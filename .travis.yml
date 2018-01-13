@@ -1,10 +1,10 @@
 language: generic
 
+# TODO: decide when to update docs, and update condition below (and
+# doc deploy on tag?) before merging
 stages:
   - test
-  # TODO: decide when to update docs, and update condition below (and
-  # doc deploy on tag?) before merging
-  - doc
+  - name: doc
     if: branch = doc AND type != pull_request
 
 jobs:
