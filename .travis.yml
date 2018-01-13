@@ -5,7 +5,7 @@ language: generic
 stages:
   - test
   - name: doc
-    if: branch = doc AND type != pull_request
+    if: branch = initial_ci AND type != pull_request
 
 jobs:
   include:
