@@ -1,5 +1,6 @@
 name: earthsim
 channels:
+  - ioam
   - defaults
 dependencies:
   - python>=3.6
