@@ -5,7 +5,7 @@ EarthSim
 **Short description of the point of this project**
 
 Project is an `open-source
-<https://github.com/ioam/holoviews/blob/master/LICENSE.txt>`_ Python
+<https://github.com/pyviz/EarthSim/blob/master/LICENSE>`_ Python
 library for something something something something and something
 more.
 
