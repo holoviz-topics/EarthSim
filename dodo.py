@@ -7,7 +7,7 @@ from ioamdoit import *
 # installing dependencies, running tests, downloading data, etc,
 # across projects.
 
-def develop_install():
+def task_develop_install():
     return {'actions': []}
 
 def task_all_tests():
