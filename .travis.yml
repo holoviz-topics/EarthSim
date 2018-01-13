@@ -30,12 +30,13 @@ jobs:
         - doit develop_install
         - doit all_tests
 
-    - <<: *default
-      os: osx
-      before_install:
-        # brew-installed geos interferes with cartopy?
-        - brew uninstall --ignore-dependencies geos gdal postgis
-      if: branch = master AND type != pull_request
+# restore when travis/macos recovers...
+#    - <<: *default
+#      os: osx
+#      before_install:
+#        # brew-installed geos interferes with cartopy?
+#        - brew uninstall --ignore-dependencies geos gdal postgis
+#      if: branch = master AND type != pull_request
 
     - <<: *default
       stage: doc
