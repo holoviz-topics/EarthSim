@@ -1,0 +1,12 @@
+install:
+  - "SET PATH=C:\\Miniconda3-x64;C:\\Miniconda3-x64\\Scripts;%PATH%"
+  - pip install ioamdoit
+  - conda env create
+  - activate earthsim
+  - doit capture_conda_env
+
+build: off
+
+test_script:
+  - doit develop_install
+  - doit all_tests
