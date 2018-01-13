@@ -23,7 +23,7 @@ def task_test_nb():
     
 def task_all_tests():
     return {'actions': [],
-            'task_dep': ['test_nb']
+            'task_dep': ['test_nb']}
 
 
 
