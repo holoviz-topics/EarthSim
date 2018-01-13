@@ -5,3 +5,6 @@ status](https://ci.appveyor.com/api/projects/status/cdhrrks36kr32545/branch/mast
 
 # EarthSim
 Tools for working and visualizing with environmental simulations
+
+See `pyviz.github.io/EarthSim <https://pyviz.github.io/EarthSim>`_ for
+more information.
