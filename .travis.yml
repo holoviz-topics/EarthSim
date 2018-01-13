@@ -1,11 +1,9 @@
 language: generic
 
-# TODO: decide when to update docs, and update condition below (and
-# doc deploy on tag?) before merging
 stages:
   - test
   - name: doc
-    if: branch = initial_ci AND type != pull_request
+    if: branch = master AND type != pull_request
 
 jobs:
   include:
