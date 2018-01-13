@@ -25,7 +25,7 @@ jobs:
         - export PATH="$HOME/miniconda/bin:$PATH"
         #######################
         - pip install ioamdoit
-        - conda env create -q -y
+        - conda env create -q
         - source activate earthsim
         - doit capture_conda_env
       script:
