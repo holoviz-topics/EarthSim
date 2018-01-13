@@ -42,6 +42,7 @@ jobs:
     - <<: *default
       stage: doc
       script:
+        - doit develop_install
         - doit install_doc_dependencies
         - doit docs
       deploy:
