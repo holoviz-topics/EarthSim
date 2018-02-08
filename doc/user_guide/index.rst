@@ -3,8 +3,25 @@ User Guide
 **********
 
 
+Running Simulation
+==================
+
+GSSHA
+-----
+
+* `GSSHA Workflow <Workflow_GSSHA.html>`_
+  An end to end workflow for running GSSHA simulations.
+
+* Parameterized workflows
+
+AdH
+---
+
+Coming soon...
+
+
 Visualization & Annotation
---------------------------
+==========================
 
 * `Drawing Tools <Drawing_Tools.html>`_
   Introduction to the drawing tools used to draw, edit and annotate data.
@@ -21,26 +38,14 @@ Visualization & Annotation
 
 * `Analyzing Meshes <Analyzing_Meshes.html>`_
   Analyzing meshes by computing arbitrary line cross-sections.
-
-Running Simulation
-------------------
-
-GSSHA
-#####
-
-* Workflow GSSHA
-* Parameterized workflows
-
-AdH
-###
-
-Coming soon...
+  
 
 .. toctree::
     :titlesonly:
     :hidden:
     :maxdepth: 2
 
+    GSSHA Workflow <Workflow_GSSHA>
     Drawing Tools <Drawing_Tools>
     Adding Annotations <Annotators>
     Visualizing Meshes <Visualizing_Meshes>
