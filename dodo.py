@@ -1,5 +1,7 @@
 DOIT_CONFIG = {'verbosity': 2}
 
+import shutil
+from doit import action
 from ioamdoit import *
 
 # The aim would be to not have anything much here, but right now
@@ -44,11 +46,9 @@ def task_install_doc_dependencies():
 def task_download_sample_data():
     return {
         'actions': [
-            'cd examples',
-            'python download_sample_data.py',
-            'cd ..',
-            'cp -r examples/data doc/data'],
-        }
+            action.CmdAction('python download_sample_data.py', cwd='./examples'),
+            lambda: shutil.copytree("examples/data","doc/data")
+        ]}
 
 def task_docs():
     return {'actions': [
