@@ -1,6 +1,7 @@
 name: earthsim
 channels:
     - ioam
+    - erdc
     - bokeh
     - conda-forge
     - defaults
@@ -8,8 +9,7 @@ dependencies:
     - python=3.5
     - fiona
     - rasterio
-    - gdal=2.1.*
-    - numpy
+    - gdal
     - json-rpc
     - ulmo>=0.8.3.2
     - pyyaml
@@ -17,7 +17,6 @@ dependencies:
     - click
     - werkzeug
     - peewee
-    - stevedore
     - geopandas
     - psutil
     - pint
@@ -25,15 +24,13 @@ dependencies:
     - pytest-cov
     - scikit-image
     - go-spatial
-    - shapely
     - jupyter
     - descartes
     - gsshapy
-    - plotly
     - cartopy
     - bokeh
     - xarray
-    - gbrener::gssha
+    - gssha
 
     - pip:
         - git+https://github.com/ioam/param.git
