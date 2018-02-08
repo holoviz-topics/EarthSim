@@ -1,0 +1,15 @@
+---
+
+data:
+
+  - url: http://s3.amazonaws.com/datashader-data/Chesapeake_and_Delaware_Bays.zip
+    title: 'Depth data for the Chesapeake and Delaware Bay region of the USA'
+    files:
+      - Chesapeake_and_Delaware_Bays.3dm
+
+
+  - url: http://assets.holoviews.org/earthsim/SanDiego_Mesh.zip
+    title: 'SanDiego mesh data and AdH model output'
+    files:
+      - SanDiego_Mesh/SanDiego.3dm
+      - SanDiego_Mesh/SanDiego_ovl.dat
