@@ -28,6 +28,7 @@ jobs:
         - pip install ioamdoit
         - conda env create -q
         - source activate earthsim
+        - python setup.py develop --no-deps
         - doit capture_conda_env
       script:
         - doit develop_install
