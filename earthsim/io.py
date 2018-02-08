@@ -103,6 +103,50 @@ def read_3dm_mesh(fpath, skiprows=1):
     return tris, verts
 
 
+def read_mesh2d(fpath):
+    """
+    Loads a dat files containing mesh2d data corresponding to
+    a 3dm mesh.
+
+    Parameters
+    ----------
+
+    fpath: str
+        Path to .dat file
+
+    Returns
+    -------
+
+    dfs: dict(int: DataFrame)
+        A dictionary of dataframes indexed by time.
+    """
+    attrs = {}
+    with open(fpath, 'r') as f:
+        dataset = f.readline()
+        if not dataset.startswith('DATASET'):
+            raise ValueError('Expected DATASET file, cannot read data.')
+        objtype = f.readline()
+        if not objtype.startswith('OBJTYPE "mesh2d"'):
+            raise ValueError('Expected "mesh2d" OBJTYPE, cannot read data.')
+        _ = f.readline()
+        nd, nc = f.readline(), f.readline()
+        name = f.readline()[6:-2]
+        unit = f.readline()
+    df = pd.read_table(fpath, delim_whitespace=True,
+                       header=None, skiprows=7, names=[0, 1, 2]).iloc[:-1]
+    ts_index = np.where(df[0]=='TS')[0]
+    indexes = [df.iloc[idx, 2] for idx in ts_index]
+    dfs = {}
+    for time, tdf in zip(indexes, np.split(df, ts_index)[1:]):
+        tdf = tdf.iloc[1:].astype(np.float64).dropna(axis=1, how='all')
+        if len(tdf.columns) == 1:
+            tdf.columns = [name]
+        else:
+            tdf.columns = [name+'_%d' % c for c in range(len(tdf.columns))]
+        dfs[time] = tdf.reset_index(drop=True)
+    return dfs
+
+
 def save_shapefile(cdsdata, path, template):
     """
     Accepts bokeh ColumnDataSource data and saves it as a shapefile,
