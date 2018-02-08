@@ -13,3 +13,8 @@ data:
     files:
       - SanDiego_Mesh/SanDiego.3dm
       - SanDiego_Mesh/SanDiego_ovl.dat
+
+  - url: http://assets.holoviews.org/earthsim/vicksburg_watershed.zip
+    title: 'Vicksburg watershed shapefile used as GSSHA simulation input'
+    files:
+      - vicksburg_watershed/watershed_boundary.shp

@@ -40,7 +40,16 @@ def task_install_doc_dependencies():
             'conda install -y -q -c conda-forge sphinx beautifulsoup4 graphviz selenium phantomjs',
             'pip install nbsite sphinx_ioam_theme'],
         }
-    
+
+def task_download_sample_data():
+    return {
+        'actions': [
+            'cd examples',
+            'python download_sample_data.py',
+            'cd ..',
+            'cp -r examples/data doc/data'],
+        }
+
 def task_docs():
     return {'actions': [
         'nbsite_nbpagebuild.py pyviz earthsim ./examples ./doc',

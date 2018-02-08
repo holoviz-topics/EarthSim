@@ -32,6 +32,7 @@ jobs:
         - doit capture_conda_env
       script:
         - doit develop_install
+        - doit download_sample_data
         - doit all_tests
 
 # restore when travis/macos recovers...
