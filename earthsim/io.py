@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import fiona
 import geoviews as gv
 import dask.dataframe as dd
 import xarray as xr
