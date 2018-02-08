@@ -31,6 +31,7 @@ dependencies:
     - bokeh
     - xarray
     - gssha
+    - datashader
 
     - pip:
         - git+https://github.com/ioam/param.git
