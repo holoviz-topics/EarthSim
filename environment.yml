@@ -32,6 +32,7 @@ dependencies:
     - xarray
     - gssha
     - datashader
+    - filigree
 
     - pip:
         - git+https://github.com/ioam/param.git
