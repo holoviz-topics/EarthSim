@@ -1,13 +1,41 @@
 name: earthsim
 channels:
-  - ioam
-  - bokeh
-  - conda-forge
-  - defaults
+    - ioam
+    - erdc
+    - bokeh
+    - conda-forge
+    - defaults
 dependencies:
-  - python>=3.6
-  - notebook>=5.1
-  - holoviews
-  - bokeh
-  - geoviews
-  - geopandas
+    - python=3.5
+    - fiona
+    - rasterio
+    - gdal
+    - json-rpc
+    - ulmo>=0.8.3.2
+    - pyyaml
+    - matplotlib
+    - click
+    - werkzeug
+    - peewee
+    - geopandas
+    - psutil
+    - pint
+    - pony
+    - pytest-cov
+    - scikit-image
+    - go-spatial
+    - jupyter
+    - descartes
+    - gsshapy
+    - cartopy
+    - bokeh
+    - xarray
+    - gssha
+
+    - pip:
+        - git+https://github.com/ioam/param.git
+        - git+https://github.com/ioam/paramnb.git
+        - git+https://github.com/ioam/parambokeh.git
+        - git+https://github.com/ioam/holoviews.git
+        - git+https://github.com/ioam/geoviews.git
+        - git+https://github.com/ContinuumIO/EarthSim-quest.git
