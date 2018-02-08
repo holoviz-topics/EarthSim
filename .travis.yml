@@ -6,10 +6,6 @@ stages:
     if: branch = master AND type != pull_request
 
 before_install:
-  # brew-installed geos interferes with cartopy?
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew uninstall --ignore-dependencies geos gdal postgis;
-    fi
   - echo -e "machine github.com\n  login $CI_USER\n  password $CI_USER_PASSWORD" >> ~/.netrc
 
 jobs:
@@ -32,9 +28,11 @@ jobs:
         - pip install ioamdoit
         - conda env create -q
         - source activate earthsim
+        - python setup.py develop --no-deps
         - doit capture_conda_env
       script:
         - doit develop_install
+        - doit download_sample_data
         - doit all_tests
 
 # restore when travis/macos recovers...
@@ -50,6 +48,7 @@ jobs:
       script:
         - doit develop_install
         - doit install_doc_dependencies
+        - doit download_sample_data
         - doit docs
       deploy:
         provider: pages
