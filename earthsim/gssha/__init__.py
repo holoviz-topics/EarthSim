@@ -51,6 +51,7 @@ def download_data(service_uri, bounds, collection_name):
     features = quest.api.get_features(uris=service_uri,
                                       filters={'bbox': bounds},
                                       as_dataframe=True,
+                                      update_cache=False
                                       )
     
     # add the selected features to a quest collection
