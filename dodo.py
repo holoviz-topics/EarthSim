@@ -17,12 +17,14 @@ def task_install_required_dependencies():
     return {'actions': []}
 
 def task_install_test_dependencies():
-    return {'actions': ['pip install pytest-nbsmoke'],
+    return {'actions': ['pip install pytest-nbsmoke',
+                        'pip uninstall six -y',
+                        'conda install six --yes'],
             'task_dep': ['install_required_dependencies']}
 
 def task_test_nb():
     return {'actions': ['pytest --nbsmoke-run examples/']}
-    
+
 def task_all_tests():
     return {'actions': [],
             'task_dep': ['test_nb']}
