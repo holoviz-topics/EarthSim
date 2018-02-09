@@ -40,4 +40,4 @@ dependencies:
         - git+https://github.com/ioam/parambokeh.git
         - git+https://github.com/ioam/holoviews.git
         - git+https://github.com/ioam/geoviews.git
-        - git+https://github.com/ContinuumIO/EarthSim-quest.git
+        - git+https://github.com/erdc/quest.git
