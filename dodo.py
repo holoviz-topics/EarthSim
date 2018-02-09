@@ -18,6 +18,7 @@ def task_install_required_dependencies():
 
 def task_install_test_dependencies():
     return {'actions': ['pip install pytest-nbsmoke',
+                        # Six installed twice remove and reinstall
                         'pip uninstall six -y',
                         'conda install six --yes'],
             'task_dep': ['install_required_dependencies']}
