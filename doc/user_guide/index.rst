@@ -12,7 +12,8 @@ GSSHA
 * `GSSHA Workflow <Workflow_GSSHA.html>`_
   An end to end workflow for running GSSHA simulations.
 
-* Parameterized workflows
+* `GSSHA Parameter Sweet <GSSHA_Parameter_Sweep.html>`_
+  Running a parameter sweep of a parameterized GSSHA Workflow.
 
 AdH
 ---
@@ -46,6 +47,7 @@ Visualization & Annotation
     :maxdepth: 2
 
     GSSHA Workflow <Workflow_GSSHA>
+	GSSHA Parameter Sweep <GSSHA_Parameter_Sweep>
     Drawing Tools <Drawing_Tools>
     Adding Annotations <Annotators>
     Visualizing Meshes <Visualizing_Meshes>
