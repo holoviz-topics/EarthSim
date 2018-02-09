@@ -33,7 +33,7 @@ jobs:
       script:
         - doit develop_install
         - doit download_sample_data
-        - doit all_tests
+        - travis_wait 60 doit all_tests
 
 # restore when travis/macos recovers...
 #    - <<: *default
