@@ -18,6 +18,7 @@ dependencies:
     - werkzeug
     - peewee
     - geopandas
+    - stevedore
     - psutil
     - pint
     - pony
