@@ -49,8 +49,7 @@ def task_install_doc_dependencies():
 def task_download_sample_data():
     return {
         'actions': [
-            action.CmdAction('python download_sample_data.py', cwd='./examples'),
-            lambda: shutil.copytree("examples/data","doc/data")
+            action.CmdAction('python download_sample_data.py', cwd='./examples')
         ]}
 
 def task_docs():
