@@ -22,6 +22,8 @@ html_theme_options = {
 #    'favicon':'amazingfavicon.ico'
 }
 
+nbbuild_cell_timeout = 1200
+
 _NAV =  (
     ('Getting started', 'getting_started/index'),
     ('User Guide', 'user_guide/index'),
