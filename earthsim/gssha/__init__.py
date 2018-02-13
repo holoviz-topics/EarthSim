@@ -1,37 +1,38 @@
 """
+Support for running GSSHA simulations, using Quest.
 """
+
 from datetime import datetime, timedelta
 
 import param
 import quest
 import geopandas as gpd
 
-from .model import CreateModel, CreateGSSHModel
+from .model import CreateModel, CreateGSSHAModel
 
 
 class Simulation(param.Parameterized):
-
+    """Basic example of wrapping a GSSHA-based rainfall simulation."""
+    
     elevation_service = param.Parameter(default='svc://usgs-ned:13-arc-second',precedence=0.1)
     
     land_use_service = param.Parameter(default='svc://usgs-nlcd:2011',precedence=0.2)
 
     land_use_grid_id = param.Parameter(default='nlcd',precedence=0.3)
     
-    model_creator = param.ClassSelector(CreateModel,default=CreateGSSHModel(),precedence=0.4)
+    model_creator = param.ClassSelector(CreateModel,default=CreateGSSHAModel(),precedence=0.4)
 
     # TODO: switch to date range...
     simulation_start=param.Date(default=datetime(2017, 5 ,9),precedence=0.5)
     # ...or at least a timedelta parameter type
     simulation_duration=param.Integer(default=120, bounds=(0,None), softbounds=(0,1000000), precedence=0.51, doc="""
-        seconds""")
+        Simulated-time duration to run the simulator, in seconds.""")
 
     rain_intensity= param.Integer(default=24, bounds=(0,None), softbounds=(0,75), precedence=0.6, doc="""
-        mm/hr
-        """)
+        Intensity for simulated rain, in mm/hr.""")
 
     rain_duration=param.Integer(default=60,bounds=(0,None), softbounds=(0,1000000), precedence=0.61, doc="""
-        seconds
-        """)
+        Simulated-time duration for simulated rain, in seconds.""")
 
 
     

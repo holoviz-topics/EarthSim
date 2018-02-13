@@ -1,6 +1,5 @@
 """
-Modeling gsshapy...
-
+GSSHA-based model using gsshapy.
 """
 
 import os
@@ -12,6 +11,7 @@ from gsshapy.modeling import GSSHAModel
 
 
 class RoughnessSpecification(param.Parameterized):
+    """Abatract class for a parameterized specification of surface roughness."""
     __abstract = True
     
     # If we could modify code in gsshpy we could actually do something useful here 
@@ -21,7 +21,7 @@ class RoughnessSpecification(param.Parameterized):
         raise NotImplementedError
 
 class UniformRoughness(RoughnessSpecification):
-    
+    """Roughness specified as a uniform constant over an area."""
     # TODO: what default?
     value = param.Number(default=0.04, doc="""
        Value of uniform manning's n roughness for grid.""")
@@ -38,7 +38,7 @@ class UniformRoughness(RoughnessSpecification):
 # and docstrings. Would need to study code...
 
 class GriddedRoughness(RoughnessSpecification):
-
+    """Roughness specified as a land-use grid file."""
     __abstract = True
     
     land_use_grid = param.FileSelector(default=None, doc="""
@@ -49,6 +49,7 @@ class GriddedRoughness(RoughnessSpecification):
     
     
 class GriddedRoughnessTable(GriddedRoughness):
+    """Roughness specified as a land-use grid file and roughness table."""
 
     land_use_to_roughness_table = param.FileSelector(default=None, doc="""
        Path to land use to roughness table.""") 
@@ -62,6 +63,7 @@ class GriddedRoughnessTable(GriddedRoughness):
         }
 
 class GriddedRoughnessID(GriddedRoughness):
+    """Roughness specified as a land-use grid file and ID of default GHSSApy grid."""
     
     land_use_grid_id = param.String(default='nlcd', doc="""
        ID of default grid supported in GSSHApy. """)
@@ -80,13 +82,14 @@ class GriddedRoughnessID(GriddedRoughness):
 
 
 class CreateModel(param.Parameterized):
-
+    """Abstract base class for creating models."""
     __abstract = True
     
     project_base_directory = param.Foldername(default=os.getcwd(), doc="""
-       Base directory to which name will be appended to write GSSHA project files to.""", precedence=0)
+       Base directory to which name will be appended to write project files to.""", precedence=0)
     
-    project_name = param.String(default='vicksburg_south', doc="Name of GSSHA project. Required for new model.")    
+    project_name = param.String(default='vicksburg_south', doc="""
+       Name of project. Required for new model.""")    
 
     def _map_kw(self,p):
         kw = {}
@@ -104,7 +107,8 @@ class CreateModel(param.Parameterized):
 # TODO: defaults are strange e.g. ./vicksburg_watershed/*.shp
     
     
-class CreateGSSHModel(CreateModel):
+class CreateGSSHAModel(CreateModel):
+    """Create a new GSSHA model."""
     
     mask_shapefile = param.FileSelector(default='./vicksburg_watershed/watershed_boundary.shp',
                                         path='./vicksburg_watershed/*.shp', doc="""
@@ -128,7 +132,7 @@ class CreateGSSHModel(CreateModel):
 
         
     def _map_kw(self,p):
-        kw = super(CreateGSSHModel,self)._map_kw(p)
+        kw = super(CreateGSSHAModel,self)._map_kw(p)
         kw['mask_shapefile'] = p.mask_shapefile
         kw['grid_cell_size'] = p.grid_cell_size
         kw['elevation_grid_path'] = os.path.abspath(p.elevation_grid_path)

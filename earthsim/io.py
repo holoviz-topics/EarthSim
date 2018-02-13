@@ -1,3 +1,7 @@
+"""
+Input and output for geo-specific data formats.
+"""
+
 import numpy as np
 import pandas as pd
 import fiona
@@ -32,7 +36,7 @@ def get_sampling(bounds, shape):
 
 def open_gssha(filename):
     """
-    Reads various filetypes 
+    Reads various filetypes produced by GSSHA
     """
     # Read metadata
     ftype = filename.split('.')[-1]
@@ -106,8 +110,7 @@ def read_3dm_mesh(fpath, skiprows=1):
 
 def read_mesh2d(fpath):
     """
-    Loads a dat files containing mesh2d data corresponding to
-    a 3dm mesh.
+    Loads a .dat file containing mesh2d data corresponding to a 3dm mesh.
 
     Parameters
     ----------

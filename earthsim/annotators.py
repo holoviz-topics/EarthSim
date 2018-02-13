@@ -1,3 +1,8 @@
+"""
+Helper functions for building interactive plots that support persistent user annotations.
+"""
+
+
 from functools import partial
 
 import param
