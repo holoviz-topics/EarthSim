@@ -2,6 +2,7 @@ language: generic
 
 stages:
   - test
+  - doc
   - name: doc
     if: branch = master AND type != pull_request
 
@@ -28,10 +29,9 @@ jobs:
         - pip install ioamdoit
         - conda env create -q
         - source activate earthsim
-        - python setup.py develop --no-deps
+        - doit develop_install
         - doit capture_conda_env
       script:
-        - doit develop_install
         - doit download_sample_data
         - travis_wait 60 doit all_tests
 
@@ -46,7 +46,6 @@ jobs:
     - <<: *default
       stage: doc
       script:
-        - doit develop_install
         - doit install_doc_dependencies
         - doit download_sample_data
         - travis_wait 60 doit docs
@@ -55,5 +54,5 @@ jobs:
         skip_cleanup: true
         github_token: $GITHUB_TOKEN
         local_dir: ./doc/_build/html
-        #on:
-        #  tags: true
+        on:
+          tags: true

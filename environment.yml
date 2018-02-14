@@ -1,5 +1,6 @@
 name: earthsim
 channels:
+    - pyviz/label/dev
     - ioam
     - erdc
     - bokeh
@@ -34,11 +35,12 @@ dependencies:
     - gssha
     - datashader
     - filigree
+    - nbsmoke
+    - param
+    - parambokeh
 
     - pip:
-        - git+https://github.com/ioam/param.git
         - git+https://github.com/ioam/paramnb.git
-        - git+https://github.com/ioam/parambokeh.git
         - git+https://github.com/ioam/holoviews.git
         - git+https://github.com/ioam/geoviews.git
         - git+https://github.com/erdc/quest.git
