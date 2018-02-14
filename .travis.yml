@@ -2,7 +2,6 @@ language: generic
 
 stages:
   - test
-  - doc
   - name: doc
     if: branch = master AND type != pull_request
 
