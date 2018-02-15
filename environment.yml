@@ -19,11 +19,9 @@ dependencies:
     - werkzeug
     - peewee
     - geopandas
-    - stevedore>1.6 # avoid getting from erdc channel
     - psutil
     - pint
     - pony
-    - pytest-cov
     - scikit-image
     - go-spatial
     - jupyter
@@ -35,9 +33,14 @@ dependencies:
     - gssha
     - datashader
     - filigree
-    - nbsmoke
     - param
     - parambokeh
+    ### dependencies for tests
+    - nbsmoke
+    - pytest-cov
+    ### dependencies for pip installed packages
+    # for quest
+    - stevedore>1.6 # avoid getting from erdc channel
 
     - pip:
         - git+https://github.com/ioam/paramnb.git
