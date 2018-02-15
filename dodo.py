@@ -9,27 +9,12 @@ from ioamdoit import *
 # installing dependencies, running tests, downloading data, etc,
 # across projects.
 
-def task_develop_install():
-    return {'actions': [],
-            'task_dep': ['install_test_dependencies']}
-
-def task_install_required_dependencies():
-    return {'actions': []}
-
-def task_install_test_dependencies():
-    return {'actions': ['pip install pytest-nbsmoke',
-                        # Six installed twice remove and reinstall
-                        'pip uninstall six -y',
-                        'conda install six --yes'],
-            'task_dep': ['install_required_dependencies']}
-
 def task_test_nb():
     return {'actions': ['pytest --nbsmoke-run examples/']}
 
 def task_all_tests():
     return {'actions': [],
             'task_dep': ['test_nb']}
-
 
 
 ############################################################
@@ -42,7 +27,7 @@ def task_all_tests():
 def task_install_doc_dependencies():
     return {
         'actions': [
-            'conda install -y -q -c conda-forge sphinx beautifulsoup4 graphviz selenium phantomjs',
+            'conda install -y -c conda-forge "sphinx<1.7" beautifulsoup4 graphviz selenium phantomjs',
             'pip install nbsite sphinx_ioam_theme'],
         }
 

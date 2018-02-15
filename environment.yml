@@ -1,5 +1,6 @@
 name: earthsim
 channels:
+    - pyviz/label/dev
     - ioam
     - erdc
     - bokeh
@@ -18,11 +19,9 @@ dependencies:
     - werkzeug
     - peewee
     - geopandas
-    - stevedore
     - psutil
     - pint
     - pony
-    - pytest-cov
     - scikit-image
     - go-spatial
     - jupyter
@@ -34,11 +33,17 @@ dependencies:
     - gssha
     - datashader
     - filigree
+    - param
+    - parambokeh
+    ### dependencies for tests
+    - nbsmoke
+    - pytest-cov
+    ### dependencies for pip installed packages
+    # for quest
+    - stevedore>1.6 # avoid getting from erdc channel
 
     - pip:
-        - git+https://github.com/ioam/param.git
         - git+https://github.com/ioam/paramnb.git
-        - git+https://github.com/ioam/parambokeh.git
         - git+https://github.com/ioam/holoviews.git
         - git+https://github.com/ioam/geoviews.git
         - git+https://github.com/erdc/quest.git
