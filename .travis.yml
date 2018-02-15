@@ -2,8 +2,7 @@ language: generic
 
 stages:
   - test
-  - name: doc
-    if: branch = master AND type != pull_request
+  - doc
 
 before_install:
   - echo -e "machine github.com\n  login $CI_USER\n  password $CI_USER_PASSWORD" >> ~/.netrc
@@ -30,9 +29,9 @@ jobs:
         - source activate earthsim
         - doit develop_install
         - doit capture_conda_env
-      script:
-        - doit download_sample_data
-        - travis_wait 60 doit all_tests
+      script: true
+#        - doit download_sample_data
+#        - travis_wait 60 doit all_tests
 
 # restore when travis/macos recovers...
 #    - <<: *default
