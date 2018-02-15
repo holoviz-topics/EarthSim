@@ -27,9 +27,7 @@ def task_all_tests():
 def task_install_doc_dependencies():
     return {
         'actions': [
-            'conda install -y -c conda-forge "sphinx<1.7" beautifulsoup4 graphviz selenium phantomjs',
-            'pip install nbsite sphinx_ioam_theme'],
-        }
+            'conda install -y -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme']}
 
 def task_download_sample_data():
     return {
