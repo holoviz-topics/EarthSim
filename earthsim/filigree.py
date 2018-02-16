@@ -1,3 +1,8 @@
+"""
+Interface to the Filigree irregular triangular mesh generator, 
+allowing interactively specified control over mesh generation using Bokeh.
+"""
+
 from collections import defaultdict
 
 import param

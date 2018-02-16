@@ -1,3 +1,7 @@
+"""
+PyViz-based tools for interactively creating plots dynamically from other plots.
+"""
+
 from collections import Callable, Iterable
 
 import param
