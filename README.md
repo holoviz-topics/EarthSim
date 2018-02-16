@@ -13,10 +13,10 @@ EarthSim is designed as a lightweight "overview" site and project, relying on co
 - [Param](https://github.com/ioam/param): Specifying parameters of interest, e.g. to make widgets
 - [GeoViews](http://geoviews.org): HoloViews with earth-specific projections
 
-As such, this site primarily consists of three things:
+As such, this repository primarily consists of three things:
 
 - [earthsim](https://github.com/pyviz/EarthSim/tree/master/earthsim): A Python package with a small amount of code specific to environmental simulation
 - [examples](https://github.com/pyviz/EarthSim/tree/master/examples): A set of Jupyter notebooks that show how to use the various PyViz tools to solve earth-science problems
-- [website](https://pyviz.github.io/EarthSim): A set of Jupyter notebooks that show how to use the various PyViz tools to solve earth-science problems
+- [website](https://pyviz.github.io/EarthSim): The example notebooks already run and rendered to HTML for simple exploration
 
-In most cases, the examples (as notebooks or as the webstite) represent the main form of documentation, even for the Python package, so please see [pyviz.github.io/EarthSim](https://pyviz.github.io/EarthSim>) for more information.
+In most cases, the examples (as notebooks or as the webstite) represent the main form of documentation, even for the Python package, so please see [pyviz.github.io/EarthSim](https://pyviz.github.io/EarthSim>) for more information, including installation and usage instructions.
