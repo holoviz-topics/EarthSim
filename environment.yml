@@ -2,9 +2,9 @@ name: earthsim
 channels:
     - pyviz/label/dev
     - ioam
-    - erdc
     - bokeh
     - conda-forge
+    - erdc    
     - defaults
 dependencies:
     - python=3.5
@@ -40,7 +40,7 @@ dependencies:
     - pytest-cov
     ### dependencies for pip installed packages
     # for quest
-    - stevedore>1.6 # avoid getting from erdc channel
+    - stevedore
 
     - pip:
         - git+https://github.com/ioam/paramnb.git
