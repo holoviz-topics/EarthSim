@@ -25,9 +25,9 @@ html_theme_options = {
 nbbuild_cell_timeout = 1200
 
 _NAV =  (
-    ('Getting started', 'getting_started/index'),
+    ('Getting Started', 'getting_started/index'),
     ('User Guide', 'user_guide/index'),
-    ('FAQ', 'FAQ'),
+    ('Topics', 'topics/index'),
     ('About', 'about')
 )
 
@@ -45,3 +45,9 @@ html_context.update({
         ('Github', '//github.com/pyviz/earthsim'),
     )
 })
+
+html_theme_options = {
+    'logo':'logo.png',
+    'favicon':'favicon.ico',
+    'custom_css':'geoviews.css'
+}
