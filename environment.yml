@@ -4,10 +4,10 @@ channels:
     - ioam
     - bokeh
     - conda-forge
-    - erdc    
+    - erdc
     - defaults
 dependencies:
-    - python=3.5
+    - python>=3.5
     - fiona
     - rasterio
     - gdal
