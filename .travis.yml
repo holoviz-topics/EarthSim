@@ -53,5 +53,3 @@ jobs:
         skip_cleanup: true
         github_token: $GITHUB_TOKEN
         local_dir: ./doc/_build/html
-        on:
-          tags: true
