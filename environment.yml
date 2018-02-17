@@ -35,6 +35,7 @@ dependencies:
     - filigree
     - param
     - parambokeh
+    - paramnb
     ### dependencies for tests
     - nbsmoke
     - pytest-cov
@@ -43,7 +44,6 @@ dependencies:
     - stevedore
 
     - pip:
-        - git+https://github.com/ioam/paramnb.git
         - git+https://github.com/ioam/holoviews.git
         - git+https://github.com/ioam/geoviews.git
         - git+https://github.com/erdc/quest.git
