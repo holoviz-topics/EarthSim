@@ -130,9 +130,9 @@ class PolyAnnotator(GeoAnnotator):
     table_height = param.Integer(default=150, doc="Height of the table",
                                  precedence=-1)
 
-    def __init__(self, **params):
+    def __init__(self, poly_data={}, **params):
         super(PolyAnnotator, self).__init__(**params)
-        self.poly_table_stream = CDSStream(data={}, rename={'data': 'table_data'})
+        self.poly_table_stream = CDSStream(data=poly_data, rename={'data': 'table_data'})
         self.poly_sel_stream = Selection1D(source=self.polys)
         streams = [self.poly_stream, self.poly_sel_stream, self.poly_table_stream]
         self.poly_table = DynamicMap(self.load_table, streams=streams)
@@ -201,7 +201,8 @@ class PointAnnotator(GeoAnnotator):
         style = dict(editable=True)
         plot = dict(width=self.width, height=self.table_height)
         for col in self.point_columns:
-            self.points = self.points.add_dimension(col, 0, None, True)
+            if col not in self.points:
+                self.points = self.points.add_dimension(col, 0, None, True)
         self.point_stream = PointDraw(source=self.points, data={})
         self.point_table = Table(self.points).opts(plot=plot, style=style)
 
