@@ -8,8 +8,8 @@ EarthSim is a project for developing Python-based workflows for
 specifying, launching, visualizing, and analyzing environmental
 simulations, such as those for hydrology modeling. EarthSim is
 designed to be a lightweight project internally, relying on code and
-documentation primarily maintained in other, general-purpose SciPy and
-`PyViz <http://pyviz.org>`_ projects:
+documentation primarily maintained in other, freely available,
+general-purpose SciPy and `PyViz <http://pyviz.org>`_ projects:
 
 -  `Bokeh <http://bokeh.pydata.org>`_: Interactive browser-based
    plotting.
