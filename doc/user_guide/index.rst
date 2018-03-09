@@ -10,7 +10,7 @@ documenting the small amount of code that's actually in `earthsim`
 itself.
 
 So far, what is documented here shows how to use the
-drawing/annotation tools that wered added to Bokeh and HoloViews
+drawing/annotation tools that were added to Bokeh and HoloViews
 as part of this project, along with the specific application of those
 tools to specifying the generation of irregular triangular meshes used
 for variable-resolution simulations.
