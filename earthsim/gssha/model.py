@@ -94,7 +94,8 @@ class CreateModel(param.Parameterized):
     def _map_kw(self,p):
         kw = {}
         kw['project_directory'] = os.path.abspath(os.path.join(p.project_base_directory, p.project_name))
-        os.makedirs(kw['project_directory']) # TODO: decide what to do about overwriting
+        # Currently allows overwriting existing files
+        os.makedirs(kw['project_directory'],exist_ok=True)
         kw['project_name'] = p.project_name
         return kw
     
@@ -119,13 +120,13 @@ class CreateGSSHAModel(CreateModel):
     # TODO: specify acceptable file extensions?
     elevation_grid_path = param.FileSelector(
         doc="""
-       Path to elevation raster used for GSSHA grid. Required for new model. Typically an *.ele file.""", precedence=0.3)
+       Path to elevation raster used for GSSHA grid. Required for new model. Typically a *.ele file.""", precedence=0.3)
 
     # TODO: paramnb ClassSelector should cache instances that get
     # created or else editing parameters on non-default options is
     # confusing.
     roughness = param.ClassSelector(RoughnessSpecification,default=UniformRoughness(),doc="""
-        Specify roughness something something""") 
+        Method for specifying roughness""") 
 
     out_hydrograph_write_frequency = param.Number(default=10, bounds=(1,60), doc="""
        Frequency of writing to hydrograph (minutes). Sets HYD_FREQ card. Required for new model.""", precedence=0.8)

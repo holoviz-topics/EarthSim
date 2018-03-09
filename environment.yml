@@ -36,6 +36,7 @@ dependencies:
     - param
     - parambokeh
     - paramnb
+    - numpy=1.13       # Pinned to avoid warnings with numpy=1.14 and bokeh=1.12.14    
     ### dependencies for tests
     - nbsmoke
     - pytest-cov
