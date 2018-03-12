@@ -73,7 +73,10 @@ class LineCrossSection(param.Parameterized):
         a variable number of elements batching must be enabled and
         the legend_limit must be set to 0.
         """
-        path = self.path_stream.element
+        if self.path_stream.data is None:
+            path = self.path
+        else:
+            path = self.path_stream.element
         if isinstance(obj, TriMesh): 
             vdim = obj.nodes.vdims[0]
         else:
@@ -152,7 +155,10 @@ class SurfaceCrossSection(LineCrossSection):
         Rasterizes the supplied object across times returning
         an Image of the sampled data across time and distance.
         """
-        path = self.path_stream.element
+        if self.path_stream.data is None:
+            path = self.path
+        else:
+            path = self.path_stream.element
         if isinstance(obj, TriMesh): 
             vdim = obj.nodes.vdims[0]
         else:
