@@ -13,13 +13,13 @@ or Mac Python 3.5, because ``gssha`` and ``gssha-py`` packages are not yet
 available for Windows or other Python versions.
 
 Installable ``earthsim`` packages will be created at some point, but
-at present, the recommended way to install Earthsim is based on conda
+at present, the recommended way to install Earthsim is based on
 `conda <http://conda.pydata.org/docs>`_ environments and 
 `git <https://git-scm.com>`_:
 
 
-1. Install Python 3 `miniconda <http://conda.pydata.org/miniconda.html>`_ or 
-`anaconda <http://docs.continuum.io/anaconda/install>`_, if you don't already have it on your system.
+1. Install Python 3 `Miniconda <http://conda.pydata.org/miniconda.html>`_ or 
+`Anaconda <http://docs.continuum.io/anaconda/install>`_, if you don't already have it on your system.
 
 2. Clone the EarthSim git repository if you do not already have it::
 
@@ -31,7 +31,7 @@ at present, the recommended way to install Earthsim is based on conda
     conda env create --quiet --force -n earthsim -f ./environment.yml
     source activate earthsim
 
-4. Put the `earthsim` directory into the Python path in this environment::
+4. Put the ``earthsim`` directory into the Python path in this environment::
     
     pip install -e .
 
@@ -68,7 +68,7 @@ and the `Topics <https://github.com/pyviz/EarthSim/issues>`_ to see examples, bu
 most of the documentation is at the sites for the packages like
 `HoloViews <http://holoviews.org>`_ that are used in the examples.  A
 good way to get comfortable with those tools is to work through the tutorials at 
-`PyViz.org <http://pyviz.org>`_.
+`PyViz.org. <http://pyviz.org>`_
 
 If you find any bugs or have any feature suggestions please file a 
 `GitHub issue <https://github.com/pyviz/EarthSim/issues>`_
