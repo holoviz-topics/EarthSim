@@ -8,7 +8,7 @@ research topics.  So far, the examples each use the
 `GSSHA <http://www.gsshawiki.com/>`_ simulator, but other examples using
 `AdH <http://www.erdc.usace.army.mil/Media/Fact-Sheets/Fact-Sheet-Article-View/Article/476708/adaptive-hydraulics-model-system/>`_ are being developed and will be added here when they are ready.
 
-EarthSim is an open-source project, but note that these examples use three packages that are freely available but currently closed source: GSSHA, Filigree, and libfiligree.
+EarthSim is an open-source project, but note that the GSSHA simulator used in these examples is freely available but closed source.  GSSHA is also currently limited to Python 3.5 on Linux or Mac; Windows is not yet supported (unlike for the other EarthSim tools and examples).
 
 
 * `GSSHA Workflow <GSSHA_Workflow.html>`_

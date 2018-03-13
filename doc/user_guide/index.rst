@@ -6,7 +6,7 @@ Most of the functionality developed in the EarthSim project is in the
 various general-purpose open-source Python packages like `Bokeh
 <http://bokeh.pydata.org>`_, `HoloViews <http://holoviews.org>`_, and
 `Datashader <http://datashader.org>`_. This User Guide focuses on
-documenting the small amount of code that's actually in `earthsim`
+documenting the small amount of code that's actually in ``earthsim``
 itself.
 
 So far, what is documented here shows how to use the
@@ -15,32 +15,34 @@ as part of this project, along with the specific application of those
 tools to specifying the generation of irregular triangular meshes used
 for variable-resolution simulations.
 
-There is also some support in the `earthsim` module for running the
-GSSHA hydrology simulator, which is currently illustrated in the separate
-`Topics <../topics/>`_ section.
+There is also some support in the ``earthsim`` module for running the
+GSSHA hydrology simulator, which is currently illustrated in the
+separate `Topics <../topics/>`_ section.  Note that GSSHA and the
+Filigree and libfiligree packages used in the meshes section below are
+freely available but currently closed source; the rest of the packages
+used in EarthSim are all open source.
 
 
 Drawing/annotation tools:
 
 
-* `Drawing Tools <Drawing_Tools.html>`_
+* `Drawing Tools <Drawing_Tools.html>`_:
   Introduction to the drawing tools used to draw, edit and annotate data.
 
-* `Adding Annotations <Annotators.html>`_
+* `Adding Annotations <Annotators.html>`_:
   Introduces a number of classes useful for annotating point, line and polygon data.
 
 
 Making and using triangular meshes:
 
-
-* `Specifying meshes with Filigree <Specifying_Meshes.html>`_
+* `Specifying meshes with Filigree <Specifying_Meshes.html>`_:
   Using draw tools to generate inputs to the Filigree mesh generator.
 
-* `Visualizing meshes <Visualizing_Meshes.html>`_
+* `Visualizing meshes <Visualizing_Meshes.html>`_:
   Demonstrates how to load large static and time-varying trimesh data
   and using datashader to interpolate it.
 
-* `Analyzing Meshes <Analyzing_Meshes.html>`_
+* `Analyzing Meshes <Analyzing_Meshes.html>`_:
   Analyzing meshes by plotting data across multi-segment line cross-sections.
 
 
