@@ -48,11 +48,53 @@ def get_setup_version(reponame):
 
 ########## dependencies ##########
 
+# TODO: need to sort through these
 install_requires = [
     'param >= 1.6'
+    'fiona',
+    'rasterio',
+    'gdal',
+    'json-rpc',
+    'ulmo >=0.8.3.2',
+    'pyyaml',
+    'matplotlib',
+    'click',
+    'werkzeug',
+    'peewee',
+    'geopandas',
+    'psutil',
+    'pint',
+    'pony',
+    'scikit-image',
+    'go-spatial',
+    'jupyter',
+    'descartes',
+    'gsshapy',
+    'cartopy',
+    'bokeh',
+    'xarray',
+    'gssha',
+    'datashader',
+    'filigree',
+    'param',
+    'parambokeh',
+    'paramnb',
+    'numpy',
+    # ?
+    ### dependencies for pip installed packages
+    # for quest
+    'stevedore'
 ]
 
-
+extras_require = {
+    'tests': [
+        'nbsmoke',
+        #pytest-cov
+    ],
+    'docs': [
+        'nbsite'
+    ]
+}    
 
 ########## metadata for setuptools ##########
 
@@ -64,6 +106,8 @@ setup_args.update(dict(
     packages = find_packages(),
     include_package_data=True,
     install_requires = install_requires,
+    extras_require = extras_require,
+    tests_require = extras_require['tests'],
     python_requires = ">=3.5"
 ))
 
