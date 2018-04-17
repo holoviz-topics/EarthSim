@@ -34,7 +34,7 @@ jobs:
         # tmp hack
         - conda env create && source activate earthsim
         - doit develop_install $CHANNELS
-        - doit env_list
+        - doit env_capture
       script:
         - doit test_flakes
 #        - doit download_sample_data
