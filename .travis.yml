@@ -8,7 +8,7 @@ stages:
 env:
   global:
     - PYENV_VERSION=3.6
-    - CHANNELS=-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults
+    - CHANNELS="-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
 
 before_install:
   - echo -e "machine github.com\n  login $CI_USER\n  password $CI_USER_PASSWORD" >> ~/.netrc
