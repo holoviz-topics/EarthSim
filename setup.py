@@ -89,6 +89,7 @@ install_requires = [
 extras_require = {
     'tests': [
         'nbsmoke',
+        'flake8', # TODO: not a dependency of nbsmoke?
         #pytest-cov
     ],
     'docs': [
