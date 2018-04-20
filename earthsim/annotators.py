@@ -46,7 +46,7 @@ class GeoAnnotator(param.Parameterized):
         self.polys = self.path_type(polys, crs=crs)
         self.poly_stream = PolyDraw(source=self.polys, data={})
         self.vertex_stream = PolyEdit(source=self.polys)
-        self.points = Points(points, crs=crs)
+        self.points = Points(points, self.polys.kdims, crs=crs)
         self.point_stream = PointDraw(source=self.points, data={})
 
     def pprint(self):
@@ -185,7 +185,7 @@ class PolyAnnotator(GeoAnnotator):
     def view(self):
         sel_stream = Selection1D(source=self.poly_table)
         poly_view = DynamicMap(self.highlight_polys, streams=[sel_stream])
-        return (self.tiles * self.polys * poly_view *
+        return (self.tiles * self.polys * poly_view.options(apply_ranges=False) *
                 self.points + self.poly_table).cols(1)
 
 
@@ -222,5 +222,5 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     """
 
     def view(self):
-        return (self.tiles * self.polys * self.poly_view * self.points +
+        return (self.tiles * self.polys * self.poly_view.options(apply_ranges=False) * self.points +
                 self.poly_table + self.point_table).cols(1)
