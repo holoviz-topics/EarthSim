@@ -12,7 +12,7 @@ import cartopy.crs as ccrs
 import holoviews as hv
 from holoviews import DynamicMap, Path, Table, NdOverlay
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
-from geoviews import Polygons, Points, WMTS, TriMesh
+from geoviews import Path, Polygons, Points, WMTS, TriMesh
 
 
 class GeoAnnotator(param.Parameterized):
@@ -25,6 +25,9 @@ class GeoAnnotator(param.Parameterized):
 
     extent = param.NumericTuple(default=(-91, 32.2, -90.8, 32.4), doc="""
          Initial extent if no data is provided.""", precedence=-1)
+
+    path_type = param.ClassSelector(default=Polygons, class_=Path, doc="""
+         The element type to draw into.""")
 
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
@@ -39,7 +42,7 @@ class GeoAnnotator(param.Parameterized):
                           crs=ccrs.PlateCarree()).opts(plot=plot_opts)
         polys = [] if polys is None else polys
         points = [] if points is None else points
-        self.polys = Polygons(polys, crs=ccrs.GOOGLE_MERCATOR)
+        self.polys = self.path_type(polys, crs=ccrs.GOOGLE_MERCATOR)
         self.poly_stream = PolyDraw(source=self.polys, data={})
         self.vertex_stream = PolyEdit(source=self.polys)
         self.points = Points(points, crs=ccrs.GOOGLE_MERCATOR)
@@ -176,7 +179,7 @@ class PolyAnnotator(GeoAnnotator):
     def highlight_polys(self, index):
         polys = self.poly_stream.element.split(datatype='array')
         selected = [arr for i, arr in enumerate(polys) if i in index]
-        return Polygons(selected, crs=ccrs.GOOGLE_MERCATOR).opts(style=dict(fill_alpha=1))
+        return self.path_type(selected, crs=ccrs.GOOGLE_MERCATOR).opts(style=dict(fill_alpha=1))
 
     def view(self):
         sel_stream = Selection1D(source=self.poly_table)
