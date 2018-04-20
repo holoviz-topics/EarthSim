@@ -12,7 +12,7 @@ import cartopy.crs as ccrs
 import holoviews as hv
 from holoviews import DynamicMap, Path, Table, NdOverlay
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
-from geoviews import Path, Polygons, Points, WMTS, TriMesh
+from geoviews import Polygons, Points, WMTS, TriMesh
 
 
 class GeoAnnotator(param.Parameterized):
@@ -26,7 +26,7 @@ class GeoAnnotator(param.Parameterized):
     extent = param.NumericTuple(default=(-91, 32.2, -90.8, 32.4), doc="""
          Initial extent if no data is provided.""", precedence=-1)
 
-    path_type = param.ClassSelector(default=Polygons, class_=Path, doc="""
+    path_type = param.ClassSelector(default=Polygons, class_=Path, is_instance=False, doc="""
          The element type to draw into.""")
 
     height = param.Integer(default=500, doc="Height of the plot",
@@ -35,17 +35,18 @@ class GeoAnnotator(param.Parameterized):
     width = param.Integer(default=900, doc="Width of the plot",
                           precedence=-1)
 
-    def __init__(self, polys=None, points=None, **params):
+    def __init__(self, polys=None, points=None, crs=None, **params):
         super(GeoAnnotator, self).__init__(**params)
         plot_opts = dict(height=self.height, width=self.width)
         self.tiles = WMTS(self.tile_url, extents=self.extent,
                           crs=ccrs.PlateCarree()).opts(plot=plot_opts)
         polys = [] if polys is None else polys
         points = [] if points is None else points
-        self.polys = self.path_type(polys, crs=ccrs.GOOGLE_MERCATOR)
+        crs = ccrs.GOOGLE_MERCATOR if crs is None else crs
+        self.polys = self.path_type(polys, crs=crs)
         self.poly_stream = PolyDraw(source=self.polys, data={})
         self.vertex_stream = PolyEdit(source=self.polys)
-        self.points = Points(points, crs=ccrs.GOOGLE_MERCATOR)
+        self.points = Points(points, crs=crs)
         self.point_stream = PointDraw(source=self.points, data={})
 
     def pprint(self):
