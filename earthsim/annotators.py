@@ -13,6 +13,7 @@ import holoviews as hv
 from holoviews import DynamicMap, Path, Table, NdOverlay
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
 from geoviews import Polygons, Points, WMTS, TriMesh
+from geoviews.operation import project_path
 
 
 class GeoAnnotator(param.Parameterized):
@@ -139,6 +140,9 @@ class PolyAnnotator(GeoAnnotator):
         self.poly_table_stream = CDSStream(data=poly_data, rename={'data': 'table_data'})
         self.poly_sel_stream = Selection1D(source=self.polys)
         streams = [self.poly_stream, self.poly_sel_stream, self.poly_table_stream]
+        poly_data = project_path(self.polys).split()
+        self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
+                                     for kd in self.polys.kdims})
         self.poly_table = DynamicMap(self.load_table, streams=streams)
         sel_stream = Selection1D(source=self.poly_table)
         self.poly_view = DynamicMap(self.highlight_polys, streams=[sel_stream])
@@ -156,7 +160,7 @@ class PolyAnnotator(GeoAnnotator):
         if length:
             col_data = {}
             for col in self.poly_columns:
-                vals = table_data.get(col, [])
+                vals = list(table_data.get(col, []))
                 new = length-len(vals)
                 if new < 0:
                     # Process deleted entry
@@ -212,7 +216,7 @@ class PointAnnotator(GeoAnnotator):
 
     def view(self):
         layout = (self.tiles * self.polys * self.points + self.point_table)
-        return hv.opts({'Layout': {'plot': dict(shared_datasource=True)}}, layout).cols(1)
+        return layout.options(shared_datasource=True).cols(1)
 
 
 class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
@@ -222,5 +226,6 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     """
 
     def view(self):
-        return (self.tiles * self.polys * self.poly_view.options(apply_ranges=False) * self.points +
-                self.poly_table + self.point_table).cols(1)
+        layout = (self.tiles * self.polys * self.poly_view.options(apply_ranges=False) * self.points +
+                  self.poly_table + self.point_table)
+        return layout.options(shared_datasource=True).cols(1)
