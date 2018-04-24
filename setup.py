@@ -55,7 +55,7 @@ def get_setup_version(reponame, pkgname=None):
 
 # TODO: need to sort through these
 install_requires = [
-    'param >= 1.6'
+    'param >= 1.6',
     'fiona',
     'rasterio',
     'gdal',
