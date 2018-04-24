@@ -30,7 +30,6 @@ jobs:
 
     - &default
       stage: test
-      os: linux
       before_install:
         # install doit/pyct and use to install miniconda...
         - pip install pyct && doit miniconda_install && pip uninstall -y doit pyct
@@ -39,14 +38,13 @@ jobs:
         # ...and now install doit/pyct into miniconda
         - conda install -c pyviz/label/dev pyct && doit ecosystem_setup
       install:
-        # tmp hack
-        - conda env create && source activate earthsim
+        - doit env_create --python=$PYENV_VERSION
+        - source activate test-environment
         - doit develop_install $CHANNELS
         - doit env_capture
       script:
-        - doit test_flakes
-#        - doit download_sample_data
-#        - travis_wait 60 doit all_tests
+      # restore travis_wait when restore all nbs
+        - doit test_all
 
 # restore when travis/macos recovers...
 #    - <<: *default
