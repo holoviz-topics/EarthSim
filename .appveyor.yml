@@ -4,7 +4,6 @@ environment:
     CHANNELS: "-c ceball -c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
   matrix:
     - PY: "3.6"
-      PYTHON: "C:\\Python36-x64"
       CONDA: "C:\\Miniconda36-x64"
 
 install:
