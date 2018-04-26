@@ -1,0 +1,21 @@
+environment:
+  global:
+    # TODO: update before merge
+    CHANNELS: "-c ceball -c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+  matrix:
+    - PY: "3.6"
+      PYTHON: "C:\\Python36-x64"
+      CONDA: "C:\\Miniconda36-x64"
+
+install:
+  - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
+  - "conda install -y -c pyviz/label/dev pyct && doit ecosystem_setup"
+  - "doit env_create --name=test --python=%PY%"
+  - "activate test"
+  - "doit develop_install %CHANNELS%"
+  - "doit env_capture"
+
+build: off
+
+test_script:
+  - "doit test_all_quick"
