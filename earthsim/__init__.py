@@ -5,11 +5,11 @@ __version__ = str(param.version.Version(fpath=__file__, archive_commit="$Format:
 from functools import partial
 try:
     from pvutil.cmd import install_examples as _examples, download_data as _data
-    install_examples = partial(_examples,'datashader')
-    download_data = partial(_data,'datashader')
+    install_examples = partial(_examples,'earthsim')
+    download_data = partial(_data,'earthsim')
 except ImportError:
-    def _examples(*args,**kw): print("install examples package to enable this command (`conda install datashader-examples`)")
-    _data = _examples
-    def err(): raise ValueError(_data())
-    download_data = install_examples = err
+    def _missing_cmd(*args,**kw): print("install pvutil to enable this command")
+    _data = _examples = _missing_cmd
+    def _err(): raise ValueError(_missing_cmd())
+    download_data = install_examples = _err
 del partial, _examples, _data
