@@ -43,7 +43,8 @@ jobs:
         - doit develop_install $CHANNELS
         - doit env_capture
       script:
-        - travis_wait doit test_all
+        - earthsim download_examples --path=examples
+        - travis_wait 60 doit test_all
 
 # restore when travis/macos recovers...
 #    - <<: *default

@@ -17,4 +17,5 @@ install:
 build: off
 
 test_script:
+  - "earthsim download_examples --path=examples"
   - "doit test_all"
