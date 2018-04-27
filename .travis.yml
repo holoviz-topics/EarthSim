@@ -43,8 +43,7 @@ jobs:
         - doit develop_install $CHANNELS
         - doit env_capture
       script:
-      # restore travis_wait when restore all nbs
-        - doit test_all
+        - travis_wait doit test_all
 
 # restore when travis/macos recovers...
 #    - <<: *default
