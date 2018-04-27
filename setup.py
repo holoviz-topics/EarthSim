@@ -53,11 +53,23 @@ def get_setup_version(reponame, pkgname=None):
 
 ########## dependencies ##########
 
-# TODO: need to sort through these
+# TODO: need to sort through these, and what's the split between
+# required/recommended? I made a fairly random cut...
+
 install_requires = [
-    'param >= 1.6',
-    'holoviews', # > ?
+    'bokeh',    
+    'datashader',
     'geoviews',  # > ?
+    'holoviews', # > ?
+    'jupyter',
+    'numpy',    
+    'param >= 1.6',
+    'parambokeh',
+    'paramnb',    
+]
+
+extras_require = {
+    'recommended': [
     # quest?
     'fiona',
     'rasterio',
@@ -75,26 +87,18 @@ install_requires = [
     'pony',
     'scikit-image',
     'go-spatial',
-    'jupyter',
     'descartes',
     'gsshapy',
+    'gssha',    
     'cartopy',
-    'bokeh',
     'xarray',
-    'gssha',
-    'datashader',
     'filigree',
-    'param',
-    'parambokeh',
-    'paramnb',
-    'numpy',
+    'pvutil',
     # ?
     ### dependencies for pip installed packages
     # for quest
     'stevedore'
-]
-
-extras_require = {
+    ],
     'tests': [
         'nbsmoke',
         'flake8', # TODO: not a dependency of nbsmoke?
@@ -116,7 +120,12 @@ setup_args.update(dict(
     install_requires = install_requires,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
-    python_requires = ">=3.5"
+    python_requires = ">=3.5",
+    entry_points={
+        'console_scripts': [
+            'earthsim = earthsim.__main__:main'
+        ]
+    },       
 ))
 
 if __name__=="__main__":
