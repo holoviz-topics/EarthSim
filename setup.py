@@ -57,15 +57,15 @@ def get_setup_version(reponame, pkgname=None):
 # required/recommended? I made a fairly random cut...
 
 install_requires = [
-    'bokeh',    
+    'bokeh',
     'datashader',
-    'geoviews',  # > ?
-    'holoviews', # > ?
+    'geoviews',  # TODO > ?
+    'holoviews', # TODO > ?
     'jupyter',
-    'numpy',    
-    'param >= 1.6',
+    'numpy',
+    'param >=1.6.1',
     'parambokeh',
-    'paramnb',    
+    'paramnb',
 ]
 
 extras_require = {
@@ -89,7 +89,7 @@ extras_require = {
     'go-spatial',
     'descartes',
     'gsshapy',
-    'gssha',    
+    'gssha',
     'cartopy',
     'xarray',
     'filigree',
@@ -107,7 +107,7 @@ extras_require = {
     'docs': [
         'nbsite'
     ]
-}    
+}
 
 ########## metadata for setuptools ##########
 
@@ -125,7 +125,7 @@ setup_args.update(dict(
         'console_scripts': [
             'earthsim = earthsim.__main__:main'
         ]
-    },       
+    },
 ))
 
 if __name__=="__main__":
