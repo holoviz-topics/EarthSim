@@ -40,7 +40,7 @@ jobs:
       install:
         - doit env_create --python=$PYENV_VERSION
         - source activate test-environment
-        - doit develop_install $CHANNELS
+        - doit develop_install $CHANNELS -o recommended
         - doit env_capture
       script:
         - earthsim download_data --path=examples
