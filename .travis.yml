@@ -8,7 +8,8 @@ stages:
 env:
   global:
     - PYENV_VERSION=3.6
-    - CHANNELS="-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+    - CHANS_DEV="-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+    - CHANS_REL="-c pyviz -c erdc -c defaults"
 
 cache:
   directories:
@@ -26,8 +27,8 @@ stages:
   - test
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)*[a-z]\d*$
-#  - name: conda_package
-#    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
+  - name: conda_package
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
 
 jobs:
   include:
@@ -46,9 +47,9 @@ jobs:
         # ...and now install doit/pyct into miniconda
         - conda install -c pyviz/label/dev pyct && doit ecosystem_setup
       install:
-        - doit env_create $CHANNELS --python=$PYENV_VERSION
+        - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
-        - doit develop_install $CHANNELS -o recommended
+        - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
       script:
         - earthsim download_data --path=examples
@@ -76,7 +77,15 @@ jobs:
       stage: conda_dev_package
       env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
-        - doit package_build $CHANNELS --test-python=py36 --test-group=all
+        - doit package_build $CHANS_DEV --test-python=py36 --test-group=all
       script:
         - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev
+
+    - <<: *default
+      stage: conda_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      install:
+        - doit package_build $CHANS_REL --test-python=py36 --test-group=all
+      script:
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main
 
