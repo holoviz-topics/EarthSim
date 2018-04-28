@@ -72,7 +72,7 @@ jobs:
 
     ########## PACKAGES ##########
 
-    - <<: *conda_default
+    - <<: *default
       stage: conda_dev_package
       env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
       install:
