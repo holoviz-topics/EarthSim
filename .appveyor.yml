@@ -11,11 +11,11 @@ install:
   - "conda install -y -c pyviz/label/dev pyct && doit ecosystem_setup"
   - "doit env_create --name=test --python=%PY%"
   - "activate test"
-  - "doit develop_install %CHANNELS%"
+  - "doit develop_install %CHANNELS% -o recommended"
   - "doit env_capture"
 
 build: off
 
 test_script:
-  - "earthsim download_examples --path=examples"
+  - "earthsim download_data --path=examples"
   - "doit test_all"
