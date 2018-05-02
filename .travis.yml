@@ -64,8 +64,6 @@ jobs:
 #        - doit download_sample_data
 #        - travis_wait 60 doit docs
 #      deploy:
-#        edge:
-#          branch: v1.8.47
 #        provider: pages
 #        skip_cleanup: true
 #        github_token: $GITHUB_TOKEN
