@@ -1,5 +1,5 @@
 include earthsim/.version
-graft earthsim/examples
+recursive-include examples *.csv *.gz *.ipynb *.md *.npz *.png
 global-exclude *.py[co]
 global-exclude *~
 global-exclude *.ipynb_checkpoints/*
