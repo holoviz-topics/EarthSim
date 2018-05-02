@@ -59,53 +59,47 @@ def get_setup_version(reponame, pkgname=None):
 install_requires = [
     'bokeh',
     'datashader',
-    'geoviews',  # TODO > ?
-    'holoviews', # TODO > ?
+    'geoviews >1.4',
     'jupyter',
-    'numpy',
-    'param >=1.6.1',
     'parambokeh',
     'paramnb',
 ]
 
 extras_require = {
     'recommended': [
-    # quest?
-    'fiona',
-    'rasterio',
-    'gdal',
-    'json-rpc',
-    'ulmo >=0.8.3.2',
-    'pyyaml',
-    'matplotlib',
-    'click',
-    'werkzeug',
-    'peewee',
-    'geopandas',
-    'psutil',
-    'pint',
-    'pony',
-    'scikit-image',
-    'go-spatial',
-    'descartes',
-    'gsshapy',
-    'gssha',
-    'cartopy',
-    'xarray',
-    'filigree',
-    'pvutil',
-    # ?
-    ### dependencies for pip installed packages
-    # for quest
-    'stevedore'
+        'filigree',
+        'fiona',
+        'gdal',
+        'geopandas',
+        'gsshapy',
+        'gssha',
+        #'quest',
+        #'stevedore', # for quest
+        'xarray',
+
+        # check if the below already come from direct deps?
+        'click',
+        'descartes',
+        'go-spatial',
+        'json-rpc',
+        'peewee',
+        'pint',
+        'pony',
+        'psutil',
+        'pyyaml',
+        'rasterio',
+        'scikit-image',
+        'ulmo >=0.8.3.2',
+        'werkzeug',
     ],
     'tests': [
         'nbsmoke',
-        'flake8', # TODO: not a dependency of nbsmoke?
+        'flake8',
         #pytest-cov
     ],
     'docs': [
-        'nbsite'
+        'nbsite',
+        'sphinx_ioam_theme'
     ]
 }
 
