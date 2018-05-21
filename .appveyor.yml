@@ -16,5 +16,5 @@ install:
 build: off
 
 test_script:
-  - "earthsim download_data --path=examples"
+  - "earthsim fetch-data --path=examples"
   - "doit test_all"

@@ -52,7 +52,7 @@ jobs:
         - doit develop_install $CHANS_DEV -o recommended
         - doit env_capture
       script:
-        - earthsim download_data --path=examples
+        - earthsim fetch-data --path=examples
         - travis_wait 60 doit test_all
 
       # TODO: restore macos if travis has recovered
