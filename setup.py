@@ -175,7 +175,7 @@ setup_args = {'name':'earthsim'}
 setup_args.update(dict(
     version=get_setup_version("EarthSim",pkgname=setup_args['name']),
     packages = find_packages() + packages,
-    package_data={'earthsim': ['.version']},    
+    include_package_data = True,
     install_requires = install_requires,
     extras_require = extras_require,
     tests_require = extras_require['tests'],
