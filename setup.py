@@ -1,4 +1,8 @@
 from setuptools import setup, find_packages
+from collections import defaultdict
+import os
+import sys
+import shutil
 
 ########## autover ##########
 
@@ -145,24 +149,13 @@ extras_require = {
         'geopandas',
         'gsshapy',
         'gssha',
-        #'quest',
-        #'stevedore', # for quest
+        'quest',
         'xarray',
-
         # check if the below already come from direct deps?
-        'click',
         'descartes',
         'go-spatial',
         'json-rpc',
-        'peewee',
-        'pint',
-        'pony',
-        'psutil',
-        'pyyaml',
-        'rasterio',
         'scikit-image',
-        'ulmo >=0.8.3.2',
-        'werkzeug',
     ],
     'tests': [
         'nbsmoke',
