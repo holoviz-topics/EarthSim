@@ -10,6 +10,12 @@ source:
 build:
   noarch: python
   script: python setup.py install --single-version-externally-managed --record=record.txt
+  entry_points:
+    {% for group,epoints in sdata.get("entry_points",{}).items() %}
+    {% for entry_point in epoints %}
+    - {{ entry_point }}
+    {% endfor %}
+    {% endfor %}
 
 requirements:
   build:
@@ -20,7 +26,7 @@ requirements:
     {% for dep in sdata.get('install_requires',{}) %}
     - {{ dep }}
     {% endfor %}
-    # might consider splitting to earthsim-core and earthsim one day
+    # consider splitting to earthsim-core and earthsim one day?
     {% for dep in sdata['extras_require']['recommended'] %}
     - {{ dep }}
     {% endfor %}
