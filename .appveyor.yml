@@ -1,13 +1,13 @@
 environment:
   global:
-    CHANS_DEV: "-c ceball/label/dev -c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+    CHANS_DEV: "-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
   matrix:
     - PY: "3.6"
       CONDA: "C:\\Miniconda36-x64"
 
 install:
   - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
-  - "conda install -y -c pyviz/label/dev pyct && doit ecosystem_setup"
+  - "conda install -y -c pyviz/label/dev pyctdev && doit ecosystem_setup"
   - "doit env_create --name=test --python=%PY%"
   - "activate test"
   - "doit develop_install %CHANS_DEV% -o recommended"
@@ -16,5 +16,5 @@ install:
 build: off
 
 test_script:
-  - "earthsim download_data --path=earthsim/examples"
+  - "earthsim download_data --path=examples"
   - "doit test_all"
