@@ -51,7 +51,6 @@ jobs:
         - doit env_create $CHANS_DEV --python=$PYENV_VERSION
         - source activate test-environment
         - doit develop_install $CHANS_DEV -o recommended
-        - conda install -y -c conda-forge numpy scipy
         - doit env_capture
       script:
         - earthsim fetch-data --path=examples

@@ -88,8 +88,11 @@ install_requires = [
     'datashader',
     'geoviews >1.4',
     'jupyter',
+    'numpy',
     'parambokeh',
     'paramnb',
+    # TODO: temporary; "parambokeh does not yet declare this dependency"
+    'pyviz_comms'
 ]
 
 extras_require = {
@@ -112,7 +115,6 @@ extras_require = {
     'tests': [
         'nbsmoke',
         'flake8',
-        #pytest-cov
     ],
     'docs': [
         'nbsite',
