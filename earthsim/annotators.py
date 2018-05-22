@@ -163,9 +163,10 @@ class PolyAnnotator(GeoAnnotator):
         plot = dict(width=self.width, height=self.table_height)
         self.polys.data = poly_to_geopandas(self.polys, self.poly_columns)
         self.polys.interface = GeoPandasInterface
-        poly_data = gv.project(self.polys).split()
-        self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
-                                     for kd in self.polys.kdims})
+        if len(self.polys):
+            poly_data = gv.project(self.polys).split()
+            self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
+                                         for kd in self.polys.kdims})
         self.poly_table = Table(self.polys.data, self.poly_columns, []).opts(plot=plot, style=style)
 
     def view(self):
