@@ -57,39 +57,6 @@ def get_setup_version(reponame, pkgname=None):
 
 ########## examples ##########
 
-def check_pseudo_package(path):
-    """
-    Verifies that a fake subpackage path for assets (notebooks, svgs,
-    pngs etc) both exists and is populated with files.
-    """
-    if not os.path.isdir(path):
-        raise Exception("Please make sure pseudo-package %s exists." % path)
-    else:
-        assets = os.listdir(path)
-        if len(assets) == 0:
-            raise Exception("Please make sure pseudo-package %s is populated." % path)
-
-
-excludes = ['DS_Store', '.log', 'ipynb_checkpoints']
-packages = []
-extensions = defaultdict(list)
-
-def walker(top, names):
-    """
-    Walks a directory and records all packages and file extensions.
-    """
-    global packages, extensions
-    if any(exc in top for exc in excludes):
-        return
-    package = top[top.rfind('earthsim'):].replace(os.path.sep, '.')
-    packages.append(package)
-    for name in names:
-        ext = '.'.join(name.split('.')[1:])
-        ext_str = '*.%s' % ext
-        if ext and ext not in excludes and ext_str not in extensions[package]:
-            extensions[package].append(ext_str)
-
-
 def examples(path='earthsim-examples', verbose=False, force=False, root=__file__):
     """
     Copies the notebooks to the supplied path.
@@ -110,22 +77,6 @@ def examples(path='earthsim-examples', verbose=False, force=False, root=__file__
     else:
         print('Cannot find %s' % tree_root)
 
-
-
-def package_assets(example_path):
-    """
-    Generates pseudo-packages for the examples directory.
-    """
-    examples(example_path, force=True, root=__file__)
-    for root, dirs, files in os.walk(example_path):
-        walker(root, dirs+files)
-    setup_args['packages'] += packages
-    for p, exts in extensions.items():
-        if exts:
-            setup_args['package_data'][p] = exts
-
-
-    
 
 ########## dependencies ##########
 
@@ -174,7 +125,7 @@ setup_args = {'name':'earthsim'}
 
 setup_args.update(dict(
     version=get_setup_version("EarthSim",pkgname=setup_args['name']),
-    packages = find_packages() + packages,
+    packages = find_packages(),
     include_package_data = True,
     install_requires = install_requires,
     extras_require = extras_require,
@@ -191,7 +142,7 @@ if __name__=="__main__":
     example_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 'earthsim/examples')
     if 'develop' not in sys.argv:
-        package_assets(example_path)
+        examples(example_path, force=True, root=__file__)
     
     setup(**setup_args)
 
