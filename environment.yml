@@ -5,6 +5,7 @@ channels:
     - bokeh
     - conda-forge
     - erdc
+    - pyviz
     - defaults
 dependencies:
     - python>=3.5
@@ -35,6 +36,7 @@ dependencies:
     - filigree
     - param
     - parambokeh
+    - pyviz_comms      # parambokeh does not yet declare this dependency
     - paramnb
     - numpy=1.13       # Pinned to avoid warnings with numpy=1.14 and bokeh=1.12.14    
     ### dependencies for tests

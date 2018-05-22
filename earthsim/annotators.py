@@ -13,6 +13,7 @@ import holoviews as hv
 from holoviews import DynamicMap, Path, Table, NdOverlay
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
 from geoviews import Polygons, Points, WMTS, TriMesh
+from geoviews.operation import project_path
 
 
 class GeoAnnotator(param.Parameterized):
@@ -26,23 +27,27 @@ class GeoAnnotator(param.Parameterized):
     extent = param.NumericTuple(default=(-91, 32.2, -90.8, 32.4), doc="""
          Initial extent if no data is provided.""", precedence=-1)
 
+    path_type = param.ClassSelector(default=Polygons, class_=Path, is_instance=False, doc="""
+         The element type to draw into.""")
+
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
 
     width = param.Integer(default=900, doc="Width of the plot",
                           precedence=-1)
 
-    def __init__(self, polys=None, points=None, **params):
+    def __init__(self, polys=None, points=None, crs=None, **params):
         super(GeoAnnotator, self).__init__(**params)
         plot_opts = dict(height=self.height, width=self.width)
         self.tiles = WMTS(self.tile_url, extents=self.extent,
                           crs=ccrs.PlateCarree()).opts(plot=plot_opts)
         polys = [] if polys is None else polys
         points = [] if points is None else points
-        self.polys = Polygons(polys, crs=ccrs.GOOGLE_MERCATOR)
+        crs = ccrs.GOOGLE_MERCATOR if crs is None else crs
+        self.polys = self.path_type(polys, crs=crs)
         self.poly_stream = PolyDraw(source=self.polys, data={})
         self.vertex_stream = PolyEdit(source=self.polys)
-        self.points = Points(points, crs=ccrs.GOOGLE_MERCATOR)
+        self.points = Points(points, self.polys.kdims, crs=crs)
         self.point_stream = PointDraw(source=self.points, data={})
 
     def pprint(self):
@@ -135,6 +140,9 @@ class PolyAnnotator(GeoAnnotator):
         self.poly_table_stream = CDSStream(data=poly_data, rename={'data': 'table_data'})
         self.poly_sel_stream = Selection1D(source=self.polys)
         streams = [self.poly_stream, self.poly_sel_stream, self.poly_table_stream]
+        poly_data = project_path(self.polys).split()
+        self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
+                                     for kd in self.polys.kdims})
         self.poly_table = DynamicMap(self.load_table, streams=streams)
         sel_stream = Selection1D(source=self.poly_table)
         self.poly_view = DynamicMap(self.highlight_polys, streams=[sel_stream])
@@ -152,7 +160,7 @@ class PolyAnnotator(GeoAnnotator):
         if length:
             col_data = {}
             for col in self.poly_columns:
-                vals = table_data.get(col, [])
+                vals = list(table_data.get(col, []))
                 new = length-len(vals)
                 if new < 0:
                     # Process deleted entry
@@ -176,12 +184,12 @@ class PolyAnnotator(GeoAnnotator):
     def highlight_polys(self, index):
         polys = self.poly_stream.element.split(datatype='array')
         selected = [arr for i, arr in enumerate(polys) if i in index]
-        return Polygons(selected, crs=ccrs.GOOGLE_MERCATOR).opts(style=dict(fill_alpha=1))
+        return self.path_type(selected, crs=ccrs.GOOGLE_MERCATOR).opts(style=dict(fill_alpha=1))
 
     def view(self):
         sel_stream = Selection1D(source=self.poly_table)
         poly_view = DynamicMap(self.highlight_polys, streams=[sel_stream])
-        return (self.tiles * self.polys * poly_view *
+        return (self.tiles * self.polys * poly_view.options(apply_ranges=False) *
                 self.points + self.poly_table).cols(1)
 
 
@@ -208,7 +216,7 @@ class PointAnnotator(GeoAnnotator):
 
     def view(self):
         layout = (self.tiles * self.polys * self.points + self.point_table)
-        return hv.opts({'Layout': {'plot': dict(shared_datasource=True)}}, layout).cols(1)
+        return layout.options(shared_datasource=True).cols(1)
 
 
 class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
@@ -218,5 +226,6 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     """
 
     def view(self):
-        return (self.tiles * self.polys * self.poly_view * self.points +
-                self.poly_table + self.point_table).cols(1)
+        layout = (self.tiles * self.polys * self.poly_view.options(apply_ranges=False) * self.points +
+                  self.poly_table + self.point_table)
+        return layout.options(shared_datasource=True).cols(1)
