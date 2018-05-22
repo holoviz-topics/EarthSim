@@ -8,12 +8,36 @@ from functools import partial
 import param
 import pandas as pd
 import cartopy.crs as ccrs
-
+import geopandas as gpd
 import holoviews as hv
+import geoviews as gv
+
 from holoviews import DynamicMap, Path, Table, NdOverlay
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
+from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh
-from geoviews.operation import project_path
+
+
+def poly_to_geopandas(polys, columns):
+    """
+    Converts a GeoViews Paths or Polygons type to a geopandas dataframe.
+
+    Parameters
+    ----------
+
+    polys : gv.Path or gv.Polygons
+        GeoViews element
+    columns: list(str)
+        List of columns
+
+    Returns
+    -------
+    gdf : Geopandas dataframe
+    """
+    rows = []
+    for g in polys.geom():
+        rows.append(dict({c: '' for c in columns}, geometry=g))
+    return gpd.GeoDataFrame(rows, columns=columns+['geometry'])
 
 
 class GeoAnnotator(param.Parameterized):
@@ -62,7 +86,6 @@ class GeoAnnotator(param.Parameterized):
         return self.tiles * self.polys * self.points
 
 
-
 class PointWidgetAnnotator(GeoAnnotator):
     """
     Allows adding a group to the currently selected points using
@@ -81,7 +104,7 @@ class PointWidgetAnnotator(GeoAnnotator):
 
     table_height = param.Integer(default=150, doc="Height of the table",
                                  precedence=-1)
-    
+
     def __init__(self, groups, **params):
         super(PointWidgetAnnotator, self).__init__(**params)
         group_param = self.params('group')
@@ -123,7 +146,6 @@ class PointWidgetAnnotator(GeoAnnotator):
         return (self.tiles * self.polys * self.points * annotated + table).cols(1)
 
 
-
 class PolyAnnotator(GeoAnnotator):
     """
     Allows drawing and annotating Polygons using a bokeh DataTable.
@@ -137,60 +159,18 @@ class PolyAnnotator(GeoAnnotator):
 
     def __init__(self, poly_data={}, **params):
         super(PolyAnnotator, self).__init__(**params)
-        self.poly_table_stream = CDSStream(data=poly_data, rename={'data': 'table_data'})
-        self.poly_sel_stream = Selection1D(source=self.polys)
-        streams = [self.poly_stream, self.poly_sel_stream, self.poly_table_stream]
-        poly_data = project_path(self.polys).split()
-        self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
-                                     for kd in self.polys.kdims})
-        self.poly_table = DynamicMap(self.load_table, streams=streams)
-        sel_stream = Selection1D(source=self.poly_table)
-        self.poly_view = DynamicMap(self.highlight_polys, streams=[sel_stream])
-
-
-    def load_table(self, data, index, table_data):
-        """
-        Returns a table combining the data from two sources. The
-        point or polygon data being annotated and the data from the
-        table itself, which is used to annotate the points and
-        polygons. Additionally receives the indices of selected points
-        or polygons which are used to determine points to be deleted.
-        """
-        length = len(list(data.values())[0]) if data else 0
-        if length:
-            col_data = {}
-            for col in self.poly_columns:
-                vals = list(table_data.get(col, []))
-                new = length-len(vals)
-                if new < 0:
-                    # Process deleted entry
-                    if not index:
-                        # Deletion has already been processed,
-                        # skip and return last Table
-                        return self.table.last
-                    vals = [vals[idx] for idx in range(length)
-                            if idx not in index]
-                else:
-                    # Process added entry
-                    vals = vals + ['' for i in range(new)]
-                col_data[col] = vals
-            data = dict(index=range(length), **col_data)
-        else:
-            data = []
         style = dict(editable=True)
         plot = dict(width=self.width, height=self.table_height)
-        return Table(data, 'index', self.poly_columns).opts(style=style, plot=plot)
-
-    def highlight_polys(self, index):
-        polys = self.poly_stream.element.split(datatype='array')
-        selected = [arr for i, arr in enumerate(polys) if i in index]
-        return self.path_type(selected, crs=ccrs.GOOGLE_MERCATOR).opts(style=dict(fill_alpha=1))
+        self.polys.data = poly_to_geopandas(self.polys, self.poly_columns)
+        self.polys.interface = GeoPandasInterface
+        poly_data = gv.project(self.polys).split()
+        self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
+                                     for kd in self.polys.kdims})
+        self.poly_table = Table(self.polys.data, self.poly_columns, []).opts(plot=plot, style=style)
 
     def view(self):
-        sel_stream = Selection1D(source=self.poly_table)
-        poly_view = DynamicMap(self.highlight_polys, streams=[sel_stream])
-        return (self.tiles * self.polys * poly_view.options(apply_ranges=False) *
-                self.points + self.poly_table).cols(1)
+        layout = (self.tiles * self.polys * self.points + self.poly_table)
+        return layout.options(shared_datasource=True, clone=False).cols(1)
 
 
 class PointAnnotator(GeoAnnotator):
@@ -216,7 +196,7 @@ class PointAnnotator(GeoAnnotator):
 
     def view(self):
         layout = (self.tiles * self.polys * self.points + self.point_table)
-        return layout.options(shared_datasource=True).cols(1)
+        return layout.options(shared_datasource=True, clone=False).cols(1)
 
 
 class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
@@ -226,6 +206,6 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     """
 
     def view(self):
-        layout = (self.tiles * self.polys * self.poly_view.options(apply_ranges=False) * self.points +
+        layout = (self.tiles * self.polys  * self.points +
                   self.poly_table + self.point_table)
-        return layout.options(shared_datasource=True).cols(1)
+        return layout.options(shared_datasource=True, clone=False).cols(1)
