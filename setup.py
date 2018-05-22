@@ -94,6 +94,7 @@ install_requires = [
 
 extras_require = {
     'recommended': [
+        'pyct',
         'filigree',
         'fiona',
         'gdal',
