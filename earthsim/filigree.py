@@ -157,8 +157,9 @@ class FiligreeMeshDashboard(FiligreeMesh):
         helper = self.draw_helper
         mesh_dmap = DynamicMap(Callable(self.gen_mesh, memoize=False), streams=[self])
         if isinstance(helper, PolyAnnotator):
-            return (helper.tiles * helper.polys * helper.poly_view * mesh_dmap * helper.points +
-                    helper.poly_table + helper.point_table).cols(1)
+            layout = (helper.tiles * helper.polys * mesh_dmap * helper.points +
+                      helper.poly_table + helper.point_table)
         else:
-            return (helper.tiles * helper.polys * mesh_dmap * helper.points +
-                    helper.point_table).cols(1)
+            layout = (helper.tiles * helper.polys * mesh_dmap * helper.points +
+                      helper.point_table)
+        return layout.options(shared_datasource=True, clone=False).cols(1)
