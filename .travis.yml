@@ -5,53 +5,86 @@ stages:
   - name: doc
     if: branch = master AND type != pull_request
 
-before_install:
-  - echo -e "machine github.com\n  login $CI_USER\n  password $CI_USER_PASSWORD" >> ~/.netrc
+env:
+  global:
+    - PYENV_VERSION=3.6
+    - CHANS_DEV="-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+    - CHANS_REL="-c pyviz -c erdc -c defaults"
+
+cache:
+  directories:
+    - $HOME/miniconda
+
+before_cache:
+  - rm -rf $HOME/miniconda/pkgs
+  - rm -rf $HOME/miniconda/conda-bld/*
+  - rm -rf $HOME/miniconda/envs/*/conda-bld
+
+# quick hack to determine what tag is (improvements welcomed)
+#     release: ^v(\d+|\.)*[^a-z]\d*$
+# dev release: ^v(\d+|\.)*[a-z]\d*$
+
+stages:
+  - test
+  - name: conda_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+  - name: conda_package
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$
 
 jobs:
   include:
+
+    ########## TEST DEVELOPER INSTALL ##########
+
+    # quick tests in typical dev env (most tests are run on packages)
+
     - &default
       stage: test
-      os: linux
+      before_install:
+        # install doit/pyctdev and use to install miniconda...
+        - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
+        - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        - conda config --set always_yes True
+        # ...and now install doit/pyctdev into miniconda
+        - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
       install:
-        #######################
-        ## install miniconda ##
-        - easy_install --user doit==0.29.0 ioamdoit
-        - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-            ~/Library/Python/2.7/bin/doit install_miniconda;
-          else
-            ~/.local/bin/doit install_miniconda;
-          fi
-        - rm -f .doit.db
-        - export PATH="$HOME/miniconda/bin:$PATH"
-        #######################
-        - pip install ioamdoit
-        - conda env create
-        - source activate earthsim
-        - doit develop_install
-        - doit capture_conda_env
+        - doit env_create $CHANS_DEV --python=$PYENV_VERSION
+        - source activate test-environment
+        - doit develop_install $CHANS_DEV -o recommended
+        - doit env_capture
       script:
-        - doit download_sample_data
-        - travis_wait 60 doit all_tests
+        - earthsim fetch-data --path=examples
+        - travis_wait 60 doit test_all
 
-# restore when travis/macos recovers...
+      # TODO: restore macos if travis has recovered
+
 #    - <<: *default
-#      os: osx
-#      before_install:
-#        # brew-installed geos interferes with cartopy?
-#        - brew uninstall --ignore-dependencies geos gdal postgis
-#      if: branch = master AND type != pull_request
+#      stage: doc
+#      script:
+#        - doit install_doc_dependencies
+#        - doit download_sample_data
+#        - travis_wait 60 doit docs
+#      deploy:
+#        provider: pages
+#        skip_cleanup: true
+#        github_token: $GITHUB_TOKEN
+#        local_dir: ./doc/_build/html
+
+    ########## PACKAGES ##########
 
     - <<: *default
-      stage: doc
+      stage: conda_dev_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      install:
+        - doit package_build $CHANS_DEV --test-python=py36 --test-group=all
       script:
-        - doit install_doc_dependencies
-        - doit download_sample_data
-        - travis_wait 60 doit docs
-      deploy:
-        edge:
-          branch: v1.8.47
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_TOKEN
-        local_dir: ./doc/_build/html
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev
+
+    - <<: *default
+      stage: conda_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID
+      install:
+        - doit package_build $CHANS_REL --test-python=py36 --test-group=all
+      script:
+        - doit package_upload --token=$CONDA_UPLOAD_TOKEN --label=dev --label=main
+

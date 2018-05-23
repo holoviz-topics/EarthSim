@@ -1,0 +1,45 @@
+{% set sdata = load_setup_py_data() %}
+
+package:
+  name: earthsim
+  version: {{ sdata['version'] }}
+
+source:
+  path: ..
+
+build:
+  noarch: python
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+  entry_points:
+    {% for group,epoints in sdata.get("entry_points",{}).items() %}
+    {% for entry_point in epoints %}
+    - {{ entry_point }}
+    {% endfor %}
+    {% endfor %}
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python {{ sdata['python_requires'] }}
+    {% for dep in sdata.get('install_requires',{}) %}
+    - {{ dep }}
+    {% endfor %}
+    # consider splitting to earthsim-core and earthsim one day?
+    {% for dep in sdata['extras_require']['recommended'] %}
+    - {{ dep }}
+    {% endfor %}
+
+test:
+  imports:
+    - earthsim
+  requires:
+    {% for dep in sdata['extras_require']['tests'] %}
+    - {{ dep }}
+    {% endfor %}    
+
+about:
+  home: {{ sdata['url'] }}
+  summary: {{ sdata['description'] }}
+  license: {{ sdata['license'] }}
