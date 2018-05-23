@@ -29,6 +29,10 @@ jobs:
         - conda env create
         - source activate earthsim
         - doit develop_install
+        - ls -l /home/travis/miniconda/envs/earthsim/lib/libstdc++*
+        - conda remove --force gcc
+        - conda install --force -c conda-forge libgcc-ng scipy numpy libstdcxx-ng
+        - ls -l /home/travis/miniconda/envs/earthsim/lib/libstdc++*
         - doit capture_conda_env
       script:
         - doit download_sample_data
