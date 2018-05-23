@@ -38,7 +38,8 @@ dependencies:
     - parambokeh
     - pyviz_comms      # parambokeh does not yet declare this dependency
     - paramnb
-    - numpy=1.13       # Pinned to avoid warnings with numpy=1.14 and bokeh=1.12.14    
+    - numpy=1.13       # Pinned to avoid warnings with numpy=1.14 and bokeh=1.12.14
+    - scipy            # ensure scipy (and hence its deps) come from c-f
     ### dependencies for tests
     - nbsmoke
     - pytest-cov
