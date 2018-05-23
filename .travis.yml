@@ -30,8 +30,10 @@ jobs:
         - source activate earthsim
         - doit develop_install
         - ls -l /home/travis/miniconda/envs/earthsim/lib/libstdc++*
-        - conda remove -y --force gcc
-        - conda install -y --force -c conda-forge libgcc-ng scipy numpy libstdcxx-ng
+        - rm -rf /home/travis/miniconda/envs/earthsim/lib/libstdc++.so.6
+        - ln -s /home/travis/miniconda/envs/earthsim/lib/libstdc++.so.6.0.24 /home/travis/miniconda/envs/earthsim/lib/libstdc++.so.6 
+        #- conda remove -y --force gcc
+        #- conda install -y --force -c conda-forge libgcc-ng scipy numpy libstdcxx-ng
         - ls -l /home/travis/miniconda/envs/earthsim/lib/libstdc++*
         - doit capture_conda_env
       script:
