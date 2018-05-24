@@ -132,21 +132,30 @@ class FiligreeMeshDashboard(FiligreeMesh):
 
     draw_helper = param.ClassSelector(class_=GeoAnnotator, precedence=-1)
 
+    clear_mesh = param.Action(default=lambda self: self._clear_mesh(), precedence=1,
+                               doc="""Button clearing the current mesh.""")
+    
     update_mesh = param.Action(default=lambda self: self.event(), precedence=1,
                                doc="""Button triggering mesh generation.""")
 
     def __init__(self, draw_helper, **params):
         super(FiligreeMesh, self).__init__(draw_helper=draw_helper, **params)
         self.mesh = filigree.FiligreeMesh()
+        self._clear = False
 
-    def reset_mesh(self):
+    def _clear_mesh(self):
+        self._clear = True
+        self.event()
+
+    def _reset_mesh(self):
         self.mesh.polygons = []
         self.mesh.refine_points = []
 
     def gen_mesh(self, **kwargs):
-        if not self.draw_helper.poly_stream.element:
+        if not self.draw_helper.poly_stream.element or self._clear:
+            self._clear = False
             return RGB([], bounds=self.draw_helper.extent)
-        self.reset_mesh()
+        self._reset_mesh()
         self.polys = self._process_polys(self.draw_helper.poly_stream.element)
         self.refine_points = self.add_refine_points(self.draw_helper)
         verts, tris = self.mesh.create_mesh()
