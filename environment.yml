@@ -5,47 +5,52 @@ channels:
     - defaults
     - erdc
 dependencies:
+
+    ########### direct deps
     - conda-forge::python>=3.5
     - conda-forge::fiona
-    - conda-forge::rasterio
     - conda-forge::gdal
-    - conda-forge::json-rpc
-    - conda-forge::ulmo>=0.8.3.2
-    - conda-forge::pyyaml
-    - conda-forge::matplotlib
-    - conda-forge::click
-    - conda-forge::werkzeug
-    - conda-forge::peewee
-    - conda-forge::geopandas
-    - conda-forge::psutil
-    - conda-forge::pint
-    - conda-forge::pony
-    - conda-forge::scikit-image
-    - conda-forge::go-spatial
-    - conda-forge::jupyter
-    - conda-forge::descartes
-    - conda-forge::gsshapy
     - conda-forge::cartopy
     - conda-forge::bokeh
     - conda-forge::xarray
-    - erdc::gssha
-    - pyviz/label/dev::datashader
+    - conda-forge::geopandas
+    - conda-forge::jupyter
     - conda-forge::filigree
     - ioam::lancet
     - conda-forge::opencv
+    - pyviz/label/dev::datashader
     - pyviz/label/dev::param
     - pyviz/label/dev::parambokeh
-    - pyviz/label/dev::pyviz_comms      # parambokeh does not yet declare this dependency
     - pyviz/label/dev::paramnb
-    - conda-forge::numpy=1.13       # Pinned to avoid warnings with numpy=1.14 and bokeh=1.12.14
+
+    - conda-forge::gsshapy
+    - erdc::gssha
+
+    ########### indirect deps
+    #
+    - conda-forge::rasterio         # quest
+    - conda-forge::ulmo>=0.8.3.2    # quest
+    - conda-forge::pyyaml           # quest
+    - conda-forge::matplotlib       # quest
+    - conda-forge::click            # quest
+    - conda-forge::werkzeug         # quest
+    - conda-forge::peewee           # quest
+    - conda-forge::psutil           # quest
+    - conda-forge::pint             # quest
+    - conda-forge::pony             # quest
+    - conda-forge::pytest-cov       # quest
+    - conda-forge::stevedore        # quest
+    - pyviz/label/dev::pyviz_comms  # missing from parambokeh
+    - conda-forge::scikit-image     # ?
+    - conda-forge::go-spatial       # ?
+    - conda-forge::descartes        # ?
+    - conda-forge::json-rpc         # ?
+    - conda-forge::numpy=1.13       # avoid warnings with numpy=1.14 and bokeh=1.12.14
     - conda-forge::scipy            # ensure scipy (and hence its deps) come from c-f
     - conda-forge::libgfortran      # (also for scipy)
-    ### dependencies for tests
+
+    ########### for tests
     - pyviz/label/dev::nbsmoke
-    - conda-forge::pytest-cov
-    ### dependencies for pip installed packages
-    # for quest
-    - conda-forge::stevedore
 
     - pip:
         - git+https://github.com/ioam/holoviews.git
