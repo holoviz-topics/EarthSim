@@ -8,7 +8,7 @@ stages:
 env:
   global:
     - PYENV_VERSION=3.6
-    - CHANS_DEV="-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+    - CHANS_DEV="-c pyviz/label/dev -c ioam -c bokeh -c erdc -c defaults"
     - CHANS_REL="-c pyviz -c erdc -c defaults"
 
 cache:
