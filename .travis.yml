@@ -24,17 +24,12 @@ jobs:
           fi
         - rm -f .doit.db
         - export PATH="$HOME/miniconda/bin:$PATH"
+        - conda config --set path_conflict prevent
         #######################
         - pip install ioamdoit
         - conda env create
         - source activate earthsim
         - doit develop_install
-        ###
-        # TODO: figure out what's depending on (deprecated?) gcc package; see https://github.com/pyviz/EarthSim/issues/97
-        - pushd /home/travis/miniconda/envs/earthsim/lib/ && rm -rf libstdc++.so.6 && ln -s libstdc++.so.6.0.24 libstdc++.so.6 && popd
-        #- conda remove -y --force gcc
-        #- conda install -y --force -c conda-forge libgcc-ng scipy numpy libstdcxx-ng
-        ###
         - doit capture_conda_env
       script:
         - doit download_sample_data
