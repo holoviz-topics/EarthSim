@@ -126,7 +126,7 @@ class CreateGSSHAModel(CreateModel):
     # created or else editing parameters on non-default options is
     # confusing.
     roughness = param.ClassSelector(RoughnessSpecification,default=UniformRoughness(),doc="""
-        Method for specifying roughness""") 
+        Method for specifying roughness""", precedence=-1) 
 
     out_hydrograph_write_frequency = param.Number(default=10, bounds=(1,60), doc="""
        Frequency of writing to hydrograph (minutes). Sets HYD_FREQ card. Required for new model.""", precedence=0.8)
