@@ -24,7 +24,7 @@ EarthSim is an open-source project, but note that the GSSHA simulator used in th
     :hidden:
     :maxdepth: 2
 
-	GrabCut Demo <GrabCut>
+    GrabCut Demo <GrabCut>
     GSSHA Workflow <GSSHA_Workflow>
     GSSHA Parameter Sweep <GSSHA_Parameter_Sweep>
 
