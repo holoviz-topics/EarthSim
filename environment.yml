@@ -40,6 +40,7 @@ dependencies:
     - paramnb
     - numpy=1.13       # Pinned to avoid warnings with numpy=1.14 and bokeh=1.12.14
     - scipy            # ensure scipy (and hence its deps) come from c-f
+    - opencv
     ### dependencies for tests
     - nbsmoke
     - pytest-cov
