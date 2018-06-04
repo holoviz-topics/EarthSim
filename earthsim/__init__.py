@@ -32,14 +32,14 @@ def params_from_kwargs(**kwargs):
     return params
 
 
-def global_params(**kwargs):
+def parameters(**kwargs):
     """
     Utility to easily define a parameterized class with a chosen set of
     parameters specified as keyword arguments. The resulting object can
     be used to parameterize a notebook, display corresponding widgets
     with parambokeh and control the workflow from the command line.
     """
-    name = 'GlobalParams'
+    name = 'Parameters'
     params = params_from_kwargs(**kwargs)
     params['name'] = param.String(default=name)
     return type(name, (param.Parameterized,), params)
