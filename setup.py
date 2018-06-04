@@ -6,6 +6,7 @@ setup_args = {}
 setup_args.update(dict(
     name='earthsim',
     version="0.1",
+    install_requires = ['lancet'],
     packages = find_packages(),
     entry_points={
           'console_scripts': [
