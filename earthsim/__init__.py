@@ -39,7 +39,7 @@ def parameters(**kwargs):
     be used to parameterize a notebook, display corresponding widgets
     with parambokeh and control the workflow from the command line.
     """
-    name = 'Parameters'
+    name = kwargs.get('name', 'Parameters')
     params = params_from_kwargs(**kwargs)
     params['name'] = param.String(default=name)
     return type(name, (param.Parameterized,), params)
