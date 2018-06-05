@@ -9,6 +9,7 @@ channels:
     - defaults
 dependencies:
     - python>=3.5
+    - lancet
     - fiona
     - rasterio
     - gdal

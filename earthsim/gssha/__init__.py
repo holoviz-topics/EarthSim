@@ -20,7 +20,7 @@ class Simulation(param.Parameterized):
 
     land_use_grid_id = param.Parameter(default='nlcd',precedence=0.3)
     
-    model_creator = param.ClassSelector(CreateModel,default=CreateGSSHAModel(),precedence=0.4)
+    model_creator = param.ClassSelector(CreateModel,default=CreateGSSHAModel(),precedence=-1)
 
     # TODO: switch to date range...
     simulation_start=param.Date(default=datetime(2017, 5 ,9),precedence=0.5)
