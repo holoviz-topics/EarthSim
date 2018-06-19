@@ -150,6 +150,7 @@ class FiligreeMeshDashboard(FiligreeMesh):
     def _reset_mesh(self):
         self.mesh.polygons = []
         self.mesh.refine_points = []
+        self.mesh.data = []
 
     def gen_mesh(self, **kwargs):
         if not self.draw_helper.poly_stream.element or self._clear:
