@@ -17,6 +17,8 @@ from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh
 
+from .custom_tools import CheckpointTool, RestoreTool
+
 
 def poly_to_geopandas(polys, columns):
     """
@@ -38,6 +40,19 @@ def poly_to_geopandas(polys, columns):
     for g in polys.geom():
         rows.append(dict({c: '' for c in columns}, geometry=g))
     return gpd.GeoDataFrame(rows, columns=columns+['geometry'])
+
+
+def initialize_tools(plot, element):
+    """
+    Initializes the Checkpoint and Restore tools.
+    """
+    cds = plot.handles['source']
+    checkpoint = plot.state.select(type=CheckpointTool)
+    restore = plot.state.select(type=RestoreTool)
+    if checkpoint:
+        checkpoint[0].sources.append(cds)
+    if restore:
+        restore[0].sources.append(cds)
 
 
 class GeoAnnotator(param.Parameterized):
@@ -68,10 +83,12 @@ class GeoAnnotator(param.Parameterized):
         polys = [] if polys is None else polys
         points = [] if points is None else points
         crs = ccrs.GOOGLE_MERCATOR if crs is None else crs
-        self.polys = self.path_type(polys, crs=crs)
+        tools = [CheckpointTool(), RestoreTool()]
+        opts = dict(tools=tools, finalize_hooks=[initialize_tools])
+        self.polys = self.path_type(polys, crs=crs).options(**opts)
         self.poly_stream = PolyDraw(source=self.polys, data={})
         self.vertex_stream = PolyEdit(source=self.polys)
-        self.points = Points(points, self.polys.kdims, crs=crs)
+        self.points = Points(points, self.polys.kdims, crs=crs).options(**opts)
         self.point_stream = PointDraw(source=self.points, data={})
 
     def pprint(self):
