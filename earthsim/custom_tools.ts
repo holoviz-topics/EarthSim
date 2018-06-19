@@ -11,7 +11,16 @@ export class CheckpointToolView extends ActionToolView {
       if (source.buffer == undefined) { source.buffer = [] }
       let data_copy = {};
       for (const key in source.data) {
-        data_copy[key] = copy(source.data[key]);
+		const column = source.data[key];
+		if (Array.isArray(column) || (ArrayBuffer.isView(column))) {
+		  const new_column = []
+		  for (const arr of column) {
+            new_column.push(copy(arr))
+          }
+          data_copy[key] = new_column;
+		} else {
+          data_copy[key] = copy(column);
+        }
       }
       source.buffer.push(data_copy)
     }
@@ -29,7 +38,7 @@ export interface CheckpointTool extends CheckpointTool.Attrs {}
 export class CheckpointTool extends ActionTool {
   properties: CheckpointTool.Props
   sources: ColumnDataSource[]
-  
+
   constructor(attrs?: Partial<CheckpointTool.Attrs>) {
     super(attrs)
   }
@@ -37,12 +46,12 @@ export class CheckpointTool extends ActionTool {
   static initClass(): void {
     this.prototype.type = "CheckpointTool"
     this.prototype.default_view = CheckpointToolView
-    
+
     this.define({
       sources: [ p.Array, [] ],
     })
   }
-  
+
   tool_name = "Checkpoint"
   icon = "bk-tool-icon-save"
 }
@@ -72,7 +81,7 @@ export interface RestoreTool extends RestoreTool.Attrs {}
 export class RestoreTool extends ActionTool {
   properties: RestoreTool.Props
   sources: ColumnDataSource[]
-  
+
   constructor(attrs?: Partial<RestoreTool.Attrs>) {
     super(attrs)
   }
@@ -80,12 +89,12 @@ export class RestoreTool extends ActionTool {
   static initClass(): void {
     this.prototype.type = "RestoreTool"
     this.prototype.default_view = RestoreToolView
-    
+
     this.define({
       sources: [ p.Array, [] ],
     })
   }
-  
+
   tool_name = "Restore"
   icon = "bk-tool-icon-undo"
 }

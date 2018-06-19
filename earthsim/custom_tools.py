@@ -14,7 +14,7 @@ class CheckpointTool(Tool):
     """
 
     __implementation__ = os.path.join(fpath, 'custom_tools.ts')
-    
+
     sources = List(Instance(ColumnDataSource))
 
 
@@ -25,5 +25,5 @@ class RestoreTool(Tool):
     """
 
     __implementation__ = os.path.join(fpath, 'custom_tools.ts')
-    
+
     sources = List(Instance(ColumnDataSource))
