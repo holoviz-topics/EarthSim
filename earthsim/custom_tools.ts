@@ -11,16 +11,16 @@ export class CheckpointToolView extends ActionToolView {
       if (source.buffer == undefined) { source.buffer = [] }
       let data_copy = {};
       for (const key in source.data) {
-		const column = source.data[key];
-		if (Array.isArray(column) || (ArrayBuffer.isView(column))) {
-		  const new_column = []
-		  for (const arr of column) {
+        const column = source.data[key];
+        const new_column = []
+        for (const arr of column) {
+          if (Array.isArray(arr) || (ArrayBuffer.isView(arr))) {
             new_column.push(copy(arr))
+          } else {
+            new_column.push(arr)
           }
-          data_copy[key] = new_column;
-		} else {
-          data_copy[key] = copy(column);
         }
+        data_copy[key] = new_column;
       }
       source.buffer.push(data_copy)
     }
