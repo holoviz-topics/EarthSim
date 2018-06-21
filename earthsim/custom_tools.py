@@ -27,3 +27,13 @@ class RestoreTool(Tool):
     __implementation__ = os.path.join(fpath, 'custom_tools.ts')
 
     sources = List(Instance(ColumnDataSource))
+
+
+class ClearTool(Tool):
+    """
+    Clears the data on the supplied ColumnDataSources.
+    """
+
+    __implementation__ = os.path.join(fpath, 'custom_tools.ts')
+
+    sources = List(Instance(ColumnDataSource))
