@@ -174,23 +174,65 @@ class PolyAnnotator(GeoAnnotator):
     poly_columns = param.List(default=['Group'], doc="""
         Columns to annotate the Polygons with.""", precedence=-1)
 
+    vertex_columns = param.List(default=[], doc="""
+        Columns to annotate the Polygon vertices with.""", precedence=-1)
+
     table_height = param.Integer(default=150, doc="Height of the table",
                                  precedence=-1)
 
     def __init__(self, poly_data={}, **params):
+        self._initialized = False
         super(PolyAnnotator, self).__init__(**params)
-        style = dict(editable=True)
-        plot = dict(width=self.width, height=self.table_height)
-        self.polys.data = poly_to_geopandas(self.polys, self.poly_columns)
-        self.polys.interface = GeoPandasInterface
+        options = dict(editable=True, width=self.width, height=self.table_height)
+
+        # Convert polygons so their datasource can be shared
+        vdims = self.poly_columns+self.vertex_columns
+        self.polys = self.polys.clone(poly_to_geopandas(self.polys, vdims), vdims=vdims).options(tools=['hover'])
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
                                          for kd in self.polys.kdims})
-        self.poly_table = Table(self.polys.data, self.poly_columns, []).opts(plot=plot, style=style)
+        self.poly_table = Table(self.polys.data, self.poly_columns, self.vertex_columns).options(**options)
+        self.poly_sel = Selection1D(sourceg=self.polys)
+
+        # Declare vertex table and create dynamic polygon to sync vertex data
+        self.vertex_table = DynamicMap(self.get_vertex_table, streams=[self.poly_sel]).options(**options)
+        self.vertex_stream = CDSStream(source=self.vertex_table, rename={'data': 'vertex_data'}, transient=True)
+        self.poly_dynamic = DynamicMap(self.sync_polys, streams=[self.vertex_stream])
+        self.poly_stream.source = self.poly_dynamic
+        self.poly_sel.source = self.poly_dynamic
+
+
+    def get_vertex_table(self, index):
+        """
+        Generate a Table from the vertices of the currently selected polygon
+        """
+        if not index:
+            return Table([], ['Longitude', 'Latitude'], self.vertex_columns)
+        index = index[0]
+        poly = {k: v[index] for k, v in self.poly_stream.data.items()}
+        nvertices = len(poly['xs'])
+        poly.update({col: [None]*nvertices for col in self.vertex_columns})
+        points = Points(poly, ['xs', 'ys'], self.vertex_columns, crs=self.polys.crs)
+        return Table(gv.project(points, projection=ccrs.PlateCarree()).redim(xs='Longitude', ys='Latitude'))
+
+    def sync_polys(self, vertex_data):
+        """
+        Combines data from drawn polygons and vertex table
+        """
+        if not self._initialized:
+            self._initialized = True
+            return self.polys
+
+        # Insert edited vertices at currently selected index
+        el = self.poly_stream.element
+        vertex_points = Points(vertex_data, ['Longitude', 'Latitude'], self.vertex_columns, crs=ccrs.PlateCarree())
+        items = el.split(datatype='columns')
+        items[self.poly_sel.index[0]] = gv.project(vertex_points).columns()
+        return self.polys.clone(items, vdims=self.vertex_columns)
 
     def view(self):
-        layout = (self.tiles * self.polys * self.points + self.poly_table)
+        layout = (self.tiles * self.poly_dynamic * self.points + self.poly_table + self.vertex_table)
         return layout.options(shared_datasource=True, clone=False).cols(1)
 
 
