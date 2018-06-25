@@ -3,7 +3,7 @@ language: generic
 stages:
   - test
   - name: doc
-    if: branch = master AND type != pull_request
+    if: branch = skip_parameter_sweep_from_docs AND type != pull_request
 
 before_install:
   - echo -e "machine github.com\n  login $CI_USER\n  password $CI_USER_PASSWORD" >> ~/.netrc
@@ -53,11 +53,16 @@ jobs:
       script:
         - doit install_doc_dependencies
         - doit download_sample_data
+        ##
+        # see github.com/pyviz/EarthSim/issues/113
+        - rm -rf examples/topics/batched_example/*.ipynb
+        - rm -rf examples/topics/GSSHA_Parameter_Sweep.ipynb
+        ##
         - travis_wait 60 doit docs
-      deploy:
-        edge:
-          branch: v1.8.47
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_TOKEN
-        local_dir: ./doc/_build/html
+#      deploy:
+#        edge:
+#          branch: v1.8.47
+#        provider: pages
+#        skip_cleanup: true
+#        github_token: $GITHUB_TOKEN
+#        local_dir: ./doc/_build/html
