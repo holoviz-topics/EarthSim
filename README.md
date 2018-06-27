@@ -19,4 +19,4 @@ As such, this repository primarily consists of three things:
 - [examples](https://github.com/pyviz/EarthSim/tree/master/examples): A set of Jupyter notebooks that show how to use the various PyViz tools to solve earth-science problems
 - [website](https://pyviz.github.io/EarthSim): The example notebooks already run and rendered to HTML for simple exploration
 
-In most cases, the examples (as notebooks or as the website) represent the main form of documentation, even for the Python package, so please see [pyviz.github.io/EarthSim](https://pyviz.github.io/EarthSim>) for more information, including installation and usage instructions.
+In most cases, the examples (as notebooks or as the website) represent the main form of documentation, even for the Python package, so please see [pyviz.github.io/EarthSim](https://pyviz.github.io/EarthSim) for more information, including installation and usage instructions.
