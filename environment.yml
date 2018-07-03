@@ -23,6 +23,8 @@ dependencies:
     - ceball::gssha
     - ceball::filigree
 
+    - erdc::quest
+
     - pyviz/label/dev::datashader
     - pyviz/label/dev::param
     - pyviz/label/dev::parambokeh
@@ -32,23 +34,9 @@ dependencies:
 
     ########### indirect deps
     #
-    - conda-forge::rasterio         # quest
-    - conda-forge::ulmo>=0.8.3.2    # quest
-    - conda-forge::pyyaml           # quest
-    - conda-forge::matplotlib       # quest
-    - conda-forge::click            # quest
-    - conda-forge::werkzeug         # quest
-    - conda-forge::peewee           # quest
-    - conda-forge::psutil           # quest
-    - conda-forge::pint             # quest
-    - conda-forge::pony             # quest
-    - conda-forge::pytest-cov       # quest
-    - conda-forge::stevedore        # quest
     - pyviz/label/dev::pyviz_comms  # missing from parambokeh
     - conda-forge::scikit-image     # ?
-    - conda-forge::go-spatial       # ?
     - conda-forge::descartes        # ?
-    - conda-forge::json-rpc         # ?
     - conda-forge::numpy=1.13       # avoid warnings with numpy=1.14 and bokeh=1.12.14
     - conda-forge::scipy            # ensure scipy (and hence its deps) come from c-f
     - conda-forge::libgfortran      # (also for scipy)
@@ -58,4 +46,4 @@ dependencies:
 
     - pip:
         - git+https://github.com/ioam/holoviews.git
-        - git+https://github.com/erdc/quest.git
+
