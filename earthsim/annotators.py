@@ -18,6 +18,7 @@ from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh
 
 from .custom_tools import CheckpointTool, RestoreTool, ClearTool
+from .links import VertexTableLink
 
 
 def poly_to_geopandas(polys, columns):
@@ -180,6 +181,9 @@ class PolyAnnotator(GeoAnnotator):
     poly_columns = param.List(default=['Group'], doc="""
         Columns to annotate the Polygons with.""", precedence=-1)
 
+    vertex_columns = param.List(default=[], doc="""
+        Columns to annotate the Polygons with.""", precedence=-1)
+
     table_height = param.Integer(default=150, doc="Height of the table",
                                  precedence=-1)
 
@@ -194,9 +198,11 @@ class PolyAnnotator(GeoAnnotator):
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
                                          for kd in self.polys.kdims})
         self.poly_table = Table(self.polys.data, self.poly_columns, []).opts(plot=plot, style=style)
+        self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
+        self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
 
     def view(self):
-        layout = (self.tiles * self.polys * self.points + self.poly_table)
+        layout = (self.tiles * self.polys * self.points + self.poly_table + self.vertex_table)
         return layout.options(shared_datasource=True, clone=False).cols(1)
 
 
