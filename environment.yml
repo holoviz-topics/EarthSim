@@ -1,14 +1,14 @@
 name: earthsim
 channels:
     - pyviz/label/dev
-    - ceball
     - conda-forge
     - defaults
     - erdc
+    - ceball
 dependencies:
 
     ########### direct deps
-    - conda-forge::python>=3.5
+    - conda-forge::python=3.6
     - conda-forge::fiona
     - conda-forge::gdal
     - conda-forge::cartopy
@@ -16,16 +16,19 @@ dependencies:
     - conda-forge::xarray
     - conda-forge::geopandas
     - conda-forge::jupyter
-    - conda-forge::filigree
     - ioam::lancet
     - conda-forge::opencv
+    - conda-forge::gsshapy    
+    # should move updated packaging to conda-forge or erdc
+    - ceball::gssha
+    - ceball::filigree
+
     - pyviz/label/dev::datashader
     - pyviz/label/dev::param
     - pyviz/label/dev::parambokeh
     - pyviz/label/dev::paramnb
+    - pyviz/label/dev::geoviews
 
-    - conda-forge::gsshapy
-    - ceball::gssha
 
     ########### indirect deps
     #
@@ -55,5 +58,4 @@ dependencies:
 
     - pip:
         - git+https://github.com/ioam/holoviews.git
-        - git+https://github.com/ioam/geoviews.git
         - git+https://github.com/erdc/quest.git
