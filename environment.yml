@@ -1,10 +1,10 @@
 name: earthsim
 channels:
     - pyviz/label/dev
+    - ceball    
     - conda-forge
     - defaults
     - erdc
-    - ceball
 dependencies:
 
     ########### direct deps
