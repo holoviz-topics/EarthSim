@@ -24,7 +24,7 @@ jobs:
           fi
         - rm -f .doit.db
         - export PATH="$HOME/miniconda/bin:$PATH"
-        - conda config --set path_conflict prevent
+        - conda config --set path_conflict warn
         #######################
         - pip install ioamdoit
         - conda env create
