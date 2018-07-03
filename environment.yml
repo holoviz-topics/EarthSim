@@ -1,6 +1,7 @@
 name: earthsim
 channels:
     - pyviz/label/dev
+    - ceball
     - conda-forge
     - defaults
     - erdc
@@ -23,7 +24,7 @@ dependencies:
     - pyviz/label/dev::paramnb
 
     - conda-forge::gsshapy
-    - erdc::gssha
+    - ceball::gssha
 
     ########### indirect deps
     #
