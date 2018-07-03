@@ -21,8 +21,8 @@ dependencies:
     - conda-forge::gsshapy    
     # should move updated packaging to conda-forge or erdc
     - ceball::gssha=7.12+ceball=h6bb024c_48
-    - ceball::filigree=0.0.4+ceball=py36h6bb024c_0
-    - ceball::libfiligree=0.0.2+ceball=h6bb024c_4
+    - ceball::filigree=0.0.4+ceball=py36h6bb024c_1
+    - ceball::libfiligree=0.0.2+ceball=h6bb024c_5
 
     - erdc::quest
 
@@ -30,7 +30,7 @@ dependencies:
     - pyviz/label/dev::param
     - pyviz/label/dev::parambokeh
     - pyviz/label/dev::paramnb
-    - pyviz/label/dev::geoviews
+#    - pyviz/label/dev::geoviews
 
 
     ########### indirect deps
@@ -47,4 +47,4 @@ dependencies:
 
     - pip:
         - git+https://github.com/ioam/holoviews.git
-
+        - git+https://github.com/ioam/geoviews.git
