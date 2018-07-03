@@ -18,8 +18,9 @@ dependencies:
     - conda-forge::jupyter
     - conda-forge::gsshapy    
     # should move updated packaging to conda-forge or erdc
-    - ceball::gssha
-    - ceball::filigree
+    - ceball::gssha=7.12+ceball=h6bb024c_48
+    - ceball::filigree=0.0.4+ceball=py36h6bb024c_0
+    - ceball::libfiligree=0.0.2+ceball=h6bb024c_4
 
     - erdc::quest
 
