@@ -5,6 +5,7 @@ channels:
     - conda-forge
     - defaults
     - erdc
+    - ioam
 dependencies:
 
     ########### direct deps
@@ -16,10 +17,10 @@ dependencies:
     - conda-forge::xarray
     - conda-forge::geopandas
     - conda-forge::jupyter
-    - ioam::lancet
     - conda-forge::opencv
-    - conda-forge::gsshapy    
-    # should move updated packaging to conda-forge or erdc
+    - conda-forge::gsshapy
+    
+    # should move updated packaging to conda-forge or erdc when done
     - ceball::gssha=7.12+ceball=h6bb024c_48
     - ceball::filigree=0.0.4+ceball=py36h6bb024c_1
     - ceball::libfiligree=0.0.2+ceball=h6bb024c_5
@@ -31,7 +32,7 @@ dependencies:
     - pyviz/label/dev::parambokeh
     - pyviz/label/dev::paramnb
 #    - pyviz/label/dev::geoviews
-
+    - ioam::lancet
 
     ########### indirect deps
     #
