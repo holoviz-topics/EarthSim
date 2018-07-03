@@ -88,10 +88,16 @@ class GeoAnnotator(param.Parameterized):
         crs = ccrs.GOOGLE_MERCATOR if crs is None else crs
         tools = [CheckpointTool(), RestoreTool(), ClearTool()]
         opts = dict(tools=tools, finalize_hooks=[initialize_tools])
-        self.polys = self.path_type(polys, crs=crs).options(**opts)
+        if isinstance(polys, Path):
+            self.polys = polys
+        else:
+            self.polys = self.path_type(polys, crs=crs).options(**opts)
         self.poly_stream = PolyDraw(source=self.polys, data={})
         self.vertex_stream = PolyEdit(source=self.polys)
-        self.points = Points(points, self.polys.kdims, crs=crs).options(**opts)
+        if isinstance(points, Points):
+            self.points = points
+        else:
+            self.points = Points(points, self.polys.kdims, crs=crs).options(**opts)
         self.point_stream = PointDraw(source=self.points, data={})
 
     def pprint(self):
