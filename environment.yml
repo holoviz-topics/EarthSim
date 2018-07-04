@@ -19,14 +19,16 @@ dependencies:
     - conda-forge::jupyter
     - conda-forge::opencv
     - conda-forge::gsshapy
-    
-    # should move updated packaging to conda-forge or erdc when done
-    - ceball::gssha=7.12+ceball=h6bb024c_48
+    ####
+    # Should move updated packaging to erdc when done, and when source
+    # is public should be moved to conda-forge
+    - ceball::gssha=7.12.2+ceball
+    # (lib)filigree still WIP
     - ceball::filigree=0.0.4+ceball=py36h6bb024c_1
     - ceball::libfiligree=0.0.2+ceball=h6bb024c_5
+    ####
 
     - erdc::quest
-
     - pyviz/label/dev::datashader
     - pyviz/label/dev::param
     - pyviz/label/dev::parambokeh
