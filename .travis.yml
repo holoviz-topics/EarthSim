@@ -1,8 +1,8 @@
 language: generic
 
+# TODO: to not overload travis during debugging, just do branch
 stages:
   - test
-    # TODO: to not overload travis during debugging, just do branch
     if: type != pull_request
   - name: doc
     if: branch = master AND type != pull_request
@@ -39,11 +39,10 @@ jobs:
 
     - <<: *default
       os: osx
-      # check this is still required
       before_install:
+        # check this is still required
         # brew-installed geos interferes with cartopy?
         - brew uninstall --ignore-dependencies geos gdal postgis
-#      if: branch = master AND type != pull_request
 
     - <<: *default
       stage: doc
