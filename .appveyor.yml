@@ -7,7 +7,7 @@ install:
   - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
   - "pip install ioamdoit"
   - "conda env create"
-  - "source activate earthsim"
+  - "activate earthsim"
   - "doit develop_install"
   - "doit capture_conda_env"
 
