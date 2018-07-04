@@ -1,5 +1,9 @@
 language: generic
 
+env:
+  global:
+    - PYENV_VERSION=3.6
+
 stages:
   - test
   - name: doc
@@ -14,18 +18,10 @@ jobs:
       stage: test
       os: linux
       install:
-        #######################
-        ## install miniconda ##
-        - easy_install --user doit==0.29.0 ioamdoit
-        - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-            ~/Library/Python/2.7/bin/doit install_miniconda;
-          else
-            ~/.local/bin/doit install_miniconda;
-          fi
-        - rm -f .doit.db
-        - export PATH="$HOME/miniconda/bin:$PATH"
-        #- conda config --set path_conflict warn
-        #######################
+        # install pyctdev and use to install miniconda...
+        - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
+        - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        # updating to pyctdev is on another branch...
         - pip install ioamdoit
         - conda env create
         - source activate earthsim
@@ -37,8 +33,13 @@ jobs:
 
     - <<: *default
       os: osx
+      osx_image: xcode9.3
+      env: PYENV_VERSION=3.6.4
       before_install:
-        # check this is still required
+        # set up python
+        - eval "$(pyenv init -)"
+        - pyenv install $PYENV_VERSION  
+        # check the below still required
         # brew-installed geos interferes with cartopy?
         - brew uninstall --ignore-dependencies geos gdal postgis
 
