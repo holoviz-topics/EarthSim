@@ -1,9 +1,7 @@
 language: generic
 
-# TODO: to not overload travis during debugging, just do branch
 stages:
   - test
-    if: type != pull_request
   - name: doc
     if: branch = master AND type != pull_request
 
