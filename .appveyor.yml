@@ -1,0 +1,18 @@
+environment:
+  matrix:
+    - PY: "3.6"
+      CONDA: "C:\\Miniconda36-x64"
+
+install:
+  - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
+  - "pip install ioamdoit"
+  - "conda env create"
+  - "source activate earthsim"
+  - "doit develop_install"
+  - "doit capture_conda_env"
+
+build: off
+
+test_script:
+  - doit download_sample_data
+  - doit all_tests
