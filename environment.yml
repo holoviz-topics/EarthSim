@@ -41,8 +41,8 @@ dependencies:
     - pyviz/label/dev::pyviz_comms  # missing from parambokeh
     - conda-forge::scikit-image     # ?
     - conda-forge::descartes        # ?
-    - conda-forge::numpy=1.13       # avoid warnings with numpy=1.14 and bokeh=1.12.14
-    - conda-forge::scipy            # ensure scipy (and hence its deps) come from c-f
+    - conda-forge::numpy            # ensure scipy (and hence its deps) come from c-f
+    - conda-forge::scipy            #
 #    - conda-forge::libgfortran      # (also for scipy)
 
     ########### for tests
