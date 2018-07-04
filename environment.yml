@@ -24,8 +24,8 @@ dependencies:
     # is public should be moved to conda-forge
     - ceball::gssha=7.12.2+ceball
     # (lib)filigree still WIP
-    - ceball::filigree=0.0.4+ceball
-    - ceball::libfiligree=0.0.2+ceball
+    - ceball::filigree=0.0.5+ceball
+    - ceball::libfiligree=0.0.3+ceball
     ####
 
     - erdc::quest
