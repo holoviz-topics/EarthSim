@@ -24,8 +24,8 @@ dependencies:
     # is public should be moved to conda-forge
     - ceball::gssha=7.12.2+ceball
     # (lib)filigree still WIP
-    - ceball::filigree=0.0.4+ceball=py36h6bb024c_1
-    - ceball::libfiligree=0.0.2+ceball=h6bb024c_5
+    - ceball::filigree=0.0.4+ceball
+    - ceball::libfiligree=0.0.2+ceball
     ####
 
     - erdc::quest
@@ -43,7 +43,7 @@ dependencies:
     - conda-forge::descartes        # ?
     - conda-forge::numpy=1.13       # avoid warnings with numpy=1.14 and bokeh=1.12.14
     - conda-forge::scipy            # ensure scipy (and hence its deps) come from c-f
-    - conda-forge::libgfortran      # (also for scipy)
+#    - conda-forge::libgfortran      # (also for scipy)
 
     ########### for tests
     - pyviz/label/dev::nbsmoke
