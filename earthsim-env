@@ -1,0 +1,39 @@
+########### direct deps ###########
+#conda-forge::python=3.6 # specify separately or can't solve
+conda-forge::fiona=1.7.12
+conda-forge::gdal=2.2.4
+conda-forge::cartopy=0.16.0
+conda-forge::bokeh=0.12.16
+conda-forge::xarray=0.10.7
+conda-forge::geopandas=0.3.0
+conda-forge::jupyter=1.0.0
+conda-forge::notebook=5.5.0
+conda-forge::opencv=3.4.1
+conda-forge::gsshapy=2.3.8
+####
+# Should move updated packaging to erdc when done, and when source
+# is public should be moved to conda-forge
+ceball::gssha=7.12.2+ceball
+# (lib)filigree still WIP
+ceball::filigree=0.0.6+ceball
+ceball::libfiligree=0.0.4+ceball
+####
+erdc::quest=2.4.1
+pyviz/label/dev::datashader=0.6.6
+pyviz/label/dev::param=1.7.0
+pyviz/label/dev::parambokeh=0.2.3.dev8
+pyviz/label/dev::paramnb=2.0.3
+pyviz::holoviews
+pyviz/label/dev::geoviews
+conda-forge::lancet=0.9.0
+
+########### indirect deps ###########
+conda-forge::scikit-image=0.14.0 # ?
+conda-forge::descartes=1.1.0     # ?
+### all below: scipy and deps from c-f ###
+conda-forge::numpy=1.14.5
+# linux,mac packages copied from c-f channel, win package from
+# defaults (same compiler,options for win)
+ceball::scipy=1.1.0
+#conda-forge::libgfortran
+

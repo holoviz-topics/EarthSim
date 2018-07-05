@@ -1,3 +1,6 @@
+git:
+  depth: 100
+
 language: generic
 
 env:
@@ -10,11 +13,6 @@ env:
 
 stages:
   - test
-  - name: conda_dev_package
-    if: branch = switch_to_pyct2
-#    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
-#  - name: conda_package
-#    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$  
 #  - name: doc
 #    if: branch = master AND type != pull_request
 
@@ -50,16 +48,15 @@ jobs:
         #####
 
         # channel pins in env file not respected until 4.6, which
-        # isn't out yet (we'll need to make a pkg or provide a package
+        # isn't out yet. channel pins in recipe don't carry through to built package. (we'll need to make a pkg or provide a package
         # listing file for conda i.e. not use conda env)
         #- conda install --channel "conda-canary" conda
         #- doit env_create $CHANS_DEV --python=$PYENV_VERSION
         #- doit develop_install $CHANS_DEV -o recommended
         - conda config --set path_conflict warn
-        - conda create -c conda-forge -n earthsim python=3.6
-        - source activate earthsim      
-        - conda install -c pyviz/label/dev earthsim
-        - conda remove --force earthsim holoviews geoviews
+        - conda create -n earthsim -c pyviz/label/dev -c ceball -c pyviz -c conda-forge -c defaults -c erdc --file=earthsim-env conda-forge::python=3.6
+        - source activate earthsim
+        - conda remove --force holoviews geoviews
         - pip install git+https://github.com/ioam/holoviews.git
         - pip install git+https://github.com/ioam/geoviews.git
         - pip install -e . --no-deps
@@ -93,18 +90,3 @@ jobs:
 #        skip_cleanup: true
 #        github_token: $GITHUB_TOKEN
 #        local_dir: ./doc/_build/html
-
-
-    ########## PACKAGES ##########
-
-    - &conda_pkg
-      <<: *default
-      stage: conda_dev_package
-      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_DEV LABELS=$LABELS_DEV
-      install: conda build -c pyviz/label/dev -c pyviz -c ceball -c conda-forge -c defaults -c erdc conda.recipe/
-               #doit package_build $CHANS --test-python=py36 --test-group=all
-      script: doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS
-
-#    - <<: *conda_pkg
-#      stage: conda_package
-#      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_REL LABELS=$LABELS_REL 
