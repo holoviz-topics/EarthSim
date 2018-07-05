@@ -48,7 +48,7 @@ requirements:
     - pyviz/label/dev::param=1.7.0
     - pyviz/label/dev::parambokeh=0.2.3.dev8
     - pyviz/label/dev::paramnb=2.0.3
-    - pyviz/label/dev::holoviews
+    - pyviz::holoviews
     - pyviz/label/dev::geoviews
     - conda-forge::lancet=0.9.0
 
