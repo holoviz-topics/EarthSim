@@ -15,8 +15,8 @@ conda-forge::gsshapy=2.3.8
 # is public should be moved to conda-forge
 ceball::gssha=7.12.2+ceball
 # (lib)filigree still WIP
-ceball::filigree=0.0.6+ceball
-ceball::libfiligree=0.0.4+ceball
+ceball::filigree=0.0.9+ceball
+ceball::libfiligree=0.0.9+ceball
 ####
 erdc::quest=2.4.1
 pyviz/label/dev::datashader=0.6.6
@@ -26,10 +26,13 @@ pyviz/label/dev::paramnb=2.0.3
 pyviz::holoviews
 pyviz/label/dev::geoviews
 conda-forge::lancet=0.9.0
+conda-forge::colorcet=1.0.0
 
 ########## indirect deps ##########
 conda-forge::scikit-image=0.14.0 # ?
 conda-forge::descartes=1.1.0     # ?
+conda-forge::nodejs=9.11.1       # for bokeh
+conda-forge::boost-cpp=1.66.0
 ### all below: scipy and deps from c-f ###
 conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
