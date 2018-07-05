@@ -1,5 +1,9 @@
 language: generic
 
+env:
+  global:
+    - PYENV_VERSION=3.6
+
 stages:
   - test
   - name: doc
@@ -14,39 +18,34 @@ jobs:
       stage: test
       os: linux
       install:
-        #######################
-        ## install miniconda ##
-        - easy_install --user doit==0.29.0 ioamdoit
-        - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-            ~/Library/Python/2.7/bin/doit install_miniconda;
-          else
-            ~/.local/bin/doit install_miniconda;
-          fi
-        - rm -f .doit.db
-        - export PATH="$HOME/miniconda/bin:$PATH"
-        #######################
+        # install pyctdev and use to install miniconda...
+        - pip install pyctdev && doit -f dodotmp.py miniconda_install && pip uninstall -y doit pyctdev && rm -rf .doit*
+        - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        # channel pins in env file not respected until 4.6, which
+        # isn't out yet (we'll need to make a pkg or provide a package
+        # listing file for conda i.e. not use conda env)
+        - conda install -y --channel "conda-canary" conda
+        # updating to pyctdev is on another branch...
         - pip install ioamdoit
         - conda env create
         - source activate earthsim
         - doit develop_install
-        ###
-        # TODO: figure out what's depending on (deprecated?) gcc package; see https://github.com/pyviz/EarthSim/issues/97
-        - pushd /home/travis/miniconda/envs/earthsim/lib/ && rm -rf libstdc++.so.6 && ln -s libstdc++.so.6.0.24 libstdc++.so.6 && popd
-        #- conda remove -y --force gcc
-        #- conda install -y --force -c conda-forge libgcc-ng scipy numpy libstdcxx-ng
-        ###
         - doit capture_conda_env
       script:
         - doit download_sample_data
         - travis_wait 60 doit all_tests
 
-# restore when travis/macos recovers...
-#    - <<: *default
-#      os: osx
-#      before_install:
-#        # brew-installed geos interferes with cartopy?
-#        - brew uninstall --ignore-dependencies geos gdal postgis
-#      if: branch = master AND type != pull_request
+    - <<: *default
+      os: osx
+      osx_image: xcode9.3
+      env: PYENV_VERSION=3.6.4
+      before_install:
+        # set up python
+        - eval "$(pyenv init -)"
+        - pyenv install $PYENV_VERSION  
+        # check the below still required
+        # brew-installed geos interferes with cartopy?
+        - brew uninstall --ignore-dependencies geos gdal postgis
 
     - <<: *default
       stage: doc
