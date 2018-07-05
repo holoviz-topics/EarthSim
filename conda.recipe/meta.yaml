@@ -8,6 +8,7 @@ source:
   path: ..
 
 build:
+  noarch: python
   script: python setup.py install --single-version-externally-managed --record=record.txt
   entry_points:
     {% for group,epoints in sdata.get("entry_points",{}).items() %}
@@ -51,14 +52,16 @@ requirements:
     - pyviz/label/dev::geoviews
     - conda-forge::lancet=0.9.0
 
-
     ########### indirect deps
-    #
     - conda-forge::scikit-image=0.14.0 # ?
     - conda-forge::descartes=1.1.0     # ?
-    - conda-forge::numpy               # ensure scipy (and its deps) come from c-f
-    - conda-forge::scipy               # [not win]
-#    - conda-forge::libgfortran        # (also for scipy)
+    ### scipy and deps from c-f ###
+    - conda-forge::numpy=1.14.5
+    # linux,mac packages copied from c-f channel, win package from
+    # defaults (same compiler,options for win)
+    - ceball::scipy=1.1.0
+#    - conda-forge::libgfortran
+    ###############################
 
 test:
   imports:
@@ -66,7 +69,7 @@ test:
   requires:
     {% for dep in sdata['extras_require']['tests'] %}
     - {{ dep }}
-    {% endfor %}    
+    {% endfor %}
 
 about:
   home: {{ sdata['url'] }}
