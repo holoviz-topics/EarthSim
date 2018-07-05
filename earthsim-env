@@ -23,6 +23,7 @@ pyviz/label/dev::datashader=0.6.6
 pyviz/label/dev::param=1.7.0
 pyviz/label/dev::parambokeh=0.2.3.dev8
 pyviz/label/dev::paramnb=2.0.3
+pyviz/label/dev::pyct
 pyviz::holoviews
 pyviz/label/dev::geoviews
 conda-forge::lancet=0.9.0
