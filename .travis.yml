@@ -56,7 +56,7 @@ jobs:
         - conda config --set path_conflict warn
         - conda create -n earthsim -c pyviz/label/dev -c ceball -c pyviz -c conda-forge -c defaults -c erdc --file=earthsim-env conda-forge::python=3.6
         - source activate earthsim
-        - conda remove --force holoviews geoviews
+        - conda remove --force holoviews geoviews geoviews-core
         - pip install git+https://github.com/ioam/holoviews.git
         - pip install git+https://github.com/ioam/geoviews.git
         - pip install -e . --no-deps
