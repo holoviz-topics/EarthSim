@@ -33,7 +33,7 @@ dependencies:
     - pyviz/label/dev::parambokeh
     - pyviz/label/dev::paramnb
 #    - pyviz/label/dev::geoviews
-#    - conda-forge::lancet
+    - conda-forge::lancet
 
     # won't necessarily need all these with pinning now working...
 
