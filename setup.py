@@ -139,6 +139,9 @@ setup_args.update(dict(
     extras_require = extras_require,
     tests_require = extras_require['tests'],
     python_requires = ">=3.5",
+    url = "https://pyviz.github.io/EarthSim",
+    license = "BSD",
+    description = "Tools for working with and visualizing environmental simulations"
 ))
 
 if __name__=="__main__":
