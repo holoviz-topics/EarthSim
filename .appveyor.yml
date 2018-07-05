@@ -12,7 +12,7 @@ install:
   - conda config --set always_yes True"
   - conda install --channel "conda-canary" conda
   #- "doit env_create --name=test --python=%PY%"
-  - "conda env create"
+  - "conda env create -f environment-win.yml"
   - "activate earthsim"
   #- "doit develop_install %CHANS_DEV% -o recommended"
   - "pip install -e . --no-deps"
