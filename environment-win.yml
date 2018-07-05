@@ -40,7 +40,6 @@ dependencies:
     ########### indirect deps
     #
 #    - conda-forge::libgdal    
-    - pyviz/label/dev::pyviz_comms  # missing from parambokeh
     - conda-forge::scikit-image     # ?
     - conda-forge::descartes        # ?
     - conda-forge::numpy            # ensure scipy (and hence its deps) come from c-f
