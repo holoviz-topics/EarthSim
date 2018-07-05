@@ -27,7 +27,7 @@ pyviz::holoviews
 pyviz/label/dev::geoviews
 conda-forge::lancet=0.9.0
 
-########### indirect deps ###########
+########## indirect deps ##########
 conda-forge::scikit-image=0.14.0 # ?
 conda-forge::descartes=1.1.0     # ?
 ### all below: scipy and deps from c-f ###
@@ -37,3 +37,7 @@ conda-forge::numpy=1.14.5
 ceball::scipy=1.1.0
 #conda-forge::libgfortran
 
+######## for running tests ########
+conda-forge::pytest
+conda-forge::pyflakes
+pyviz/label/dev::nbsmoke
