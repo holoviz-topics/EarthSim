@@ -14,7 +14,7 @@ import argparse
 import subprocess
 from distutils import spawn
 
-def main():
+def param_main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-cmd',type=str)
     parser.add_argument("-p", nargs=1, action='append')
@@ -38,6 +38,17 @@ def execute(args):
     p = subprocess.Popen(cmd, env=env,
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p.communicate()
+
+
+def main(args=None):
+    try:
+        import pyct.cmd
+    except ImportError:
+        from . import _missing_cmd
+        print(_missing_cmd())
+        sys.exit(1)
+    return pyct.cmd.substitute_main('earthsim',args=args)
+
 
 if __name__ == "__main__":
     main()

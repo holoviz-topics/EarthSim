@@ -1,18 +1,25 @@
 environment:
+#  global:
+#    CHANS_DEV: "-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
+
   matrix:
     - PY: "3.6"
       CONDA: "C:\\Miniconda36-x64"
 
 install:
   - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
-  - "pip install ioamdoit"
+  - "conda install -y -c pyviz/label/dev pyctdev && doit ecosystem_setup"
+  - conda config --set always_yes True"
+  - conda install --channel "conda-canary" conda
+  #- "doit env_create --name=test --python=%PY%"
   - "conda env create"
   - "activate earthsim"
-  - "doit develop_install"
-  - "doit capture_conda_env"
+  #- "doit develop_install %CHANS_DEV% -o recommended"
+  - "pip install -e . --no-deps"
+  - "doit env_capture"
 
 build: off
 
 test_script:
-  - doit download_sample_data
-  - doit all_tests
+  - "earthsim fetch-data --path=examples"
+  - "doit test_all"

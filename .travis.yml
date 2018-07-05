@@ -3,37 +3,65 @@ language: generic
 env:
   global:
     - PYENV_VERSION=3.6
+    #- CHANS_DEV="-c pyviz/label/dev -c ioam -c bokeh -c erdc -c defaults"
+    #- CHANS_REL="-c pyviz -c erdc -c defaults"
+    # and labels...
 
 stages:
   - test
-  - name: doc
-    if: branch = master AND type != pull_request
+  - name: conda_dev_package
+    if: tag =~ ^v(\d+|\.)*[a-z]\d*$
+  - name: conda_package
+    if: tag =~ ^v(\d+|\.)*[^a-z]\d*$  
+#  - name: doc
+#    if: branch = master AND type != pull_request
 
-before_install:
-  - echo -e "machine github.com\n  login $CI_USER\n  password $CI_USER_PASSWORD" >> ~/.netrc
+#cache:
+#  directories:
+#    - $HOME/miniconda
+#
+#before_cache:
+#  - rm -rf $HOME/miniconda/pkgs
+#  - rm -rf $HOME/miniconda/conda-bld/*
+#  - rm -rf $HOME/miniconda/envs/*/conda-bld
+
+# quick hack to determine what tag is (improvements welcomed)
+#     release: ^v(\d+|\.)*[^a-z]\d*$
+# dev release: ^v(\d+|\.)*[a-z]\d*$
 
 jobs:
   include:
+
+    ########## TEST DEVELOPER INSTALL ##########
+
     - &default
       stage: test
-      os: linux
+      before_install: true
       install:
-        # install pyctdev and use to install miniconda...
-        - pip install pyctdev && doit -f dodotmp.py miniconda_install && pip uninstall -y doit pyctdev && rm -rf .doit*
+        #####
+        # install doit/pyctdev and use to install miniconda...
+        - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        - conda config --set always_yes True
+        # ...and now install doit/pyctdev into miniconda
+        - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
+        #####
+
         # channel pins in env file not respected until 4.6, which
         # isn't out yet (we'll need to make a pkg or provide a package
         # listing file for conda i.e. not use conda env)
-        - conda install -y --channel "conda-canary" conda
-        # updating to pyctdev is on another branch...
-        - pip install ioamdoit
+        - conda install --channel "conda-canary" conda
+        #- doit env_create $CHANS_DEV --python=$PYENV_VERSION
+        #- doit develop_install $CHANS_DEV -o recommended
+        - conda config --set path_conflict warn 
         - conda env create
         - source activate earthsim
-        - doit develop_install
-        - doit capture_conda_env
+        #- doit develop_install 
+        - pip install -e . --no-deps
+        - doit env_capture
       script:
-        - doit download_sample_data
-        - travis_wait 60 doit all_tests
+        - earthsim fetch-data --path=examples
+        - travis_wait 60 doit test_all
 
     - <<: *default
       os: osx
@@ -47,19 +75,30 @@ jobs:
         # brew-installed geos interferes with cartopy?
         - brew uninstall --ignore-dependencies geos gdal postgis
 
-    - <<: *default
-      stage: doc
-      script:
-        - doit install_doc_dependencies
-        - doit download_sample_data
-        ##
-        # see github.com/pyviz/EarthSim/issues/113
-        - rm -rf examples/topics/batched_example/*.ipynb
-        - rm -rf examples/topics/GSSHA_Parameter_Sweep.ipynb
-        ##
-        - travis_wait 60 doit docs
-      deploy:
-        provider: pages
-        skip_cleanup: true
-        github_token: $GITHUB_TOKEN
-        local_dir: ./doc/_build/html
+    ########## DOCS ##########
+
+#    - <<: *default
+#      stage: doc
+#      script:
+#        - doit install_doc_dependencies
+#        - doit download_sample_data
+#        - travis_wait 60 doit docs
+#      deploy:
+#        provider: pages
+#        skip_cleanup: true
+#        github_token: $GITHUB_TOKEN
+#        local_dir: ./doc/_build/html
+
+
+    ########## PACKAGES ##########
+
+#    - &conda_pkg
+#      <<: *default
+#      stage: conda_dev_package
+#      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_DEV LABELS=$LABELS_DEV
+#      install: doit package_build $CHANS --test-python=py36 --test-group=all
+#      script: doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS
+#
+#    - <<: *conda_pkg
+#      stage: conda_package
+#      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID CHANS=$CHANS_REL LABELS=$LABELS_REL 
