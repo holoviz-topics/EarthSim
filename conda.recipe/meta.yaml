@@ -57,8 +57,8 @@ requirements:
     #
     - conda-forge::scikit-image=0.14.0 # ?
     - conda-forge::descartes=1.1.0     # ?
-    - conda-forge::numpy               # ensure scipy (and hence its deps) come from c-f
-    - conda-forge::scipy               # (also for scipy)
+    - conda-forge::numpy               # ensure scipy (and its deps) come from c-f
+    - conda-forge::scipy               # [not win]
 #    - conda-forge::libgfortran        # (also for scipy)
 
 test:
