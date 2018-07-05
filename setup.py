@@ -131,7 +131,7 @@ setup_args.update(dict(
     packages = find_packages(),
     entry_points={
           'console_scripts': [
-              'param = earthsim.__main__:param_main'
+              'param = earthsim.__main__:param_main',
               'earthsim = earthsim.__main__:main'
           ]},
     include_package_data = True,
