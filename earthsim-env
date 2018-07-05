@@ -34,15 +34,17 @@ conda-forge::scikit-image=0.14.0 # ?
 conda-forge::descartes=1.1.0     # ?
 conda-forge::nodejs=9.11.1       # for bokeh
 conda-forge::boost-cpp=1.66.0
+
+# Was using 4.2.5, but build 3 broke travis/linux (build 2 was
+# fine). Pin to previous minor release. (There's no 4.2.4.)
+conda-forge::zeromq=4.2.3
+
 ### all below: scipy and deps from c-f ###
 conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
 ceball::scipy=1.1.0
 #conda-forge::libgfortran
-
-# test linux build failure (this pinning won't work elsewhere)
-conda-forge::zeromq=4.2.5=hfc679d8_2
 
 ######## for running tests ########
 conda-forge::pytest
