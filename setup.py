@@ -133,7 +133,7 @@ setup_args.update(dict(
           'console_scripts': [
               'param = earthsim.__main__:param_main'
               'earthsim = earthsim.__main__:main'
-          ]}
+          ]},
     include_package_data = True,
     install_requires = install_requires,
     extras_require = extras_require,
