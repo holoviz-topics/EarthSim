@@ -41,6 +41,9 @@ conda-forge::numpy=1.14.5
 ceball::scipy=1.1.0
 #conda-forge::libgfortran
 
+# test linux build failure (this pinning won't work elsewhere)
+conda-forge::zeromq=4.2.5=hfc679d8_2
+
 ######## for running tests ########
 conda-forge::pytest
 conda-forge::pyflakes
