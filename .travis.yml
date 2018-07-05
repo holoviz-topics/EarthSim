@@ -21,6 +21,10 @@ jobs:
         # install pyctdev and use to install miniconda...
         - pip install pyctdev && doit -f dodotmp.py miniconda_install && pip uninstall -y doit pyctdev && rm -rf .doit*
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+        # channel pins in env file not respected until 4.6, which
+        # isn't out yet (we'll need to make a pkg or provide a package
+        # listing file for conda i.e. not use conda env)
+        - conda install -y --channel "conda-canary" conda
         # updating to pyctdev is on another branch...
         - pip install ioamdoit
         - conda env create

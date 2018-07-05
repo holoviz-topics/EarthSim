@@ -5,15 +5,12 @@ channels:
     - conda-forge
     - defaults
     - erdc
-    - ioam
 dependencies:
 
     ########### direct deps
     - conda-forge::python=3.6
     - conda-forge::fiona
-    - conda-forge::gdal=2.2.4     # why were we getting an older one?
-    - conda-forge::libgdal=2.2.4  # why doesn't this come from gdal?
-    - conda-forge::libkml         # otherwise from defaults; libgdal->libkml->libboost
+    - conda-forge::gdal
     - conda-forge::cartopy
     - conda-forge::bokeh
     - conda-forge::xarray
@@ -26,8 +23,8 @@ dependencies:
     # is public should be moved to conda-forge
     - ceball::gssha=7.12.2+ceball
     # (lib)filigree still WIP
-    - ceball::filigree=0.0.5+ceball
-    - ceball::libfiligree=0.0.3+ceball
+    - ceball::filigree=0.0.6+ceball
+    - ceball::libfiligree=0.0.4+ceball
     ####
 
     - erdc::quest
@@ -36,10 +33,13 @@ dependencies:
     - pyviz/label/dev::parambokeh
     - pyviz/label/dev::paramnb
 #    - pyviz/label/dev::geoviews
-    - ioam::lancet
+#    - conda-forge::lancet
+
+    # won't necessarily need all these with pinning now working...
 
     ########### indirect deps
     #
+#    - conda-forge::libgdal    
     - pyviz/label/dev::pyviz_comms  # missing from parambokeh
     - conda-forge::scikit-image     # ?
     - conda-forge::descartes        # ?
