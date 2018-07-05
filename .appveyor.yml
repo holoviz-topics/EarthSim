@@ -10,11 +10,15 @@ install:
   - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
   - "conda install -y -c pyviz/label/dev pyctdev && doit ecosystem_setup"
   - conda config --set always_yes True"
-  - conda install --channel "conda-canary" conda
+  #- conda install --channel "conda-canary" conda
+  #- "conda env create -f environment-win.yml"
   #- "doit env_create --name=test --python=%PY%"
-  - "conda env create -f environment-win.yml"
-  - "activate earthsim"
   #- "doit develop_install %CHANS_DEV% -o recommended"
+  - "activate earthsim"
+  - "conda install -c pyviz/label/dev earthsim"
+  - "conda remove --force earthsim holoviews geoviews"
+  - "pip install git+https://github.com/ioam/holoviews.git"
+  - "pip install git+https://github.com/ioam/geoviews.git"
   - "pip install -e . --no-deps"
   - "doit env_capture"
 
