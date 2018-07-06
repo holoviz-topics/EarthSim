@@ -50,7 +50,7 @@ jobs:
         #- doit env_create $CHANS_DEV --python=$PYENV_VERSION
         #- doit develop_install $CHANS_DEV -o recommended
         - conda config --set path_conflict warn
-        - conda create -n earthsim -c pyviz/label/dev -c ceball -c pyviz -c conda-forge -c defaults -c erdc --file=earthsim-env conda-forge::python=3.6
+        - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=earthsim-env conda-forge::python=3.6
         - source activate earthsim
         - pip install -e . --no-deps
         - doit env_capture
