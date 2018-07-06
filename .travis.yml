@@ -76,8 +76,8 @@ jobs:
     - <<: *default
       stage: doc
       script:
-        - doit install_doc_dependencies
-        - doit download_sample_data
+        - conda install -c pyviz -c conda-forge nbsite sphinx_ioam_theme
+        - earthsim fetch-data --path=examples
         - travis_wait 60 doit docs
 #      deploy:
 #        provider: pages
