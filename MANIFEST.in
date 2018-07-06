@@ -1,3 +1,5 @@
+include README.md
+include LICENSE
 include earthsim/.version
 graft examples
 global-exclude *.py[co]
