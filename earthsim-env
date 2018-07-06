@@ -10,16 +10,16 @@ conda-forge::jupyter=1.0.0
 conda-forge::notebook=5.5.0
 conda-forge::opencv=3.4.1
 conda-forge::gsshapy=2.3.8
-ceball::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
-ceball::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
-erdc::quest=2.4.1
-pyviz/label/dev::datashader=0.6.6
-pyviz/label/dev::param=1.7.0
-pyviz/label/dev::parambokeh=0.2.3.dev8
-pyviz/label/dev::paramnb=2.0.3
-pyviz/label/dev::pyct
-pyviz::holoviews
-pyviz/label/dev::geoviews
+pyviz/label/earthsim::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
+pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
+pyviz/label/earthsim::quest=2.4.1
+pyviz/label/earthsim::datashader=0.6.6
+pyviz/label/earthsim::param=1.7.0
+pyviz/label/earthsim::parambokeh=0.2.3.dev8
+pyviz/label/earthsim::paramnb=2.0.3
+pyviz/label/earthsim::pyct=0.4.3
+pyviz/label/earthsim::holoviews=1.11.0a1
+pyviz/label/earthsim::geoviews=1.5.2a5
 conda-forge::lancet=0.9.0
 conda-forge::colorcet=1.0.0
 
@@ -33,16 +33,16 @@ conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps includi
 # previous minor releases I tried were also problematic on
 # linux. Appears to be going through some building changes right now
 # on c-f, so temporarily avoid that by hosting ourselves.
-ceball::zeromq
+pyviz/label/earthsim::zeromq
 
 ### scipy+deps
 conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
-ceball::scipy=1.1.0
+pyviz/label/earthsim::scipy=1.1.0
 #conda-forge::libgfortran
 
 ######## for running tests ########
 conda-forge::pytest
 conda-forge::pyflakes
-pyviz/label/dev::nbsmoke
+pyviz/label/earthsim::nbsmoke

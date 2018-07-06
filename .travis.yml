@@ -47,18 +47,11 @@ jobs:
         - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
         #####
 
-        # channel pins in env file not respected until 4.6, which
-        # isn't out yet. channel pins in recipe don't carry through to built package. (we'll need to make a pkg or provide a package
-        # listing file for conda i.e. not use conda env)
-        #- conda install --channel "conda-canary" conda
         #- doit env_create $CHANS_DEV --python=$PYENV_VERSION
         #- doit develop_install $CHANS_DEV -o recommended
         - conda config --set path_conflict warn
         - conda create -n earthsim -c pyviz/label/dev -c ceball -c pyviz -c conda-forge -c defaults -c erdc --file=earthsim-env conda-forge::python=3.6
         - source activate earthsim
-        - conda remove --force holoviews geoviews geoviews-core
-        - pip install git+https://github.com/ioam/holoviews.git
-        - pip install git+https://github.com/ioam/geoviews.git
         - pip install -e . --no-deps
         - doit env_capture
       script:
