@@ -6,29 +6,15 @@ language: generic
 env:
   global:
     - PYENV_VERSION=3.6
-    #- CHANS_DEV="-c pyviz/label/dev -c ioam -c bokeh -c erdc -c defaults"
-    #- CHANS_REL="-c pyviz -c erdc -c defaults"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
 
+# TODO before merge: temporarily testing doc building on this branch
 stages:
   - test
   - name: doc
     if: branch = switch_to_pyct2
 #    if: branch = master AND type != pull_request
-
-#cache:
-#  directories:
-#    - $HOME/miniconda
-#
-#before_cache:
-#  - rm -rf $HOME/miniconda/pkgs
-#  - rm -rf $HOME/miniconda/conda-bld/*
-#  - rm -rf $HOME/miniconda/envs/*/conda-bld
-
-# quick hack to determine what tag is (improvements welcomed)
-#     release: ^v(\d+|\.)*[^a-z]\d*$
-# dev release: ^v(\d+|\.)*[a-z]\d*$
 
 jobs:
   include:
@@ -47,9 +33,6 @@ jobs:
         # ...and now install doit/pyctdev into miniconda
         - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
         #####
-
-        #- doit env_create $CHANS_DEV --python=$PYENV_VERSION
-        #- doit develop_install $CHANS_DEV -o recommended
         - conda config --set path_conflict warn
         - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
         - source activate earthsim
@@ -79,6 +62,7 @@ jobs:
         - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
         - earthsim fetch-data --path=examples
         - travis_wait 60 doit docs
+# see comment by 'stages' above
 #      deploy:
 #        provider: pages
 #        skip_cleanup: true

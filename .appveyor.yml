@@ -1,7 +1,4 @@
 environment:
-#  global:
-#    CHANS_DEV: "-c pyviz/label/dev -c ioam -c bokeh -c conda-forge -c erdc -c defaults"
-
   matrix:
     - PY: "3.6"
       CONDA: "C:\\Miniconda36-x64"
@@ -10,8 +7,6 @@ install:
   - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
   - "conda install -y -c pyviz/label/dev pyctdev && doit ecosystem_setup"
   - "conda config --set always_yes True"
-  #- "doit env_create --name=test --python=%PY%"
-  #- "doit develop_install %CHANS_DEV% -o recommended"
   - "conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6"
   - "activate earthsim"
   - "pip install -e . --no-deps"
