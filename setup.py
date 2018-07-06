@@ -80,8 +80,10 @@ def examples(path='earthsim-examples', verbose=False, force=False, root=__file__
 
 ########## dependencies ##########
 
-# TODO: need to sort through these, and what's the split between
-# required/recommended? I made a fairly random cut...
+# NOTE: This is just a start; you should ignore these for now. We are
+# currently using dependencies.txt, which can only be installed using
+# conda. The split between required and extras is also currently
+# arbitrary.
 
 install_requires = [
     'bokeh',
@@ -89,15 +91,17 @@ install_requires = [
     'geoviews >1.4',
     'jupyter',
     'numpy',
+    'param',
     'parambokeh',
     'paramnb',
-    # TODO: temporary; "parambokeh does not yet declare this dependency"
-    'pyviz_comms'
+    'colorcet'
 ]
 
 extras_require = {
     'recommended': [
-        'pyct',
+        'ioam-lancet',
+        'pyct[cmd]',
+        'cartopy',
         'filigree',
         'fiona',
         'gdal',
@@ -106,11 +110,10 @@ extras_require = {
         'gssha',
         'quest',
         'xarray',
-        # check if the below already come from direct deps?
         'descartes',
-        'go-spatial',
-        'json-rpc',
         'scikit-image',
+        'opencv',
+        'nodejs'
     ],
     'tests': [
         'nbsmoke',
@@ -139,7 +142,7 @@ setup_args.update(dict(
     extras_require = extras_require,
     tests_require = extras_require['tests'],
     python_requires = ">=3.5",
-    url = "https://pyviz.github.io/EarthSim",
+    url = "https://earthsim.pyviz.org",
     license = "BSD",
     description = "Tools for working with and visualizing environmental simulations"
 ))
