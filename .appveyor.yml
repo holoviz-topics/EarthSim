@@ -13,7 +13,7 @@ install:
   #- "doit env_create --name=test --python=%PY%"
   #- "doit develop_install %CHANS_DEV% -o recommended"
   - "conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6"
-  - "conda activate earthsim"
+  - "activate earthsim"
   - "pip install -e . --no-deps"
   - "doit env_capture"
 

@@ -25,13 +25,20 @@ at present, the recommended way to install Earthsim is based on
     
     cd EarthSim
     conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
-    conda activate earthsim
 
-4. Install the ``earthsim`` module into this environment::
+4. Activate the earthsim environment::
+	 
+    activate earthsim
+
+   for Windows; MacOS and Linux users should instead run::
+
+    source activate earthsim
+
+5. Install the ``earthsim`` module into this environment::
     
     pip install -e . --no-deps
 
-5. Download the sample files::
+6. Download the sample files::
 
     earthsim examples
 
