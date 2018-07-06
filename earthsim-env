@@ -10,14 +10,8 @@ conda-forge::jupyter=1.0.0
 conda-forge::notebook=5.5.0
 conda-forge::opencv=3.4.1
 conda-forge::gsshapy=2.3.8
-####
-# Should move updated packaging to erdc when done, and when source
-# is public should be moved to conda-forge
-ceball::gssha=7.12.2+ceball
-# (lib)filigree still WIP
-ceball::filigree=0.0.9+ceball
-ceball::libfiligree=0.0.9+ceball
-####
+ceball::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
+ceball::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 erdc::quest=2.4.1
 pyviz/label/dev::datashader=0.6.6
 pyviz/label/dev::param=1.7.0
@@ -32,14 +26,16 @@ conda-forge::colorcet=1.0.0
 ########## indirect deps ##########
 conda-forge::scikit-image=0.14.0 # ?
 conda-forge::descartes=1.1.0     # ?
-conda-forge::nodejs=9.11.1       # for bokeh
-conda-forge::boost-cpp=1.66.0
+conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
+conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
 
-# Was using 4.2.5, but build 3 broke travis/linux (build 2 was
-# fine). Pin to previous minor release. (There's no 4.2.4.)
-conda-forge::zeromq=4.2.3
+# zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
+# previous minor releases I tried were also problematic on
+# linux. Appears to be going through some building changes right now
+# on c-f, so temporarily avoid that by hosting ourselves.
+ceball::zeromq
 
-### all below: scipy and deps from c-f ###
+### scipy+deps
 conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
