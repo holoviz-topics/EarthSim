@@ -6,8 +6,6 @@ language: generic
 env:
   global:
     - PYENV_VERSION=3.6
-    - LABELS_DEV="--label dev"
-    - LABELS_REL="--label dev --label main"
 
 # TODO before merge: temporarily testing doc building on this branch
 stages:
