@@ -1,0 +1,2 @@
+setup.py export-subst
+earthsim/__init__.py export-subst

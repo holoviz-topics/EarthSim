@@ -1,10 +1,11 @@
 from setuptools import setup, find_packages
 import os
 import shutil
+import sys
 
 # TODO: build time deps to declare when we start packaging
 import pyct.build
-import param
+import param.version
 
 ########## dependencies ##########
 
@@ -58,7 +59,7 @@ extras_require = {
 setup_args = {'name':'earthsim'}
 
 setup_args.update(dict(
-    version=param.get_setup_version(__file__,"EarthSim",setup_args['name']),
+    version=param.version.get_setup_version(__file__,"EarthSim",setup_args['name'],archive_commit="$Format:%h$"),
     packages = find_packages(),
     entry_points={
           'console_scripts': [
