@@ -13,7 +13,8 @@ env:
 
 stages:
   - test
-#  - name: doc
+  - name: doc
+    if: branch = switch_to_pyct2
 #    if: branch = master AND type != pull_request
 
 #cache:
@@ -50,7 +51,7 @@ jobs:
         #- doit env_create $CHANS_DEV --python=$PYENV_VERSION
         #- doit develop_install $CHANS_DEV -o recommended
         - conda config --set path_conflict warn
-        - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=earthsim-env conda-forge::python=3.6
+        - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
         - source activate earthsim
         - pip install -e . --no-deps
         - doit env_capture
@@ -72,12 +73,12 @@ jobs:
 
     ########## DOCS ##########
 
-#    - <<: *default
-#      stage: doc
-#      script:
-#        - doit install_doc_dependencies
-#        - doit download_sample_data
-#        - travis_wait 60 doit docs
+    - <<: *default
+      stage: doc
+      script:
+        - doit install_doc_dependencies
+        - doit download_sample_data
+        - travis_wait 60 doit docs
 #      deploy:
 #        provider: pages
 #        skip_cleanup: true
