@@ -52,7 +52,7 @@ jobs:
         #- doit develop_install $CHANS_DEV -o recommended
         - conda config --set path_conflict warn
         - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
-        - source activate earthsim
+        - conda activate earthsim
         - pip install -e . --no-deps
         - doit env_capture
       script:
