@@ -59,6 +59,8 @@ jobs:
       script:
         - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
         - earthsim fetch-data --path=examples
+        - rm -rf examples/topics/batched_example/*.ipynb       # see github.com/pyviz/EarthSim/issues/113
+        - rm -rf examples/topics/GSSHA_Parameter_Sweep.ipynb   # see github.com/pyviz/EarthSim/issues/113
         - travis_wait 60 doit docs
 # see comment by 'stages' above
 #      deploy:
