@@ -7,18 +7,14 @@ env:
   global:
     - PYENV_VERSION=3.6
 
-# TODO before merge: temporarily testing doc building on this branch
 stages:
   - test
   - name: doc
-    if: branch = switch_to_pyct2
-#    if: branch = master AND type != pull_request
+    if: branch = master AND type != pull_request
 
 jobs:
   include:
-
     ########## TEST DEVELOPER INSTALL ##########
-
     - &default
       stage: test
       before_install: true
@@ -34,7 +30,7 @@ jobs:
         - conda config --set path_conflict warn
         - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
         - source activate earthsim
-        - pip install -e . --no-deps
+        - pip install -e .
         - doit env_capture
       script:
         - earthsim fetch-data --path=examples
@@ -62,10 +58,9 @@ jobs:
         - rm -rf examples/topics/batched_example/*.ipynb       # see github.com/pyviz/EarthSim/issues/113
         - rm -rf examples/topics/GSSHA_Parameter_Sweep.ipynb   # see github.com/pyviz/EarthSim/issues/113
         - travis_wait 60 doit docs
-# see comment by 'stages' above
-#      deploy:
-#        provider: pages
-#        skip_cleanup: true
-#        github_token: $GITHUB_TOKEN
-#        local_dir: ./doc/_build/html
-#        fqdn: earthsim.pyviz.org
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        local_dir: ./doc/_build/html
+        fqdn: earthsim.pyviz.org
