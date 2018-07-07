@@ -8,11 +8,8 @@ Installation
 
 EarthSim supports Python 3.6 on Linux, Windows, or Mac.
 
-Installable ``earthsim`` packages will be created at some point, but
-at present, the recommended way to install Earthsim is based on
-`conda <http://conda.pydata.org/docs>`_ and 
-`git <https://git-scm.com>`_:
-
+EarthSim itself is a pure Python package that itself would be easy to install, but it depends on several packages (gdal, geos, and others) that are linked against binary-code geospatial libraries.  Unfortunately, incompatibly compiled versions of those libraries are available from different sources, which can make it difficult to assemble an appropriate environment for safely running EarthSim.  For this reason, EarthSim is currently provided via a special set of installation steps based on `conda <http://conda.pydata.org/docs>`_ and 
+`git <https://git-scm.com>`_ that ensure only a compatible set of packages are used.  Specifically:
 
 1. Install Python 3 `Miniconda <http://conda.pydata.org/miniconda.html>`_ or 
 `Anaconda <http://docs.continuum.io/anaconda/install>`_, if you don't already have it on your system.
@@ -75,7 +72,7 @@ or submit a `pull request <https://help.github.com/articles/about-pull-requests>
 Updates
 -------
 
-Assuming you are in the EarthSim directory, and the earthsim conda
+Assuming you are in the EarthSim directory, and the ``earthsim`` conda
 environment is active, you can update to the latest version of
 EarthSim as follows:
 
