@@ -33,7 +33,7 @@ EarthSim itself is a pure Python package that itself would be easy to install, b
 
 5. Install the ``earthsim`` module into this environment::
     
-    pip install -e . --no-deps
+    pip install -e .
 
 6. Download the sample files::
 
