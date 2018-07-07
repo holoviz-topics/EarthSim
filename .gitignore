@@ -102,4 +102,5 @@ ENV/
 
 *~
 
-/examples/data
+earthsim/.version
+.doit*

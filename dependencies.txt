@@ -1,0 +1,48 @@
+########### direct deps ###########
+#conda-forge::python=3.6 # specify separately or can't solve
+conda-forge::fiona=1.7.12
+conda-forge::gdal=2.2.4
+conda-forge::cartopy=0.16.0
+conda-forge::bokeh=0.12.16
+conda-forge::xarray=0.10.7
+conda-forge::geopandas=0.3.0
+conda-forge::jupyter=1.0.0
+conda-forge::notebook=5.5.0
+conda-forge::opencv=3.4.1
+conda-forge::gsshapy=2.3.8
+pyviz/label/earthsim::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
+pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
+pyviz/label/earthsim::quest=2.4.1
+pyviz/label/earthsim::datashader=0.6.6
+pyviz/label/earthsim::param=1.7.0
+pyviz/label/earthsim::parambokeh=0.2.3.dev8
+pyviz/label/earthsim::paramnb=2.0.3
+pyviz/label/earthsim::pyct=0.4.4a10
+pyviz/label/earthsim::holoviews=1.11.0a1
+pyviz/label/earthsim::geoviews=1.5.2a5
+conda-forge::lancet=0.9.0
+conda-forge::colorcet=1.0.0
+
+########## indirect deps ##########
+conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to pin this (though it does contain compiled code)
+conda-forge::descartes=1.1.0     # from geopandas; have not verified we need to pin this
+conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
+conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
+
+# zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
+# previous minor releases I tried were also problematic on
+# linux. Appears to be going through some building changes right now
+# on c-f, so temporarily avoid that by hosting ourselves.
+pyviz/label/earthsim::zeromq
+
+### scipy+deps
+conda-forge::numpy=1.14.5
+# linux,mac packages copied from c-f channel, win package from
+# defaults (same compiler,options for win)
+pyviz/label/earthsim::scipy=1.1.0
+#conda-forge::libgfortran
+
+######## for running tests ########
+conda-forge::pytest
+conda-forge::pyflakes
+pyviz/label/earthsim::nbsmoke

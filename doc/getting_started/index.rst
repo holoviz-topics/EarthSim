@@ -6,17 +6,10 @@ Getting started
 Installation
 ------------
 
-EarthSim supports Python 3.5-3.7 on Linux, Windows, or Mac.
+EarthSim supports Python 3.6 on Linux, Windows, or Mac.
 
-To run the GSSHA-based examples in topics/, you'll need to use Linux
-or Mac Python 3.5, because ``gssha`` and ``gssha-py`` packages are not yet
-available for Windows or other Python versions.
-
-Installable ``earthsim`` packages will be created at some point, but
-at present, the recommended way to install Earthsim is based on
-`conda <http://conda.pydata.org/docs>`_ environments and 
-`git <https://git-scm.com>`_:
-
+EarthSim itself is a pure Python package that itself would be easy to install, but it depends on several packages (gdal, geos, and others) that are linked against binary-code geospatial libraries.  Unfortunately, incompatibly compiled versions of those libraries are available from different sources, which can make it difficult to assemble an appropriate environment for safely running EarthSim.  For this reason, EarthSim is currently provided via a special set of installation steps based on `conda <http://conda.pydata.org/docs>`_ and 
+`git <https://git-scm.com>`_ that ensure only a compatible set of packages is used.  Specifically:
 
 1. Install Python 3 `Miniconda <http://conda.pydata.org/miniconda.html>`_ or 
 `Anaconda <http://docs.continuum.io/anaconda/install>`_, if you don't already have it on your system.
@@ -28,18 +21,23 @@ at present, the recommended way to install Earthsim is based on
 3. Set up an environment with all of the dependencies needed to run the examples::
     
     cd EarthSim
-    conda env create --quiet --force -n earthsim -f ./environment.yml
+    conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
+
+4. Activate the earthsim environment::
+	 
+    activate earthsim
+
+   for Windows; MacOS and Linux users should instead run::
+
     source activate earthsim
 
-4. Put the ``earthsim`` directory into the Python path in this environment::
+5. Install the ``earthsim`` module into this environment::
     
     pip install -e .
 
-5. Download the sample files::
+6. Download the sample files::
 
-    cd examples
-    python download_sample_data.py
-    cd ..
+    earthsim examples
 
     
 Usage
@@ -49,12 +47,8 @@ Once you've installed EarthSim as above and are in the EarthSim directory, you c
 run the examples shown on the website using
 `Jupyter <http://jupyter.org>`_::
 
-    cd examples
-    jupyter notebook --NotebookApp.iopub_data_rate_limit=1e8
-
-(Increasing the rate limit in this way is `required for the 5.0 Jupyter version
-<http://holoviews.org/user_guide/Installing_and_Configuring.html>`_,
-but should not be needed in earlier or later Jupyter releases.)
+    cd earthsim-examples
+    jupyter notebook
 
 You should now be able to select one of the ``user-guide`` or
 ``topics`` notebooks and run it in Jupyter.
@@ -73,3 +67,23 @@ good way to get comfortable with those tools is to work through the tutorials at
 If you find any bugs or have any feature suggestions please file a 
 `GitHub issue <https://github.com/pyviz/EarthSim/issues>`_
 or submit a `pull request <https://help.github.com/articles/about-pull-requests>`_.
+
+
+Updates
+-------
+
+Assuming you are in the EarthSim directory, and the ``earthsim`` conda
+environment is active, you can update to the latest version of
+EarthSim as follows:
+
+1. Get updated code and examples from git::
+
+    git pull
+
+2. Update the earthsim conda environment::
+
+    conda install -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt
+
+3. Get a new copy of the examples to work on, and download new or updated data::
+
+    earthsim examples	 
