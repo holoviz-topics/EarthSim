@@ -239,6 +239,6 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     """
 
     def view(self):
-        layout = (self.tiles * self.polys  * self.points +
-                  self.poly_table + self.point_table)
+        layout = (self.tiles * self.polys * self.points +
+                  self.poly_table + self.point_table + self.vertex_table)
         return layout.options(shared_datasource=True, clone=False).cols(1)
