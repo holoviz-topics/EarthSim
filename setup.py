@@ -12,6 +12,7 @@ setup_args = {'name':'earthsim'}
 setup_args.update(dict(
     version=param.version.get_setup_version(__file__,"EarthSim",setup_args['name'],archive_commit="$Format:%h$"),
     packages = find_packages(),
+    package_data={'earthsim': ['*.ts']},
     entry_points={
           'console_scripts': [
               'param = earthsim.__main__:param_main',
