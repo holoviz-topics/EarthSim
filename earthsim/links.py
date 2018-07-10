@@ -104,6 +104,7 @@ class VertexTableLinkCallback(LinkCallback):
       source_cds.data[col][index] = target_cds.data[col]
     }
     source_cds.change.emit()
+    source_cds.properties.data.change.emit();
     """
 
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
