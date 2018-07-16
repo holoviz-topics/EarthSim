@@ -55,7 +55,6 @@ class extract_foreground(Operation):
         try:
             import cv2 as cv
         except ImportError:
-            raise
             raise ImportError('GrabCut algorithm requires openCV')
 
         if isinstance(self.p.foreground, hv.Polygons):
