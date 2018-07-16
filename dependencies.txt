@@ -28,6 +28,7 @@ conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to
 conda-forge::descartes=1.1.0     # from geopandas; have not verified we need to pin this
 conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
 conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
+conda-forge::x264=20131218       # newer one breaks current opencv (e.g. https://travis-ci.org/pyviz/EarthSim/jobs/404525686)
 
 # zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
 # previous minor releases I tried were also problematic on
