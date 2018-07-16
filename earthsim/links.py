@@ -36,10 +36,18 @@ class VertexTableLinkCallback(LinkCallback):
 
     source_code = """
     var projections = require("core/util/projections");
-    if (!source_cds.selected.indices.length) { return }
-    index = source_cds.selected.indices[0]
-    xs_column = source_cds.data['xs'][index]
-    ys_column = source_cds.data['ys'][index]
+    var index = source_cds.selected.indices[0];
+    if (index == undefined) {
+      var xs_column = [];
+      var ys_column = [];
+    } else {
+      var xs_column = source_cds.data['xs'][index];
+      var ys_column = source_cds.data['ys'][index];
+    }
+    if (xs_column == undefined) {
+      var xs_column = [];
+      var ys_column = [];
+    }
     var projected_xs = []
     var projected_ys = []
     var empty = []
