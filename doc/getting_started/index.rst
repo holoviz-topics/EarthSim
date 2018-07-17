@@ -57,8 +57,8 @@ You should now be able to select one of the ``user-guide`` or
 Exploring Further
 -----------------
 
-You can look through the `User Guide <https://github.com/pyviz/EarthSim/issues>`_
-and the `Topics <https://github.com/pyviz/EarthSim/issues>`_ to see examples, but
+You can look through the `User Guide <../user_guide>`_
+and the `Topics <../topics>`_ to see examples, but
 most of the documentation is at the sites for the packages like
 `HoloViews <http://holoviews.org>`_ that are used in the examples.  A
 good way to get comfortable with those tools is to work through the tutorials at 
