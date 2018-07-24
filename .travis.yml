@@ -60,7 +60,7 @@ jobs:
       <<: *default
       stage: test
       before_script:
-        - conda install -c pyviz/label/dev --file=dependencies-dev-overrides.txt
+        - conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
         - doit env_capture
 
     - <<: *dev_default
