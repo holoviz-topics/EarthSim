@@ -59,7 +59,9 @@ jobs:
     - &dev_default
       <<: *default
       stage: test
-      before_script: conda install -c pyviz/label/dev --file=dependencies-dev-overrides.txt
+      before_script:
+        - conda install -c pyviz/label/dev --file=dependencies-dev-overrides.txt
+        - doit env_capture
 
     - <<: *dev_default
       <<: *_osx_config
