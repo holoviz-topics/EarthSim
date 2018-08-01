@@ -1,7 +1,7 @@
 ########### direct deps ###########
 #conda-forge::python=3.6 # specify separately or can't solve
 conda-forge::fiona=1.7.12
-conda-forge::gdal=2.2.4
+pyviz/label/earthsim::gdal=2.2.4             # (see note by libgdal, below)
 conda-forge::cartopy=0.16.0
 conda-forge::xarray=0.10.7
 conda-forge::geopandas=0.3.0
@@ -28,6 +28,9 @@ conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to
 conda-forge::descartes=1.1.0     # from geopandas; have not verified we need to pin this
 conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
 conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
+
+# libgdal 2.2.4 build 5 (pinned for compatibility)
+pyviz/label/earthsim::libgdal
 
 # Newer x264 breaks current c-f::opencv (3.4.1; see
 # https://github.com/conda-forge/opencv-feedstock/issues/115). Note
