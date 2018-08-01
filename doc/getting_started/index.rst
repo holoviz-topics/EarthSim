@@ -87,3 +87,15 @@ EarthSim as follows:
 3. Get a new copy of the examples to work on, and download new or updated data::
 
     earthsim examples	 
+
+
+Developers
+----------    
+    
+If you are actively developing EarthSim and want to try out the latest
+pyviz work (which is not necessarily functional or stable), run the
+following after creating or updating (and activating) your earthsim
+environment::
+
+  conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
+

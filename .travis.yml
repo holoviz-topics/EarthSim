@@ -9,14 +9,29 @@ env:
 
 stages:
   - test
+  - name: user_install
+    if: type = cron
   - name: doc
     if: branch = master AND type != pull_request
 
+_osx_config: &_osx_config
+  os: osx
+  osx_image: xcode9.3
+  env: PYENV_VERSION=3.6.4
+  before_install:
+    # set up python
+    - eval "$(pyenv init -)"
+    - pyenv install $PYENV_VERSION  
+    # check the below still required
+    # brew-installed geos interferes with cartopy?
+    - brew uninstall --ignore-dependencies geos gdal postgis
+
+
 jobs:
   include:
-    ########## TEST DEVELOPER INSTALL ##########
+    ########## TEST USER INSTALL ##########
     - &default
-      stage: test
+      stage: user_install
       before_install: true
       install:
         #####
@@ -37,16 +52,20 @@ jobs:
         - travis_wait 60 doit test_all
 
     - <<: *default
-      os: osx
-      osx_image: xcode9.3
-      env: PYENV_VERSION=3.6.4
-      before_install:
-        # set up python
-        - eval "$(pyenv init -)"
-        - pyenv install $PYENV_VERSION  
-        # check the below still required
-        # brew-installed geos interferes with cartopy?
-        - brew uninstall --ignore-dependencies geos gdal postgis
+      <<: *_osx_config
+
+
+    ########## TEST DEVELOPER INSTALL ##########
+    - &dev_default
+      <<: *default
+      stage: test
+      before_script:
+        - conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
+        - doit env_capture
+
+    - <<: *dev_default
+      <<: *_osx_config
+
 
     ########## DOCS ##########
 
