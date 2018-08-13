@@ -13,7 +13,7 @@ from holoviews.core.util import pd
 from holoviews.element.util import split_path
 from holoviews.operation.datashader import ResamplingOperation, rasterize, regrid
 from holoviews.operation import contours
-from holoviews.streams import Stream, PolyDraw
+from holoviews.streams import Stream, FreehandDraw
 
 
 class rasterize_polygon(ResamplingOperation):
@@ -144,8 +144,8 @@ class GrabCutDashboard(Stream):
         super(GrabCutDashboard, self).__init__(transient=True, **params)
         self.bg_paths = gv.project(self.path_type(bg_data, crs=self.crs), projection=image.crs)
         self.fg_paths = gv.project(self.path_type(fg_data, crs=self.crs), projection=image.crs)
-        self.draw_bg = PolyDraw(source=self.bg_paths)
-        self.draw_fg = PolyDraw(source=self.fg_paths)
+        self.draw_bg = FreehandDraw(source=self.bg_paths)
+        self.draw_fg = FreehandDraw(source=self.fg_paths)
         self.filter_stream = hv.streams.Stream.define('Filter', filter=False)(transient=True)
         self._initialized = False
         self._filter = False
