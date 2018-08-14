@@ -1,0 +1,25 @@
+
+# See the following link for more information about bokeh theming:
+# 
+# https://bokeh.pydata.org/en/latest/docs/reference/themes.html
+attrs:
+    Figure:
+        background_fill_color: 'white'
+        border_fill_color: 'white'
+        outline_line_color: 'white'
+    Grid:
+        grid_line_dash: [6, 4]
+        grid_line_alpha: .3
+    Title:
+        text_color: 'black' # See issue #2008 in HoloViews repo
+    Axis:
+        major_label_text_color: "black"
+        axis_label_text_color: "black"
+        major_tick_line_color: "black"
+        minor_tick_line_color: "black"
+        axis_line_color: "black"
+    ColorBar:
+        background_fill_color: 'white'
+    Button:
+        width: 80
+ 
