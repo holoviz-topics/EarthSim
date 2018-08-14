@@ -1,4 +1,4 @@
-from dashboard import GrabCutsApp, SelectRegionApp
+from dashboard import GrabCutApp, SelectRegionApp
 
 
 if __name__ == '__main__':
@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     server = Server({
         '/region': SelectRegionApp(name = 'Region Selection')(),
-        '/grabcut': GrabCutsApp(name='GrabCut Dashboard')()})
+        '/grabcut': GrabCutApp(name='GrabCut Dashboard')()})
 
     server.start()
 
