@@ -93,7 +93,7 @@ class GeoAnnotator(param.Parameterized):
             self.polys = polys
         else:
             self.polys = self.path_type(polys, crs=crs).options(**opts)
-        self.poly_stream = PolyDraw(source=self.polys, data={})
+        self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True)
         self.vertex_stream = PolyEdit(source=self.polys)
         if isinstance(points, Points):
             self.points = points
