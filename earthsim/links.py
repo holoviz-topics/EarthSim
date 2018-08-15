@@ -73,6 +73,7 @@ class PointTableLinkCallback(LinkCallback):
        }
     }
     target_cds.change.emit()
+    target_cds.data = target_cds.data
     """
 
     target_code = """
@@ -98,6 +99,8 @@ class PointTableLinkCallback(LinkCallback):
        }
     }
     source_cds.change.emit()
+    source_cds.properties.data.change.emit()
+    source_cds.data = source_cds.data
     """
     
 
@@ -155,6 +158,7 @@ class VertexTableLinkCallback(LinkCallback):
       target_cds.data[col] = data;
     }
     target_cds.change.emit()
+    target_cds.data = target_cds.data
     """
 
     target_code = """
@@ -188,6 +192,7 @@ class VertexTableLinkCallback(LinkCallback):
     }
     source_cds.change.emit()
     source_cds.properties.data.change.emit();
+    source_cds.data = source_cds.data
     """
 
     
