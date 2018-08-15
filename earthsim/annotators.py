@@ -18,7 +18,7 @@ from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh
 
 from .custom_tools import CheckpointTool, RestoreTool, ClearTool
-from .links import VertexTableLink
+from .links import VertexTableLink, PointTableLink
 
 
 def poly_to_geopandas(polys, columns):
@@ -225,11 +225,12 @@ class PointAnnotator(GeoAnnotator):
             if col not in self.points:
                 self.points = self.points.add_dimension(col, 0, None, True)
         self.point_stream = PointDraw(source=self.points, data={})
-        self.point_table = Table(self.points).opts(plot=plot, style=style)
+        projected = gv.project(self.points, projection=ccrs.PlateCarree())
+        self.point_table = Table(projected).opts(plot=plot, style=style)
+        self.point_link = PointTableLink(source=self.points, target=self.point_table)
 
     def view(self):
-        layout = (self.tiles * self.polys * self.points + self.point_table)
-        return layout.options(shared_datasource=True, clone=False).cols(1)
+        return (self.tiles * self.polys * self.points + self.point_table).cols(1)
 
 
 class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):

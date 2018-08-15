@@ -1,9 +1,28 @@
 import param
 
-from holoviews.element import Path, Table
+from holoviews.element import Path, Table, Points
 from holoviews.plotting.links import Link
 from holoviews.plotting.bokeh.callbacks import LinkCallback
 from holoviews.core.util import dimension_sanitizer
+
+class PointTableLink(Link):
+    """
+    Defines a Link between a Points type and a Table which will
+    display the projected coordinates.
+    """
+
+    source = param.ClassSelector(class_=Points)
+
+    target = param.ClassSelector(class_=Table)
+
+    point_columns = param.List(default=[])
+
+    def __init__(self, source, target, **params):
+        if 'point_columns' not in params:
+            dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
+            params['point_columns'] = dimensions
+        super(PointTableLink, self).__init__(source, target, **params)
+
 
 class VertexTableLink(Link):
     """
@@ -24,12 +43,68 @@ class VertexTableLink(Link):
         super(VertexTableLink, self).__init__(source, target, **params)
 
 
+class PointTableLinkCallback(LinkCallback):
+
+    source_model = 'cds'
+    target_model = 'cds'
+
+    on_source_changes = ['data']
+    on_target_changes = ['data']
+
+    source_code = """
+    var projections = require("core/util/projections");
+    [x, y] = point_columns
+    var xs_column = source_cds.data[x];
+    var ys_column = source_cds.data[y];
+    var projected_xs = []
+    var projected_ys = []
+    for (i = 0; i < xs_column.length; i++) {
+      var xv = xs_column[i]
+      var yv = ys_column[i]
+      p = projections.wgs84_mercator.inverse([xv, yv])
+      projected_xs.push(p[0])
+      projected_ys.push(p[1])
+    }
+    target_cds.data[x] = projected_xs;
+    target_cds.data[y] = projected_ys;
+    for (col of source_cds.columns()) {
+       if ((col != x) && (col != y)) {
+         target_cds.data[col] = source_cds.data[col]
+       }
+    }
+    target_cds.change.emit()
+    """
+
+    target_code = """
+    var projections = require("core/util/projections");
+    [x, y] = point_columns
+    var xs_column = target_cds.data[x];
+    var ys_column = target_cds.data[y];
+    var projected_xs = []
+    var projected_ys = []
+    var empty = []
+    for (i = 0; i < xs_column.length; i++) {
+      var xv = xs_column[i]
+      var yv = ys_column[i]
+      p = projections.wgs84_mercator.forward([xv, yv])
+      projected_xs.push(p[0])
+      projected_ys.push(p[1])
+    }
+    source_cds.data[x] = projected_xs;
+    source_cds.data[y] = projected_ys;
+    for (col of target_cds.columns()) {
+       if ((col != x) && (col != y)) {
+         source_cds.data[col] = target_cds.data[col]
+       }
+    }
+    source_cds.change.emit()
+    """
+    
+
 class VertexTableLinkCallback(LinkCallback):
 
     source_model = 'cds'
-    source_handles = ['glyph_renderer']
     target_model = 'cds'
-    target_handles = ['glyph_renderer']
 
     on_source_changes = ['selected', 'data']
     on_target_changes = ['data']
@@ -115,4 +190,6 @@ class VertexTableLinkCallback(LinkCallback):
     source_cds.properties.data.change.emit();
     """
 
+    
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
+PointTableLink.register_callback('bokeh', PointTableLinkCallback)
