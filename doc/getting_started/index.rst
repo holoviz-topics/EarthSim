@@ -39,6 +39,8 @@ EarthSim itself is a pure Python package that itself would be easy to install, b
 
     earthsim examples
 
+These instructions are designed to build a working environment repeatably on Mac OS X, Windows, and Linux platforms, pinning dependencies to known versions to avoid incompatibilities with new releases of the software required.
+    
     
 Usage
 -----
@@ -92,10 +94,21 @@ EarthSim as follows:
 Developers
 ----------    
     
-If you are actively developing EarthSim and want to try out the latest
-pyviz work (which is not necessarily functional or stable), run the
-following after creating or updating (and activating) your earthsim
-environment::
+If you are actively collaborating with the EarthSim developers and
+want to try out the latest pyviz work as it first appears (which is
+not necessarily functional or stable), you can run the following after
+creating or updating (and activating) your earthsim environment::
 
   conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
 
+This command will update the main packages to the latest `dev` releases,
+which appear periodically after new features are added.
+  
+If you *really* want to be on the bleeding edge, you can instead get
+the absolute latest changes by cloning the earthsim, holoviews,
+geoviews, datashader, param, and parambokeh Github repositories and
+running `pip install -e .` inside each one, pulling new changes from
+each of these libraries as needed.  That's what the main developers
+do, but it isn't recommended for other users unless you are very
+skilled at debugging the broken environments that are likely to appear
+as packages change unpredictably over time.
