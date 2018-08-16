@@ -13,6 +13,7 @@ import holoviews as hv
 import geoviews as gv
 
 from holoviews import DynamicMap, Path, Table, NdOverlay
+from holoviews.plotting.links import DataLink
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh
@@ -191,13 +192,20 @@ class PolyAnnotator(GeoAnnotator):
         super(PolyAnnotator, self).__init__(**params)
         style = dict(editable=True)
         plot = dict(width=self.width, height=self.table_height)
-        self.polys.data = poly_to_geopandas(self.polys, self.poly_columns)
-        self.polys.interface = GeoPandasInterface
+
+        # Add annotation columns to poly data
+        for col in self.poly_columns:
+            if col not in self.polys:
+                self.polys = self.polys.add_dimension(col, 0, '', True)
+                self.polys.vdims = [vd for vd in self.polys.vdims if vd != col]
+        self.poly_stream.source = self.polys
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
                                          for kd in self.polys.kdims})
+
         self.poly_table = Table(self.polys.data, self.poly_columns, []).opts(plot=plot, style=style)
+        self.poly_link = DataLink(source=self.polys, target=self.poly_table)
         self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
         self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
 
@@ -242,4 +250,4 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     def view(self):
         layout = (self.tiles * self.polys * self.points +
                   self.poly_table + self.point_table + self.vertex_table)
-        return layout.options(shared_datasource=True, clone=False).cols(1)
+        return layout.cols(1)
