@@ -210,8 +210,7 @@ class PolyAnnotator(GeoAnnotator):
         self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
 
     def view(self):
-        layout = (self.tiles * self.polys * self.points + self.poly_table + self.vertex_table)
-        return layout.options(shared_datasource=True, clone=False).cols(1)
+        return (self.tiles * self.polys * self.points + self.poly_table + self.vertex_table).cols(1)
 
 
 class PointAnnotator(GeoAnnotator):
@@ -248,6 +247,5 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     """
 
     def view(self):
-        layout = (self.tiles * self.polys * self.points +
-                  self.poly_table + self.point_table + self.vertex_table)
-        return layout.cols(1)
+        return(self.tiles * self.polys * self.points +
+               self.poly_table + self.point_table + self.vertex_table).cols(1)

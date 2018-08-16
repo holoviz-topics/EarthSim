@@ -94,7 +94,7 @@ class FiligreeMesh(Stream):
     def add_refine_points(self, helper):
         if not isinstance(helper, PointAnnotator):
             return []
-        points = helper.points.clone(helper.point_stream.data)
+        points = helper.point_stream.element
         if self.crs:
             points = project_points(points, projection=crs)
         elif 'Size' not in helper.point_columns:
@@ -161,7 +161,7 @@ class FiligreeMeshDashboard(FiligreeMesh):
         self.refine_points = self.add_refine_points(self.draw_helper)
         verts, tris = self.mesh.create_mesh()
         return datashade(viz_mesh(verts, tris).edgepaths, cmap=['#000000'],
-                         dynamic=False)
+                         dynamic=False, aggregator='any')
 
     def view(self):
         helper = self.draw_helper
@@ -172,4 +172,4 @@ class FiligreeMeshDashboard(FiligreeMesh):
         else:
             layout = (helper.tiles * helper.polys * mesh_dmap * helper.points +
                       helper.point_table)
-        return layout.options(shared_datasource=True, clone=False).cols(1)
+        return layout.cols(1)
