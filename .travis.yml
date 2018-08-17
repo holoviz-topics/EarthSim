@@ -43,7 +43,7 @@ jobs:
         - conda install -c pyviz/label/dev pyctdev && doit ecosystem_setup
         #####
         - conda config --set path_conflict warn
-        - conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
+        - conda create -n earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
         - source activate earthsim
         - pip install -e .
         - doit env_capture
