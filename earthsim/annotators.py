@@ -13,6 +13,7 @@ import holoviews as hv
 import geoviews as gv
 
 from holoviews import DynamicMap, Path, Table, NdOverlay
+from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
 from geoviews.data.geopandas import GeoPandasInterface
@@ -197,7 +198,8 @@ class PolyAnnotator(GeoAnnotator):
         for col in self.poly_columns:
             if col not in self.polys:
                 self.polys = self.polys.add_dimension(col, 0, '', True)
-                self.polys.vdims = [vd for vd in self.polys.vdims if vd != col]
+                with disable_constant(self.polys):
+                    self.polys.vdims = [vd for vd in self.polys.vdims if vd != col]
         self.poly_stream.source = self.polys
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
