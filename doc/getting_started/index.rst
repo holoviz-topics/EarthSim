@@ -21,7 +21,7 @@ EarthSim itself is a pure Python package that itself would be easy to install, b
 3. Set up an environment with all of the dependencies needed to run the examples::
     
     cd EarthSim
-    conda create -n earthsim -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
+    conda create -n earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
 
 4. Activate the earthsim environment::
 	 
