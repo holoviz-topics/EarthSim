@@ -138,7 +138,7 @@ class SelectRegionPlot(param.Parameterized):
                                                                 color='blue',
                                                                 line_color='blue',
                                                                 line_width=2)
-        self.box_stream = hv.streams.BoxEdit(source=boxes)
+        self.box_stream = hv.streams.BoxEdit(source=boxes,num_objects=1)
         return tiles * boxes
 
 
