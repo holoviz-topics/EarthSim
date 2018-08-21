@@ -168,16 +168,24 @@ class GrabCutsLayout(DashboardLayout):
 
     def __init__(self, tiff_file, bbox, **params):
         super(GrabCutsLayout, self).__init__(**params)
-        da = xr.open_rasterio(tiff_file)
-        rgb = gv.RGB((da.x, da.y, da[0], da[1], da[2]),
-                     vdims=['R', 'G', 'B'], crs=ccrs.UTM(18))
+        arr = xr.open_rasterio(tiff_file)
+
+        # Originally crs of RGB was specified as ccrs.UTM(18)
+        rgb = gv.RGB((arr.x, arr.y, arr[0].values,
+                      arr[1].values, arr[2].values),
+                     vdims=['R', 'G', 'B'])
         self.dashboard = GrabCutDashboard(rgb, fg_data=[], bg_data=[], height=600)
 
     @classmethod
     def tiff_from_bbox(cls, url, zoom_level, bbox):
-        options = {'url': url, 'zoom_level': zoom_level, 'bbox': bbox}
-        basemap_features = quest.api.get_features('svc://wmts:seamless_imagery')
-        collection_name = 'the_demo2'
+        options = {'url': url, 'zoom_level': zoom_level,
+                   'bbox': bbox, 'crop_to_bbox':True}
+
+        quest_service = 'svc://wmts:seamless_imagery'
+        tile_service_options = quest.api.download_options(quest_service,
+                                                          fmt='param')[quest_service]
+        basemap_features = quest.api.get_features(quest_service)
+        collection_name = 'examples'
         if collection_name in quest.api.get_collections():
             pass
         else:
