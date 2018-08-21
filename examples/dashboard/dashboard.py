@@ -176,7 +176,7 @@ class GrabCutsLayout(DashboardLayout):
     @classmethod
     def tiff_from_bbox(cls, url, zoom_level, bbox):
         options = {'url': url, 'zoom_level': zoom_level, 'bbox': bbox}
-        basemap_features = quest.api.get_features('svc://basemap:Web Mercator Tile Service')
+        basemap_features = quest.api.get_features('svc://wmts:seamless_imagery')
         collection_name = 'the_demo2'
         if collection_name in quest.api.get_collections():
             pass
