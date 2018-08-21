@@ -126,7 +126,11 @@ class SelectRegionPlot(param.Parameterized):
         self.url_stream.event(url=url)
 
     def callback(self, url):
-        return gv.WMTS(url, extents=(-180, -90, 180, 90), crs=ccrs.PlateCarree()).options(width=500, height=500)
+        return (gv.WMTS(url, extents=(-180, -90, 180, 90),
+                        crs=ccrs.PlateCarree()).options(width=500, height=500) *
+                gv.WMTS(gv.tile_sources.StamenLabels.data,
+                        extents=(-180, -90, 180, 90),
+                        crs=ccrs.PlateCarree()).options(width=500, height=500))
 
     def __call__(self):
         tiles = gv.DynamicMap(self.callback, streams=[self.url_stream])
