@@ -155,8 +155,7 @@ class SelectRegion(DashboardLayout):
         # Update shared_state with bounding box (if any)
         if element:
             xs, ys = element.array().T
-            bbox = list(gv.util.project_extents((xs[0], ys[0], xs[2], ys[1]),
-                                                ccrs.GOOGLE_MERCATOR, ccrs.PlateCarree()))
+            bbox = (xs[0], ys[0], xs[2], ys[1])
             return bbox
         else:
             return None
