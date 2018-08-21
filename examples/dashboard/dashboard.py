@@ -34,7 +34,7 @@ arcgis_paths = ['World_Imagery/MapServer/tile/{Z}/{Y}/{X}',
                 'Ocean_Basemap/MapServer/tile/{Z}/{Y}/{X}',
                 'NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}']
 arcgis_urls = [arcgis_server + arcgis_path for arcgis_path in arcgis_paths]
-URL_LIST = misc_servers + arcgis_urls
+URL_LIST = arcgis_urls + misc_servers
 
 
 
