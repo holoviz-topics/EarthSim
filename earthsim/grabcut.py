@@ -188,5 +188,6 @@ class GrabCutDashboard(Stream):
         options = dict(width=self.width, height=self.height, xaxis=None, yaxis=None)
         dmap = hv.DynamicMap(self.extract_foreground, streams=[self])
         dmap = hv.util.Dynamic(dmap, operation=self.filter_contours, streams=[self.filter_stream])
-        return (gv.tile_sources.Wikipedia * regrid(self.image).options(**options) * self.bg_paths * self.fg_paths +
-                dmap.options(**options)).options(merge_tools=False, clone=False)
+        return (gv.tile_sources.Wikipedia * regrid(self.image).options(**options)
+                * self.bg_paths * self.fg_paths +
+                dmap.options(**dict(tools=['tap'], **options))).options(merge_tools=False, clone=False)
