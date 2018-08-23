@@ -6,6 +6,7 @@ import bokeh.layouts
 
 from jinja2 import Environment, FileSystemLoader
 from bokeh.themes.theme import Theme
+from bokeh.models import Div
 
 import param
 import holoviews as hv
@@ -98,6 +99,16 @@ class DashboardLayout(param.Parameterized):
         Given a HoloViews object return the corresponding Bokeh model.
         """
         return renderer.get_plot(hvobj, doc=doc).state
+
+class DivLayout(DashboardLayout):
+
+    def __init__(self, text, width, **params):
+        self.text = text
+        self.width = width
+        super(DivLayout, self).__init__(**params)
+
+    def __call__(self, shared_state, doc):
+        return Div(text=self.text, width=self.width)
 
 
 class ComposeLayouts(DashboardLayout):

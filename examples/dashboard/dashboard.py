@@ -1,12 +1,11 @@
 from pathlib import Path
 from collections import OrderedDict
-from bokeh.models import Div
 
 import os
 import param
 import parambokeh
 
-from app import App, DashboardLayout, ComposeLayouts, shared_state
+from app import App, DashboardLayout, ComposeLayouts, ColumnLayouts, DivLayout, shared_state
 
 
 import numpy as np
@@ -213,15 +212,6 @@ class GrabCutsLayout(DashboardLayout):
         return self.model(self.dashboard.view(), doc)
 
 
-
-class Instructions(DashboardLayout):
-    "Layout to use when there are no plots to show on the dashboard page"
-
-    def __call__(self, shared_state, doc):
-        html = "<center>Select the BoxEdit tool and double click to define the start and end of the ROI.</center>"
-        return Div(text=html)
-
-
 class GrabCutSettings(DashboardLayout):
     """
     Layout showing the grabcut visualization widgets.
@@ -246,15 +236,21 @@ class SelectRegionApp(param.Parameterized, App):
         self.load_theme()
         self.layouts = {}
 
+        self.instructions = "<div style='text-align:left'>In this dashboard you can select the BoxEdit tool and double click to define the start and end of the region of interest. The magnification determines how the resolution will scale up relative to the chosen selection. </div>"
+
     def viewable(self, doc=None):
         self.apply_theming(doc)
 
         select_region = SelectRegion()
         widgets = SelectRegionWidgets(select_region)
 
-        self.layouts[doc] = ComposeLayouts([[Instructions(),
-                                             LaunchGrabCut(select_region)],
-                                            [widgets, select_region]])
+        self.layouts[doc] = ColumnLayouts(
+            [DivLayout(self.instructions, width=1300),
+            ComposeLayouts([[LaunchGrabCut(select_region), DivLayout('', width=900)],
+                            [widgets, select_region]
+                ])
+             ]
+        )
         return self.layouts[doc](shared_state, doc)
 
 
@@ -269,6 +265,8 @@ class GrabCutApp(param.Parameterized, App):
         self.load_theme()
         self.layouts = {}
 
+        self.instructions = "<div style='text-align:left'>In this dashboard you can apply the grabcut algorithm to extract a coastline by drawing the foreground and background with the freehand draw tool. You can also filter out small undesired features by size. </div>"
+
     def viewable(self, doc=None):
         self.apply_theming(doc)
 
@@ -280,5 +278,7 @@ class GrabCutApp(param.Parameterized, App):
 
         grabcut = GrabCutsLayout(GrabCutsLayout.tiff_from_bbox(url, zoom_level, bbox), bbox)
         grabcutsettings = GrabCutSettings(grabcut)
-        self.layouts[doc] = ComposeLayouts([[grabcutsettings, grabcut]])
+        self.layouts[doc] = ColumnLayouts(
+            [DivLayout(self.instructions, width=1300),
+             ComposeLayouts([[grabcutsettings, grabcut]])])
         return self.layouts[doc](shared_state, doc)
