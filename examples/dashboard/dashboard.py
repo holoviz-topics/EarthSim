@@ -93,11 +93,11 @@ class GrabCutButton(param.Parameterized):
     Button to run the grab cut algorithm with the selected bounding box
     """
 
-    grab_cut = param.Action(precedence=0.01)
+    extract = param.Action(precedence=0.01)
 
     def __init__(self, select_region, **params):
         super(GrabCutButton, self).__init__(**params)
-        self.params('grab_cut').default = self.load_data
+        self.params('extract').default = self.load_data
         self.select_region = select_region
 
 
