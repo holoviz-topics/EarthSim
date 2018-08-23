@@ -134,12 +134,12 @@ class SelectRegionPlot(param.Parameterized):
 
     def __call__(self):
         tiles = gv.DynamicMap(self.callback, streams=[self.url_stream])
-        boxes = gv.Polygons([], crs=ccrs.PlateCarree()).options(fill_alpha=0.4,
-                                                                color='blue',
-                                                                line_color='blue',
+        boxes = gv.Polygons([], crs=ccrs.PlateCarree()).options(fill_alpha=0.5,
+                                                                color='grey',
+                                                                line_color='white',
                                                                 line_width=2)
         self.box_stream = hv.streams.BoxEdit(source=boxes,num_objects=1)
-        return tiles * boxes
+        return (tiles * boxes).options(width=900, height=700)
 
 
 class SelectRegion(DashboardLayout):
@@ -178,7 +178,8 @@ class GrabCutsLayout(DashboardLayout):
         rgb = gv.RGB((arr.x, arr.y, arr[0].values,
                       arr[1].values, arr[2].values),
                      vdims=['R', 'G', 'B'])
-        self.dashboard = GrabCutDashboard(rgb, fg_data=[], bg_data=[], height=600)
+        self.dashboard = GrabCutDashboard(rgb, fg_data=[], bg_data=[], height=600,
+                                          name='GrabCut Extractor')
 
     @classmethod
     def tiff_from_bbox(cls, url, zoom_level, bbox):
