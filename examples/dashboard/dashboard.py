@@ -55,7 +55,7 @@ class SelectRegionWidgets(DashboardLayout):
 
 
     def __call__(self, shared_state, doc):
-        self.layout.plot.name = 'Region Settings'
+        self.layout.plot.name = 'Settings'
         return parambokeh.Widgets(self.layout.plot, mode='raw',
                                   doc=doc, callback=self.callback)
 
@@ -67,7 +67,7 @@ class LaunchGrabCut(DashboardLayout):
     """
 
     def __init__(self, select_region):
-        self.button = GrabCutButton(select_region, name='Launch GrabCut')
+        self.button = GrabCutButton(select_region, name='Extract Coastline')
 
     def __call__(self, shared_state, doc):
         from bokeh.models.widgets import Button
