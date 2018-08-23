@@ -125,10 +125,10 @@ class GrabCutDashboard(Stream):
     filter_contour = param.Action(default=lambda self: self.filter_stream.event(filter=True), precedence=1,
                                   doc="""Button triggering GrabCut.""")
 
-    width = param.Integer(default=500, precedence=-1, doc="""
+    width = param.Integer(default=600, precedence=-1, doc="""
         Width of the plot""")
 
-    height = param.Integer(default=500, precedence=-1, doc="""
+    height = param.Integer(default=600, precedence=-1, doc="""
         Height of the plot""")
 
     downsample = param.Magnitude(default=1., doc="""
