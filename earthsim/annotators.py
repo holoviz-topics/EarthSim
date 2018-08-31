@@ -90,11 +90,10 @@ class GeoAnnotator(param.Parameterized):
         points = [] if points is None else points
         crs = ccrs.GOOGLE_MERCATOR if crs is None else crs
         tools = [CheckpointTool(), RestoreTool(), ClearTool()]
-        opts = dict(tools=tools, finalize_hooks=[initialize_tools])
-        if isinstance(polys, Path):
-            self.polys = polys
-        else:
-            self.polys = self.path_type(polys, crs=crs).options(**opts)
+        opts = dict(tools=tools, finalize_hooks=[initialize_tools], color_index=None)
+        if not isinstance(polys, Path):
+            polys = self.path_type(polys, crs=crs).options(**opts)
+        self.polys = polys.options(**opts)
         self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True)
         self.vertex_stream = PolyEdit(source=self.polys)
         if isinstance(points, Points):
@@ -198,15 +197,14 @@ class PolyAnnotator(GeoAnnotator):
         for col in self.poly_columns:
             if col not in self.polys:
                 self.polys = self.polys.add_dimension(col, 0, '', True)
-                with disable_constant(self.polys):
-                    self.polys.vdims = [vd for vd in self.polys.vdims if vd != col]
         self.poly_stream.source = self.polys
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
                                          for kd in self.polys.kdims})
 
-        self.poly_table = Table(self.polys.data, self.poly_columns, []).opts(plot=plot, style=style)
+        poly_data = {c: self.polys.dimension_values(c, expanded=False) for c in self.poly_columns}
+        self.poly_table = Table(poly_data, self.poly_columns, []).opts(plot=plot, style=style)
         self.poly_link = DataLink(source=self.polys, target=self.poly_table)
         self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
         self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
