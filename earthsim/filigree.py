@@ -57,7 +57,7 @@ class FiligreeMesh(Stream):
     def _process_polys(self, element):
         if self.crs:
             element = project_path(element, projection=self.crs)
-        polys = [Polygon(arr) for arr in element.split(datatype='array')]
+        polys = [Polygon(arr) for arr in element.split(dimensions=element.kdims, datatype='array')]
 
         # Resolve polygons contained within other polygons as holes
         poly_ids = {}
