@@ -112,7 +112,6 @@ class SelectRegionPlot(param.Parameterized):
     name = param.String(default='Region Settings')
 
 
-    url = param.ObjectSelector(default=URL_LIST[0], objects=URL_LIST)
     width = param.Integer(default=900, precedence=-1, doc="Width of the plot in pixels")
 
     height = param.Integer(default=700, precedence=-1, doc="Height of the plot in pixels")
@@ -121,6 +120,12 @@ class SelectRegionPlot(param.Parameterized):
     zoom_level = param.Integer(default=7, bounds=(1,21), precedence=-1, doc="""
        The zoom level is updated when the bounding box is drawn."""   )
 
+    url = param.ObjectSelector(default=URL_LIST[0], objects=URL_LIST, precedence=-1)
+
+
+    tile_server = param.ObjectSelector(default=arcgis_paths[0], objects=arcgis_paths)
+
+    magnification = param.Integer(default=1, bounds=(1,10), precedence=0.1)
     def __init__(self, **params):
         super(SelectRegionPlot, self).__init__(**params)
         self.url_stream = hv.streams.Stream.define('url', url=self.url)()
