@@ -110,12 +110,7 @@ class GrabCutsLayout(DashboardLayout):
         if isinstance(tiff_file, tuple):
             tiff_file = GrabCutDashboard.tiff_from_bbox(*tiff_file)
 
-        arr = xr.open_rasterio(tiff_file)
-
-        # Originally crs of RGB was specified as ccrs.UTM(18)
-        rgb = gv.RGB((arr.x, arr.y, arr[0].values,
-                      arr[1].values, arr[2].values),
-                     vdims=['R', 'G', 'B'])
+        rgb = GrabCutDashboard.tiff_to_rgb(tiff_file)
         self.dashboard = GrabCutDashboard(rgb, fg_data=[], bg_data=[], height=600,
                                           name='GrabCut Extractor')
 

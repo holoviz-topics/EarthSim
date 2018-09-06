@@ -6,6 +6,7 @@ import holoviews as hv
 import geoviews as gv
 import cartopy.crs as ccrs
 import datashader as ds
+import xarray as xr
 
 from PIL import Image, ImageDraw
 from holoviews.core.operation import Operation
@@ -181,6 +182,18 @@ class GrabCutDashboard(Stream):
         if not os.path.isfile(file_path):
             print('Error: No TIFF downloaded')
         return file_path
+
+    @classmethod
+    def tiff_to_rgb(cls, tiff_file):
+        """
+        Simple helper classmethod to load a tiff_file to a gv.RGB.
+        """
+        arr = xr.open_rasterio(tiff_file)
+
+        # Originally crs of RGB was specified as ccrs.UTM(18)
+        return gv.RGB((arr.x, arr.y, arr[0].values,
+                       arr[1].values, arr[2].values),
+                      vdims=['R', 'G', 'B'])
 
     def extract_foreground(self, **kwargs):
         img = self.image
