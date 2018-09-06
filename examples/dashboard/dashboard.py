@@ -19,23 +19,24 @@ import quest
 from earthsim.grabcut import GrabCutDashboard
 
 
-misc_servers =  ['http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-                 'https://s.basemaps.cartocdn.com/light_all/{Z}/{X}/{Y}.png',
-                 'http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png']
+misc_servers =  {'OpenStreetMap':'http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
+                 'Basemaps CartoCDN':'https://s.basemaps.cartocdn.com/light_all/{Z}/{X}/{Y}.png',
+                 'Stamen':'http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png'}
 
 arcgis_server = 'https://server.arcgisonline.com/ArcGIS/rest/services/'
-arcgis_paths = ['World_Imagery/MapServer/tile/{Z}/{Y}/{X}',
-                'World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}',
-                'World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}',
-                'World_Street_Map/MapServer/tile/{Z}/{Y}/{X}',
-                'World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}',
-                'World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}',
-                'USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}',
-                'Ocean_Basemap/MapServer/tile/{Z}/{Y}/{X}',
-                'NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}']
-arcgis_urls = [arcgis_server + arcgis_path for arcgis_path in arcgis_paths]
-URL_LIST = arcgis_urls + misc_servers
+arcgis_paths = {'World Imagery':'World_Imagery/MapServer/tile/{Z}/{Y}/{X}',
+                'World Topo Map':'World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}',
+                'World Terrain Base':'World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}',
+                'World Street Map': 'World_Street_Map/MapServer/tile/{Z}/{Y}/{X}',
+                'World Shaded Relief': 'World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}',
+                'World Physical Map': 'World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}',
+                'USA Topo Maps' : 'USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}',
+                'Ocean Basemap' : 'Ocean_Basemap/MapServer/tile/{Z}/{Y}/{X}',
+                'NatGeo World Map' : 'NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}'}
 
+arcgis_urls = {k: arcgis_server + v for k,v in arcgis_paths.items()}
+URL_LIST = list(arcgis_urls.values()) + list(misc_servers.values())
+URL_DICT = dict(misc_servers, **arcgis_urls)
 
 
 class SelectRegionWidgets(DashboardLayout):
@@ -45,11 +46,11 @@ class SelectRegionWidgets(DashboardLayout):
 
     def __init__(self, layout):
         self.layout = layout
-        shared_state.set_state(url=self.layout.plot.url)
+        shared_state.set_state(tile_server=self.layout.plot.tile_server)
 
     def callback(self, obj, **kwargs):
-        self.layout.plot.set_url(obj.url)
-        shared_state.set_state(url=obj.url)
+        self.layout.plot.set_tile_server(obj.tile_server)
+        shared_state.set_state(tile_server=obj.tile_server)
 
 
     def __call__(self, shared_state, doc):
@@ -111,24 +112,20 @@ class SelectRegionPlot(param.Parameterized):
 
     name = param.String(default='Region Settings')
 
-
     width = param.Integer(default=900, precedence=-1, doc="Width of the plot in pixels")
 
     height = param.Integer(default=700, precedence=-1, doc="Height of the plot in pixels")
 
-
     zoom_level = param.Integer(default=7, bounds=(1,21), precedence=-1, doc="""
        The zoom level is updated when the bounding box is drawn."""   )
 
-    url = param.ObjectSelector(default=URL_LIST[0], objects=URL_LIST, precedence=-1)
-
-
-    tile_server = param.ObjectSelector(default=arcgis_paths[0], objects=arcgis_paths)
+    tile_server = param.ObjectSelector(default=URL_DICT['World Imagery'], objects=URL_DICT)
 
     magnification = param.Integer(default=1, bounds=(1,10), precedence=0.1)
+
     def __init__(self, **params):
         super(SelectRegionPlot, self).__init__(**params)
-        self.url_stream = hv.streams.Stream.define('url', url=self.url)()
+        self.tile_server_stream = hv.streams.Stream.define('tile_server', tile_server=self.tile_server)()
         self.box_stream = None
 
     @classmethod
@@ -171,12 +168,12 @@ class SelectRegionPlot(param.Parameterized):
         return min(latZoom, lngZoom, max_zoom)
 
 
-    def set_url(self, url):
-        self.url = url
-        self.url_stream.event(url=url)
+    def set_tile_server(self, tile_server):
+        self.tile_server = tile_server
+        self.tile_server_stream.event(tile_server=tile_server)
 
-    def callback(self, url):
-        return (gv.WMTS(url, extents=(-180, -90, 180, 90),
+    def callback(self, tile_server):
+        return (gv.WMTS(tile_server, extents=(-180, -90, 180, 90),
                         crs=ccrs.PlateCarree()).options(width=500, height=500) *
                 gv.WMTS(gv.tile_sources.StamenLabels.data,
                         extents=(-180, -90, 180, 90),
@@ -198,7 +195,7 @@ class SelectRegionPlot(param.Parameterized):
 
 
     def __call__(self):
-        tiles = gv.DynamicMap(self.callback, streams=[self.url_stream])
+        tiles = gv.DynamicMap(self.callback, streams=[self.tile_server_stream])
         boxes = gv.Polygons([], crs=ccrs.PlateCarree()).options(fill_alpha=0.5,
                                                                 color='grey',
                                                                 line_color='white',
@@ -236,8 +233,8 @@ class GrabCutsLayout(DashboardLayout):
                                           name='GrabCut Extractor')
 
     @classmethod
-    def tiff_from_bbox(cls, url, zoom_level, bbox):
-        options = {'url': url, 'zoom_level': zoom_level,
+    def tiff_from_bbox(cls, tile_server, zoom_level, bbox):
+        options = {'tile_server': tile_server, 'zoom_level': zoom_level,
                    'bbox': bbox, 'crop_to_bbox':True}
 
         quest_service = 'svc://wmts:seamless_imagery'
@@ -306,8 +303,10 @@ class SelectRegionApp(param.Parameterized, App):
                 ])
              ]
         )
-        return self.layouts[doc](shared_state, doc)
 
+
+
+        return self.layouts[doc](shared_state, doc)
 
 
 class GrabCutApp(param.Parameterized, App):
@@ -325,13 +324,13 @@ class GrabCutApp(param.Parameterized, App):
     def viewable(self, doc=None):
         self.apply_theming(doc)
 
-        url = shared_state.state.get('url', None)
+        tile_server = shared_state.state.get('tile_server', None)
         bbox = shared_state.state.get('bbox', None)
         zoom_level = shared_state.state.get('zoom_level', None)
-        if None in [url, bbox, zoom_level]:
+        if None in [tile_server, bbox, zoom_level]:
             print('Missing information for selecting a tile.')
 
-        grabcut = GrabCutsLayout(GrabCutsLayout.tiff_from_bbox(url, zoom_level, bbox), bbox)
+        grabcut = GrabCutsLayout(GrabCutsLayout.tiff_from_bbox(tile_server, zoom_level, bbox), bbox)
         grabcutsettings = GrabCutSettings(grabcut)
         self.layouts[doc] = ColumnLayouts(
             [DivLayout(self.instructions, width=1300),
