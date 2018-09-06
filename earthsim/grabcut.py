@@ -15,6 +15,9 @@ from holoviews.operation.datashader import ResamplingOperation, rasterize, regri
 from holoviews.operation import contours
 from holoviews.streams import Stream, FreehandDraw
 
+import quest
+import os
+import math
 
 class rasterize_polygon(ResamplingOperation):
     """
@@ -149,6 +152,35 @@ class GrabCutDashboard(Stream):
         self.filter_stream = hv.streams.Stream.define('Filter', filter=False)(transient=True)
         self._initialized = False
         self._filter = False
+
+
+    @classmethod
+    def tiff_from_bbox(cls, tile_server, zoom_level, bbox):
+        options = {'url': tile_server, 'zoom_level': zoom_level,
+                   'bbox': bbox, 'crop_to_bbox':True}
+
+        quest_service = 'svc://wmts:seamless_imagery'
+        tile_service_options = quest.api.download_options(quest_service,
+                                                          fmt='param')[quest_service]
+        basemap_features = quest.api.get_features(quest_service)
+        collection_name = 'examples'
+        if collection_name in quest.api.get_collections():
+            pass
+        else:
+            quest.api.new_collection(collection_name)
+
+        collection_feature = quest.api.add_features(collection_name, basemap_features[0])
+
+        staged_id = quest.api.stage_for_download(collection_feature, options=options)
+        download_state = quest.api.download_datasets(staged_id)
+        # Fragile, needs improvement
+        download_id = list(download_state.keys())[0]
+
+        meta = quest.api.get_metadata(staged_id)
+        file_path = meta[download_id].get('file_path',None)
+        if not os.path.isfile(file_path):
+            print('Error: No TIFF downloaded')
+        return file_path
 
     def extract_foreground(self, **kwargs):
         img = self.image

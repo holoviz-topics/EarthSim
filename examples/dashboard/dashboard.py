@@ -15,7 +15,6 @@ import geoviews as gv
 import xarray as xr
 import holoviews as hv
 
-import quest
 from earthsim.grabcut import GrabCutDashboard, SelectRegionPlot
 
 
@@ -107,6 +106,10 @@ class GrabCutsLayout(DashboardLayout):
 
     def __init__(self, tiff_file, bbox, **params):
         super(GrabCutsLayout, self).__init__(**params)
+
+        if isinstance(tiff_file, tuple):
+            tiff_file = GrabCutDashboard.tiff_from_bbox(*tiff_file)
+
         arr = xr.open_rasterio(tiff_file)
 
         # Originally crs of RGB was specified as ccrs.UTM(18)
@@ -115,34 +118,6 @@ class GrabCutsLayout(DashboardLayout):
                      vdims=['R', 'G', 'B'])
         self.dashboard = GrabCutDashboard(rgb, fg_data=[], bg_data=[], height=600,
                                           name='GrabCut Extractor')
-
-    @classmethod
-    def tiff_from_bbox(cls, tile_server, zoom_level, bbox):
-        options = {'tile_server': tile_server, 'zoom_level': zoom_level,
-                   'bbox': bbox, 'crop_to_bbox':True}
-
-        quest_service = 'svc://wmts:seamless_imagery'
-        tile_service_options = quest.api.download_options(quest_service,
-                                                          fmt='param')[quest_service]
-        basemap_features = quest.api.get_features(quest_service)
-        collection_name = 'examples'
-        if collection_name in quest.api.get_collections():
-            pass
-        else:
-            quest.api.new_collection(collection_name)
-
-        collection_feature = quest.api.add_features(collection_name, basemap_features[0])
-
-        staged_id = quest.api.stage_for_download(collection_feature, options=options)
-        download_state = quest.api.download_datasets(staged_id)
-        # Fragile, needs improvement
-        download_id = list(download_state.keys())[0]
-
-        meta = quest.api.get_metadata(staged_id)
-        file_path = meta[download_id].get('file_path',None)
-        if not os.path.isfile(file_path):
-            print('Error: No TIFF downloaded')
-        return file_path
 
     def __call__(self, shared_state, doc):
         return self.model(self.dashboard.view(), doc)
@@ -214,7 +189,7 @@ class GrabCutApp(param.Parameterized, App):
         if None in [tile_server, bbox, zoom_level]:
             print('Missing information for selecting a tile.')
 
-        grabcut = GrabCutsLayout(GrabCutsLayout.tiff_from_bbox(tile_server, zoom_level, bbox), bbox)
+        grabcut = GrabCutsLayout((tile_server, zoom_level, bbox), bbox)
         grabcutsettings = GrabCutSettings(grabcut)
         self.layouts[doc] = ColumnLayouts(
             [DivLayout(self.instructions, width=1300),
