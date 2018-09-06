@@ -16,27 +16,7 @@ import xarray as xr
 import holoviews as hv
 
 import quest
-from earthsim.grabcut import GrabCutDashboard
-
-
-misc_servers =  {'OpenStreetMap':'http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-                 'Basemaps CartoCDN':'https://s.basemaps.cartocdn.com/light_all/{Z}/{X}/{Y}.png',
-                 'Stamen':'http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png'}
-
-arcgis_server = 'https://server.arcgisonline.com/ArcGIS/rest/services/'
-arcgis_paths = {'World Imagery':'World_Imagery/MapServer/tile/{Z}/{Y}/{X}',
-                'World Topo Map':'World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}',
-                'World Terrain Base':'World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}',
-                'World Street Map': 'World_Street_Map/MapServer/tile/{Z}/{Y}/{X}',
-                'World Shaded Relief': 'World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}',
-                'World Physical Map': 'World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}',
-                'USA Topo Maps' : 'USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}',
-                'Ocean Basemap' : 'Ocean_Basemap/MapServer/tile/{Z}/{Y}/{X}',
-                'NatGeo World Map' : 'NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}'}
-
-arcgis_urls = {k: arcgis_server + v for k,v in arcgis_paths.items()}
-URL_LIST = list(arcgis_urls.values()) + list(misc_servers.values())
-URL_DICT = dict(misc_servers, **arcgis_urls)
+from earthsim.grabcut import GrabCutDashboard, SelectRegionPlot
 
 
 class SelectRegionWidgets(DashboardLayout):
@@ -105,103 +85,7 @@ class GrabCutButton(param.Parameterized):
         shared_state.set_state(zoom_level=self.select_region.plot.zoom_level)
 
 
-class SelectRegionPlot(param.Parameterized):
-    """
-    Visualization that allows selecting a bounding box anywhere on a tile source.
-    """
 
-    name = param.String(default='Region Settings')
-
-    width = param.Integer(default=900, precedence=-1, doc="Width of the plot in pixels")
-
-    height = param.Integer(default=700, precedence=-1, doc="Height of the plot in pixels")
-
-    zoom_level = param.Integer(default=7, bounds=(1,21), precedence=-1, doc="""
-       The zoom level is updated when the bounding box is drawn."""   )
-
-    tile_server = param.ObjectSelector(default=URL_DICT['World Imagery'], objects=URL_DICT)
-
-    magnification = param.Integer(default=1, bounds=(1,10), precedence=0.1)
-
-    def __init__(self, **params):
-        super(SelectRegionPlot, self).__init__(**params)
-        self.tile_server_stream = hv.streams.Stream.define('tile_server', tile_server=self.tile_server)()
-        self.box_stream = None
-
-    @classmethod
-    def bounds_to_zoom_level(cls, bounds, width, height,
-                             tile_width=256, tile_height=256, max_zoom=21):
-        """
-        Computes the zoom level from the lat/lon bounds and the plot width and height
-
-        bounds: tuple(float)
-            Bounds in the form (lon_min, lat_min, lon_max, lat_max)
-        width: int
-            Width of the overall plot
-        height: int
-            Height of the overall plot
-        tile_width: int (default=256)
-            Width of each tile
-        tile_width: int (default=256)
-            Height of each tile
-        max_zoom: int (default=21)
-            Maximum allowed zoom level
-        """
-
-        def latRad(lat):
-            sin = math.sin(lat * math.pi / 180);
-            if sin == 1:
-                radX2 = 20
-            else:
-                radX2 = math.log((1 + sin) / (1 - sin)) / 2;
-            return max(min(radX2, math.pi), -math.pi) / 2;
-
-        def zoom(mapPx, worldPx, fraction):
-            return math.floor(math.log(mapPx / worldPx / fraction) / math.log(2));
-
-        x0, y0, x1, y1 = bounds
-        latFraction = (latRad(y1) - latRad(y0)) / math.pi
-        lngDiff = x1 - x0
-        lngFraction = ((lngDiff + 360) if lngDiff < 0 else lngDiff)/360
-        latZoom = zoom(height, tile_height, latFraction)
-        lngZoom = zoom(width, tile_width, lngFraction)
-        return min(latZoom, lngZoom, max_zoom)
-
-
-    def set_tile_server(self, tile_server):
-        self.tile_server = tile_server
-        self.tile_server_stream.event(tile_server=tile_server)
-
-    def callback(self, tile_server):
-        return (gv.WMTS(tile_server, extents=(-180, -90, 180, 90),
-                        crs=ccrs.PlateCarree()).options(width=500, height=500) *
-                gv.WMTS(gv.tile_sources.StamenLabels.data,
-                        extents=(-180, -90, 180, 90),
-                        crs=ccrs.PlateCarree()).options(width=500, height=500))
-
-
-    def get_bbox(self):
-        element = self.box_stream.element
-        # Update shared_state with bounding box (if any)
-        if element:
-            xs, ys = element.array().T
-            bbox = (xs[0], ys[0], xs[2], ys[1])
-            # Set the zoom level
-            zoom_level = self.bounds_to_zoom_level(bbox, self.width, self.height)
-            self.zoom_level = zoom_level
-            return bbox
-        else:
-            return None
-
-
-    def __call__(self):
-        tiles = gv.DynamicMap(self.callback, streams=[self.tile_server_stream])
-        boxes = gv.Polygons([], crs=ccrs.PlateCarree()).options(fill_alpha=0.5,
-                                                                color='grey',
-                                                                line_color='white',
-                                                                line_width=2)
-        self.box_stream = hv.streams.BoxEdit(source=boxes,num_objects=1)
-        return (tiles * boxes).options(width=self.width, height=self.height)
 
 class SelectRegion(DashboardLayout):
     """
