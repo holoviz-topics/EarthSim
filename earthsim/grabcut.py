@@ -20,6 +20,7 @@ import quest
 import os
 import math
 
+
 class rasterize_polygon(ResamplingOperation):
     """
     Rasterizes Polygons elements to a boolean mask using PIL
@@ -157,6 +158,9 @@ class GrabCutDashboard(Stream):
 
     @classmethod
     def tiff_from_bbox(cls, tile_server, zoom_level, bbox):
+        if bbox is None:
+            raise ValueError('Please supply a bounding box in order to extract a tiff.')
+
         options = {'url': tile_server, 'zoom_level': zoom_level,
                    'bbox': bbox, 'crop_to_bbox':True}
 

@@ -181,9 +181,6 @@ class GrabCutApp(param.Parameterized, App):
         tile_server = shared_state.state.get('tile_server', None)
         bbox = shared_state.state.get('bbox', None)
         zoom_level = shared_state.state.get('zoom_level', None)
-        if None in [tile_server, bbox, zoom_level]:
-            print('Missing information for selecting a tile.')
-
         grabcut = GrabCutsLayout((tile_server, zoom_level, bbox), bbox)
         grabcutsettings = GrabCutSettings(grabcut)
         self.layouts[doc] = ColumnLayouts(
