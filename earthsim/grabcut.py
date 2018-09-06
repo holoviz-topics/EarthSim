@@ -323,7 +323,8 @@ class SelectRegionPlot(param.Parameterized):
                         crs=ccrs.PlateCarree()).options(width=500, height=500))
 
 
-    def get_bbox(self):
+    @property
+    def bbox(self):
         element = self.box_stream.element
         # Update shared_state with bounding box (if any)
         if element:

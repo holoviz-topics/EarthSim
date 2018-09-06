@@ -80,7 +80,7 @@ class GrabCutButton(param.Parameterized):
 
 
     def load_data(self, obj, **kwargs):
-        shared_state.set_state(bbox=self.select_region.plot.get_bbox())
+        shared_state.set_state(bbox=self.select_region.plot.bbox())
         shared_state.set_state(zoom_level=self.select_region.plot.zoom_level)
 
 
