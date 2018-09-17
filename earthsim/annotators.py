@@ -198,12 +198,17 @@ class PolyAnnotator(GeoAnnotator):
             if col not in self.polys:
                 self.polys = self.polys.add_dimension(col, 0, '', True)
         self.poly_stream.source = self.polys
+        self.vertex_stream.source = self.polys
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
                                          for kd in self.polys.kdims})
 
         poly_data = {c: self.polys.dimension_values(c, expanded=False) for c in self.poly_columns}
+        if len(set(len(v) for v in poly_data.values())) != 1:
+            raise ValueError('poly_columns must refer to value dimensions '
+                             'which vary per path while at least one of '
+                             '%s varies by vertex.' % self.poly_columns)
         self.poly_table = Table(poly_data, self.poly_columns, []).opts(plot=plot, style=style)
         self.poly_link = DataLink(source=self.polys, target=self.poly_table)
         self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
