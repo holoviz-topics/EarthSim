@@ -11,8 +11,9 @@ import cartopy.crs as ccrs
 import geopandas as gpd
 import holoviews as hv
 import geoviews as gv
+import holoviews.plotting.bokeh
 
-from holoviews import DynamicMap, Path, Table, NdOverlay
+from holoviews import DynamicMap, Path, Table, NdOverlay, Store, Options
 from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
@@ -254,3 +255,10 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     def view(self):
         return(self.tiles * self.polys * self.points +
                self.poly_table + self.point_table + self.vertex_table).cols(1)
+
+
+options = Store.options('bokeh')
+
+options.Points = Options('plot', padding=0.1)
+options.Path = Options('plot', padding=0.1)
+options.Polygons = Options('plot', padding=0.1)
