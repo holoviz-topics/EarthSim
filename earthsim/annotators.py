@@ -2,10 +2,10 @@
 Helper functions for building interactive plots that support persistent user annotations.
 """
 
-
 from functools import partial
 
 import param
+import numpy as np
 import pandas as pd
 import cartopy.crs as ccrs
 import geopandas as gpd
@@ -69,7 +69,7 @@ class GeoAnnotator(param.Parameterized):
     tile_url = param.String(default='http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
                             doc="URL for the tile source", precedence=-1)
 
-    extent = param.NumericTuple(default=(-91, 32.2, -90.8, 32.4), doc="""
+    extent = param.NumericTuple(default=(np.nan,)*4, doc="""
          Initial extent if no data is provided.""", precedence=-1)
 
     path_type = param.ClassSelector(default=Polygons, class_=Path, is_instance=False, doc="""
