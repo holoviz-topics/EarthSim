@@ -60,3 +60,12 @@ def parameters(**kwargs):
     params = params_from_kwargs(**kwargs)
     params['name'] = param.String(default=name)
     return type(name, (param.Parameterized,), params)
+
+
+from holoviews import Store, Options
+
+options = Store.options('bokeh')
+
+options.Points = Options('plot', padding=0.1)
+options.Path = Options('plot', padding=0.1)
+options.Polygons = Options('plot', padding=0.1)
