@@ -5,7 +5,7 @@ environment:
 
 install:
   - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
-  - "conda install -y -c pyviz/label/dev pyctdev && doit ecosystem_setup"
+  - "conda install -y -c pyviz pyctdev && doit ecosystem_setup"
   - "conda config --set always_yes True"
   - "conda create -n earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6"
   - "activate earthsim"
