@@ -2,17 +2,18 @@
 Helper functions for building interactive plots that support persistent user annotations.
 """
 
-
 from functools import partial
 
 import param
+import numpy as np
 import pandas as pd
 import cartopy.crs as ccrs
 import geopandas as gpd
 import holoviews as hv
 import geoviews as gv
+import holoviews.plotting.bokeh
 
-from holoviews import DynamicMap, Path, Table, NdOverlay
+from holoviews import DynamicMap, Path, Table, NdOverlay, Store, Options
 from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
@@ -69,7 +70,7 @@ class GeoAnnotator(param.Parameterized):
     tile_url = param.String(default='http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
                             doc="URL for the tile source", precedence=-1)
 
-    extent = param.NumericTuple(default=(-91, 32.2, -90.8, 32.4), doc="""
+    extent = param.NumericTuple(default=(np.nan,)*4, doc="""
          Initial extent if no data is provided.""", precedence=-1)
 
     path_type = param.ClassSelector(default=Polygons, class_=Path, is_instance=False, doc="""
@@ -254,3 +255,10 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     def view(self):
         return(self.tiles * self.polys * self.points +
                self.poly_table + self.point_table + self.vertex_table).cols(1)
+
+
+options = Store.options('bokeh')
+
+options.Points = Options('plot', padding=0.1)
+options.Path = Options('plot', padding=0.1)
+options.Polygons = Options('plot', padding=0.1)
