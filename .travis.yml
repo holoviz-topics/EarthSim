@@ -72,7 +72,7 @@ jobs:
     - <<: *default
       stage: doc
       script:
-        - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
+        - conda install -c pyviz -c conda-forge nbsite sphinx_ioam_theme
         - earthsim fetch-data --path=examples
         - rm -rf examples/topics/batched_example/*.ipynb       # see github.com/pyviz/EarthSim/issues/113
         - rm -rf examples/topics/GSSHA_Parameter_Sweep.ipynb   # see github.com/pyviz/EarthSim/issues/113
