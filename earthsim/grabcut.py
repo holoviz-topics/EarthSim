@@ -17,7 +17,7 @@ from holoviews.core.util import pd
 from holoviews.element.util import split_path
 from holoviews.operation.datashader import ResamplingOperation, rasterize, regrid
 from holoviews.operation import contours
-from holoviews.streams import Stream, FreehandDraw, Params, BoxEdit
+from holoviews.streams import Stream, FreehandDraw, Params, BoxEdit, ParamMethod
 
 
 class rasterize_polygon(ResamplingOperation):
@@ -127,9 +127,9 @@ class GrabCutPanel(param.Parameterized):
                                   precedence=1, doc="""
         Button triggering GrabCut.""")
 
-    filter_contour = param.Action(default=lambda o: o.param.trigger('filter_contour'),
+    filter_contour = param.Action(default=lambda o: o._trigger_filter(),
                                   precedence=1, doc="""
-        Button triggering GrabCut.""")
+        Button triggering filtering of contours.""")
 
     width = param.Integer(default=500, precedence=-1, doc="""
         Width of the plot""")
@@ -152,14 +152,11 @@ class GrabCutPanel(param.Parameterized):
         self.fg_paths = gv.project(self.path_type(fg_data, crs=self.crs), projection=image.crs)
         self.draw_bg = FreehandDraw(source=self.bg_paths)
         self.draw_fg = FreehandDraw(source=self.fg_paths)
-        self._filter_stream = Params(self, ['filter_contour'], transient=True)
-
         self._initialized = False
         self._filter = False
 
     @param.depends('update_contour')
     def extract_foreground(self, **kwargs):
-        print("EXTRACTING")
         img = self.image
         if self._initialized:
             bg, fg = self.draw_bg.element, self.draw_fg.element
@@ -178,26 +175,30 @@ class GrabCutPanel(param.Parameterized):
             kwargs['height'] = int(h*self.downsample)
             img = regrid(img, **kwargs)
 
-        foreground = extract_foreground(img, background=bg, foreground=fg, iterations=self.iterations)
-        with warnings.catch_warnings():
-            warnings.filterwarnings('ignore')
-            foreground = gv.Path([contours(foreground, filled=True, levels=1).split()[0].data],
-                                 kdims=foreground.kdims, crs=foreground.crs)
+        foreground = extract_foreground(img, background=bg, foreground=fg,
+                                        iterations=self.iterations)
+        foreground = gv.Path([contours(foreground, filled=True, levels=1).split()[0].data],
+                             kdims=foreground.kdims, crs=foreground.crs)
         self.result = gv.project(foreground, projection=self.crs)
         return foreground
 
+    def _trigger_filter(self):
+        self._filter = True
+        self.param.trigger('filter_contour')
+        self._filter = False
+
+    @param.depends('filter_contour')
     def _filter_contours(self, obj, **kwargs):
-        if self._filter_stream._triggering:
+        if self._filter:
             obj = filter_polygons(obj, minimum_size=self.minimum_size)
-        self.result = obj
+        self.result = gv.project(obj, projection=self.crs)
         return obj
 
     def view(self):
         options = dict(width=self.width, height=self.height, xaxis=None, yaxis=None,
-                       projection=self.image.crs, clone=False)
+                       projection=self.image.crs)
         dmap = hv.DynamicMap(self.extract_foreground)
-        dmap = hv.util.Dynamic(dmap, operation=self._filter_contours,
-                               streams=[self._filter_stream])
+        dmap = hv.util.Dynamic(dmap, operation=self._filter_contours)
         return (regrid(self.image).options(**options) * self.bg_paths * self.fg_paths +
                 dmap.options(**options)).options(merge_tools=False, clone=False)
 
@@ -295,7 +296,7 @@ class SelectRegionPanel(param.Parameterized):
 
     @property
     def bbox(self):
-        element = self.box_stream.element
+        element = self.box_stream.element if self.box_stream.data else self.boxes
         # Update shared_state with bounding box (if any)
         if element:
             xs, ys = element.array().T
