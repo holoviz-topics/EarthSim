@@ -99,12 +99,11 @@ def read_3dm_mesh(fpath, skiprows=1):
         Vertices of the mesh
     """
     all_df = pd.read_table(fpath, delim_whitespace=True, header=None, skiprows=skiprows,
-                       names=('row_type', 'cmp1', 'cmp2', 'cmp3', 'val'), index_col=1)
-    conns = all_df[all_df['row_type'].str.lower() == 'e3t'][['cmp1', 'cmp2', 'cmp3']].values.astype(int) - 1
-    pts = all_df[all_df['row_type'].str.lower() == 'nd'][['cmp1', 'cmp2', 'cmp3']].values.astype(float)
-    pts[:, 2] *= -1
-    verts = pd.DataFrame(pts, columns=['x', 'y', 'z'])
-    tris = pd.DataFrame(conns, columns=['v0', 'v1', 'v2'])
+                           names=('row_type', 'cmp1', 'cmp2', 'cmp3', 'val'), index_col=1)
+                           conns = all_df[all_df['row_type'].str.lower() == 'e3t'][['cmp1', 'cmp2', 'cmp3', 'val']].values.astype(int) - 1
+                           pts = all_df[all_df['row_type'].str.lower() == 'nd'][['cmp1', 'cmp2', 'cmp3']].values.astype(float)
+                           verts = pd.DataFrame(pts, columns=['x', 'y', 'z'])
+                           tris = pd.DataFrame(conns, columns=['v0', 'v1', 'v2', 'mat'])
     return tris, verts
 
 
