@@ -261,6 +261,7 @@ class SelectRegionPanel(param.Parameterized):
                              tile_width=256, tile_height=256, max_zoom=21):
         """
         Computes the zoom level from the lat/lon bounds and the plot width and height
+
         bounds: tuple(float)
             Bounds in the form (lon_min, lat_min, lon_max, lat_max)
         width: int
