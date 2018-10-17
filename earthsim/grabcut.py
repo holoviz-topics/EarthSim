@@ -134,7 +134,7 @@ class GrabCutPanel(param.Parameterized):
     width = param.Integer(default=500, precedence=-1, doc="""
         Width of the plot""")
 
-    height = param.Integer(default=500, precedence=-1, doc="""
+    height = param.Integer(default=None, precedence=-1, doc="""
         Height of the plot""")
 
     downsample = param.Magnitude(default=1., doc="""
@@ -195,12 +195,16 @@ class GrabCutPanel(param.Parameterized):
         return obj
 
     def view(self):
-        options = dict(width=self.width, height=self.height, xaxis=None, yaxis=None,
+        height = self.height
+        if height is None:
+            h, w = self.image.dimension_values(2, flat=False).shape[:2]
+            height = int(self.width*(h/w))
+        options = dict(width=self.width, height=height, xaxis=None, yaxis=None,
                        projection=self.image.crs)
         dmap = hv.DynamicMap(self.extract_foreground)
         dmap = hv.util.Dynamic(dmap, operation=self._filter_contours)
         return (regrid(self.image).options(**options) * self.bg_paths * self.fg_paths +
-                dmap.options(**options)).options(merge_tools=False, clone=False)
+                dmap.options(**options))
 
 
 
