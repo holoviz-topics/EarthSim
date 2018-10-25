@@ -9,4 +9,4 @@ pyviz/label/dev::parambokeh
 pyviz/label/dev::paramnb
 pyviz/label/dev::holoviews
 pyviz/label/dev::geoviews
-bokeh/label/dev::bokeh=1.0.0dev5
+pyviz/label/dev::panel
