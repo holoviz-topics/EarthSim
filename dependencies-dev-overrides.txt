@@ -8,5 +8,5 @@ pyviz/label/dev::param
 pyviz/label/dev::parambokeh
 pyviz/label/dev::paramnb
 pyviz/label/dev::holoviews=1.11.0a9
-pyviz/label/dev::geoviews=1.5.4a15
+pyviz/label/dev::geoviews=1.6.0a1
 pyviz/label/dev::panel
