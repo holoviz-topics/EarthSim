@@ -20,7 +20,7 @@ from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh
 
-from .custom_tools import CheckpointTool, RestoreTool, ClearTool
+from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
 from .links import VertexTableLink, PointTableLink
 
 
