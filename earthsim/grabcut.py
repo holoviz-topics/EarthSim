@@ -13,6 +13,7 @@ import quest
 from PIL import Image, ImageDraw
 from holoviews.core.operation import Operation
 from holoviews.core.options import Store, Options
+from holoviews.core.spaces import DynamicMap
 from holoviews.core.util import pd
 from holoviews.element.util import split_path
 from holoviews.operation.datashader import ResamplingOperation, rasterize, regrid
@@ -123,6 +124,10 @@ class GrabCutPanel(param.Parameterized):
                                     precedence=-1, is_instance=False, doc="""
         The element type to draw into.""")
 
+    clear = param.Action(default=lambda o: o._trigger_clear(),
+                                  precedence=1, doc="""
+        Button to clear drawn annotations.""")
+
     update_contour = param.Action(default=lambda o: o.param.trigger('update_contour'),
                                   precedence=1, doc="""
         Button triggering GrabCut.""")
@@ -148,21 +153,42 @@ class GrabCutPanel(param.Parameterized):
     def __init__(self, image, fg_data=[], bg_data=[], **params):
         self.image = image
         super(GrabCutPanel, self).__init__(**params)
-        self.bg_paths = gv.project(self.path_type(bg_data, crs=self.crs), projection=image.crs)
-        self.fg_paths = gv.project(self.path_type(fg_data, crs=self.crs), projection=image.crs)
+        self._bg_data = bg_data
+        self._fg_data = fg_data
+        self.bg_paths = DynamicMap(self.bg_path_view)
+        self.fg_paths = DynamicMap(self.fg_path_view)
         self.draw_bg = FreehandDraw(source=self.bg_paths)
         self.draw_fg = FreehandDraw(source=self.fg_paths)
         self._initialized = False
         self._filter = False
+        self._clear = False
+
+    def _trigger_clear(self):
+        self._clear = True
+        self.param.trigger('clear')
+        self._clear = False
+
+    @param.depends('clear')
+    def bg_path_view(self):
+        if self._clear:
+            self._bg_data = []
+        elif self._initialized:
+            self._bg_data = self.draw_bg.element.data
+        return gv.project(self.path_type(self._bg_data, crs=self.crs), projection=self.image.crs)
+
+    @param.depends('clear')
+    def fg_path_view(self):
+        if self._clear:
+            self._fg_data = []
+        elif self._initialized:
+            self._fg_data = self.draw_fg.element.data
+        return gv.project(self.path_type(self._fg_data, crs=self.crs), projection=self.image.crs)
 
     @param.depends('update_contour')
     def extract_foreground(self, **kwargs):
         img = self.image
-        if self._initialized:
-            bg, fg = self.draw_bg.element, self.draw_fg.element
-        else:
-            self._initialized = True
-            bg, fg = self.bg_paths, self.fg_paths
+        bg, fg = self.bg_path_view(), self.fg_path_view()
+        self._initialized = True
         bg, fg = (gv.project(g, projection=img.crs) for g in (bg, fg))
 
         if not len(bg) or not len(fg):
