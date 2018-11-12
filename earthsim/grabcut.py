@@ -3,6 +3,7 @@ import math
 import warnings
 
 import param
+import panel as pn
 import numpy as np
 import holoviews as hv
 import geoviews as gv
@@ -120,6 +121,9 @@ class GrabCutPanel(param.Parameterized):
                               precedence=-1, doc="""
         Projection the inputs and output paths are defined in.""")
 
+    image = param.ClassSelector(class_=gv.RGB, precedence=-1, doc="""
+        The Image to compute contours on""")
+
     path_type = param.ClassSelector(default=gv.Path, class_=hv.Path,
                                     precedence=-1, is_instance=False, doc="""
         The element type to draw into.""")
@@ -151,8 +155,7 @@ class GrabCutPanel(param.Parameterized):
     minimum_size = param.Integer(default=10)
 
     def __init__(self, image, fg_data=[], bg_data=[], **params):
-        self.image = image
-        super(GrabCutPanel, self).__init__(**params)
+        super(GrabCutPanel, self).__init__(image=image, **params)
         self._bg_data = bg_data
         self._fg_data = fg_data
         self.bg_paths = DynamicMap(self.bg_path_view)
@@ -232,6 +235,13 @@ class GrabCutPanel(param.Parameterized):
         return (regrid(self.image).options(**options) * self.bg_paths * self.fg_paths +
                 dmap.options(**options))
 
+    @param.output(polys=hv.Path)
+    def output(self):
+        return self.result
+
+    def panel(self):
+        return pn.Row(self.param, self.view())
+
 
 
 class SelectRegionPanel(param.Parameterized):
@@ -280,6 +290,8 @@ class SelectRegionPanel(param.Parameterized):
             fill_alpha=0.5, color='grey', line_color='white',
             line_width=2, width=self.width, height=self.height
         )
+        if not self.boxes:
+            self.boxes = self.boxes.options(global_extent=True)
         self.box_stream = BoxEdit(source=self.boxes, num_objects=1)
 
     @classmethod
@@ -339,9 +351,6 @@ class SelectRegionPanel(param.Parameterized):
         else:
             return None
 
-    def view(self):
-        return (gv.DynamicMap(self.callback) * self.boxes)
-
     def get_tiff(self):
         bbox = self.bbox
         filepath = self.tiff_from_bbox(self.tile_server, self.zoom_level, bbox)
@@ -377,6 +386,17 @@ class SelectRegionPanel(param.Parameterized):
         if not os.path.isfile(file_path):
             print('Error: No TIFF downloaded')
         return file_path
+
+    def view(self):
+        return (gv.DynamicMap(self.callback) * self.boxes)
+
+    @param.output(image=hv.Image)
+    def output(self):
+        return self.get_tiff()
+
+    def panel(self):
+        return pn.Row(self.param, self.view())
+
 
 
 options = Store.options('bokeh')

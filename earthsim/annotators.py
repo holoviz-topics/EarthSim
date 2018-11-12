@@ -113,6 +113,12 @@ class GeoAnnotator(param.Parameterized):
     path_type = param.ClassSelector(default=Polygons, class_=Path, is_instance=False, doc="""
          The element type to draw into.""")
 
+    polys = param.ClassSelector(class_=Path, precedence=-1, doc="""
+         Polygon or Path element to annotate""")
+
+    points = param.ClassSelector(class_=Points, precedence=-1, doc="""
+         Point element to annotate""")
+
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
 
@@ -148,8 +154,11 @@ class GeoAnnotator(param.Parameterized):
             string += '  %s: %s\n' % (item)
         print(string)
 
-    def view(self):
+    def map_view(self):
         return self.tiles * self.polys * self.points
+
+    def panel(self):
+        return pn.Row(self.map_view())
 
 
 class PointWidgetAnnotator(GeoAnnotator):
@@ -209,18 +218,16 @@ class PointWidgetAnnotator(GeoAnnotator):
         return element.clone(data, vdims=self.column).opts(plot={'color_index': self.column},
                                                            style={'cmap': 'Category20'})
 
-    def view(self):
-        table = DynamicMap(self.group_table, streams=[self.table_stream])
+    def map_view(self):
+        options = dict(tools=['box_select'], clone=False)
         annotated = DynamicMap(self.annotated_points, streams=[self.table_stream])
-        return (self.tiles * self.polys * self.points * annotated + table).cols(1)
+        return self.tiles * self.polys * self.points.options(**options) * annotated
 
+    def table_view(self):
+        return DynamicMap(self.group_table, streams=[self.table_stream])
 
     def panel(self):
-        options = dict(tools=['box_select'], clone=False)
-        table = DynamicMap(self.group_table, streams=[self.table_stream])
-        annotated = DynamicMap(self.annotated_points, streams=[self.table_stream])
-        plot = self.tiles * self.polys * self.points.options(**options) * annotated
-        return pn.Row(self.param, plot, table)
+        return pn.Row(self.param, self.map_view(), self.table_view())
 
 
 
@@ -252,6 +259,7 @@ class PolyAnnotator(GeoAnnotator):
                 self.polys = self.polys.add_dimension(col, 0, '', True)
         self.poly_stream.source = self.polys
         self.vertex_stream.source = self.polys
+
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
@@ -267,12 +275,19 @@ class PolyAnnotator(GeoAnnotator):
         self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
         self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
 
-    def view(self):
-        return (self.tiles * self.polys * self.points + self.poly_table + self.vertex_table).cols(1)
+    def map_view(self):
+        return (self.tiles * self.polys.options(clone=False, line_width=5) *
+                self.points.options(tools=['hover'], clone=False))
+
+    def table_view(self):
+        return pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table))
 
     def panel(self):
-        plot = self.tiles * self.polys.options(clone=False, line_width=5) * self.points.options(tools=['hover'], clone=False)
-        return pn.Column(plot, pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table)))
+        return pn.Row(self.map_view(), self.table_view())
+
+    @param.output(path=hv.Path)
+    def path_output(self):
+        return self.poly_stream.element
 
 
 
@@ -302,12 +317,15 @@ class PointAnnotator(GeoAnnotator):
         self.point_table = Table(projected).opts(plot=plot, style=style)
         self.point_link = PointTableLink(source=self.points, target=self.point_table)
 
-    def view(self):
-        return (self.tiles * self.polys * self.points + self.point_table).cols(1)
+    def table_view(self):
+        return self.point_table
 
     def panel(self):
-        plot = self.tiles * self.polys * self.points.options(tools=['hover'], clone=False)
-        return pn.Row(plot, self.point_table)
+        return pn.Row(self.map_view(), self.table_view())
+
+    @param.output(points=gv.Points)
+    def point_output(self):
+        return self.point_stream.element
 
 
 class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
@@ -316,15 +334,10 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     DataTable.
     """
 
-    def view(self):
-        return(self.tiles * self.polys * self.points +
-               self.poly_table + self.point_table + self.vertex_table).cols(1)
+    def table_view(self):
+        return pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table),
+                       ('Points', self.point_table))
 
-    def panel(self):
-        plot = self.tiles * self.polys * self.points.options(tools=['hover'], clone=False)
-        tables = pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table),
-                         ('Points', self.point_table))
-        return pn.Row(plot, tables)
 
 
 options = Store.options('bokeh')
