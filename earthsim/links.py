@@ -11,10 +11,6 @@ class PointTableLink(Link):
     display the projected coordinates.
     """
 
-    source = param.ClassSelector(class_=Points)
-
-    target = param.ClassSelector(class_=Table)
-
     point_columns = param.List(default=[])
 
     def __init__(self, source, target, **params):
@@ -29,10 +25,6 @@ class VertexTableLink(Link):
     Defines a Link between a Path type and a Table which will
     display the vertices of selected path.
     """
-
-    source = param.ClassSelector(class_=Path)
-
-    target = param.ClassSelector(class_=Table)
 
     vertex_columns = param.List(default=[])
 
