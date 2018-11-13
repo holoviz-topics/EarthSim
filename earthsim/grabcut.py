@@ -142,6 +142,12 @@ class GrabCutPanel(param.Parameterized):
                                     precedence=-1, is_instance=False, doc="""
         The element type to draw into.""")
 
+    downsample = param.Magnitude(default=1, precedence=1, doc="""
+        Amount to downsample image by before applying grabcut.""")
+
+    iterations = param.Integer(default=5, precedence=1, bounds=(0, 20), doc="""
+        Number of iterations to run the GrabCut algorithm for.""")
+
     clear = param.Action(default=lambda o: o._trigger_clear(),
                                   precedence=1, doc="""
         Button to clear drawn annotations.""")
@@ -150,12 +156,16 @@ class GrabCutPanel(param.Parameterized):
                                   precedence=1, doc="""
         Button triggering GrabCut.""")
 
+    minimum_size = param.Integer(default=0, precedence=2)
+
     filter_contour = param.Action(default=lambda o: o.param.trigger('filter_contour'),
-                                  precedence=1, doc="""
+                                  precedence=3, doc="""
         Button triggering filtering of contours.""")
 
+    tolerance = param.Number(default=0, precedence=4)
+
     simplify_contour = param.Action(default=lambda o: o.param.trigger('simplify_contour'),
-                                    precedence=1, doc="""
+                                    precedence=5, doc="""
         Simplifies contour.""" )
 
     width = param.Integer(default=500, precedence=-1, doc="""
@@ -163,16 +173,6 @@ class GrabCutPanel(param.Parameterized):
 
     height = param.Integer(default=None, precedence=-1, doc="""
         Height of the plot""")
-
-    downsample = param.Magnitude(default=1., doc="""
-        Amount to downsample image by before applying grabcut.""")
-
-    iterations = param.Integer(default=5, bounds=(0, 20), doc="""
-        Number of iterations to run the GrabCut algorithm for.""")
-
-    minimum_size = param.Integer(default=0)
-
-    tolerance = param.Number(default=0)
 
     def __init__(self, image, fg_data=[], bg_data=[], **params):
         super(GrabCutPanel, self).__init__(image=image, **params)
