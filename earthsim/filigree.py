@@ -6,6 +6,7 @@ allowing interactively specified control over mesh generation using Bokeh.
 from collections import defaultdict
 
 import param
+import panel as pn
 import cartopy.crs as ccrs
 import filigree
 from holoviews import Points, DynamicMap, Callable
@@ -163,13 +164,7 @@ class FiligreeMeshDashboard(FiligreeMesh):
         return datashade(viz_mesh(verts, tris).edgepaths, cmap=['#000000'],
                          dynamic=False, aggregator='any')
 
-    def view(self):
+    def panel(self):
         helper = self.draw_helper
         mesh_dmap = DynamicMap(Callable(self.gen_mesh, memoize=False), streams=[self])
-        if isinstance(helper, PolyAnnotator):
-            layout = (helper.tiles * helper.polys * mesh_dmap * helper.points +
-                      helper.poly_table + helper.point_table)
-        else:
-            layout = (helper.tiles * helper.polys * mesh_dmap * helper.points +
-                      helper.point_table)
-        return layout.cols(1)
+        return pn.Column(self.param, pn.Row(helper.map_view() * mesh_dmap, helper.table_view()))
