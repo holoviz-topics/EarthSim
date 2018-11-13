@@ -187,7 +187,7 @@ class GrabCutPanel(param.Parameterized):
             self._fg_data = self.draw_fg.element.data
         return gv.project(self.path_type(self._fg_data, crs=self.crs), projection=self.image.crs)
 
-    @param.depends('update_contour')
+    @param.depends('update_contour', 'image')
     def extract_foreground(self, **kwargs):
         img = self.image
         bg, fg = self.bg_path_view(), self.fg_path_view()
