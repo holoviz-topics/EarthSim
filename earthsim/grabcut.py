@@ -12,6 +12,7 @@ import datashader as ds
 import quest
 
 from PIL import Image, ImageDraw
+from geoviews.util import path_to_geom_dicts
 from holoviews.core.operation import Operation
 from holoviews.core.options import Store, Options
 from holoviews.core.spaces import DynamicMap
@@ -112,6 +113,19 @@ class filter_polygons(Operation):
         return element.clone(paths)
 
 
+class simplify_paths(Operation):
+
+    tolerance = param.Number(default=0.01)
+
+    def _process(self, element, key=None):
+        paths = []
+        for g in path_to_geom_dicts(element):
+            geom = g['geometry']
+            g = dict(g, geometry=geom.simplify(self.p.tolerance))
+            paths.append(g)
+        return element.clone(paths)
+
+
 class GrabCutPanel(param.Parameterized):
     """
     Defines a Panel for extracting contours from an Image.
@@ -136,9 +150,13 @@ class GrabCutPanel(param.Parameterized):
                                   precedence=1, doc="""
         Button triggering GrabCut.""")
 
-    filter_contour = param.Action(default=lambda o: o._trigger_filter(),
+    filter_contour = param.Action(default=lambda o: o.param.trigger('filter_contour'),
                                   precedence=1, doc="""
         Button triggering filtering of contours.""")
+
+    simplify_contour = param.Action(default=lambda o: o.param.trigger('simplify_contour'),
+                                    precedence=1, doc="""
+        Simplifies contour.""" )
 
     width = param.Integer(default=500, precedence=-1, doc="""
         Width of the plot""")
@@ -152,7 +170,9 @@ class GrabCutPanel(param.Parameterized):
     iterations = param.Integer(default=5, bounds=(0, 20), doc="""
         Number of iterations to run the GrabCut algorithm for.""")
 
-    minimum_size = param.Integer(default=10)
+    minimum_size = param.Integer(default=0)
+
+    tolerance = param.Number(default=0)
 
     def __init__(self, image, fg_data=[], bg_data=[], **params):
         super(GrabCutPanel, self).__init__(image=image, **params)
@@ -163,7 +183,6 @@ class GrabCutPanel(param.Parameterized):
         self.draw_bg = FreehandDraw(source=self.bg_paths)
         self.draw_fg = FreehandDraw(source=self.fg_paths)
         self._initialized = False
-        self._filter = False
         self._clear = False
 
     def _trigger_clear(self):
@@ -211,15 +230,16 @@ class GrabCutPanel(param.Parameterized):
         self.result = gv.project(foreground, projection=self.crs)
         return foreground
 
-    def _trigger_filter(self):
-        self._filter = True
-        self.param.trigger('filter_contour')
-        self._filter = False
-
     @param.depends('filter_contour')
     def _filter_contours(self, obj, **kwargs):
-        if self._filter:
+        if self.minimum_size > 0:
             obj = filter_polygons(obj, minimum_size=self.minimum_size)
+        return obj
+
+    @param.depends('simplify_contour')
+    def _simplify_contours(self, obj, **kwargs):
+        if self.tolerance > 0:
+            obj = simplify_paths(obj, tolerance=self.tolerance)
         self.result = gv.project(obj, projection=self.crs)
         return obj
 
@@ -232,6 +252,7 @@ class GrabCutPanel(param.Parameterized):
                        projection=self.image.crs)
         dmap = hv.DynamicMap(self.extract_foreground)
         dmap = hv.util.Dynamic(dmap, operation=self._filter_contours)
+        dmap = hv.util.Dynamic(dmap, operation=self._simplify_contours)
         return (regrid(self.image).options(**options) * self.bg_paths * self.fg_paths +
                 dmap.options(**options))
 
