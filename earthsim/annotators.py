@@ -351,6 +351,24 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
                        ('Points', self.point_table))
 
 
+class PolyExporter(param.Parameterized):
+
+    filename = param.String(default='')
+
+    path = param.ClassSelector(class_=Path)
+
+    save = param.Action(default=lambda x: x._save())
+
+    def __init__(self, path, **params):
+        self._polys = paths_to_polys(path)
+        super(PolyExporter, self).__init__(path=path, **params)
+
+    def _save(self):
+        pass
+
+    def panel(self):
+        return pn.Row(self.param, self._polys.options(width=800, height=600))
+
 
 options = Store.options('bokeh')
 
