@@ -21,13 +21,18 @@ from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh, Path as GeoPath
 from geoviews.util import path_to_geom_dicts
-from shapely.geometry import Polygon, LinearRing
+from shapely.geometry import Polygon, LinearRing, MultiPolygon
 
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
 from .links import VertexTableLink, PointTableLink
 
 
 def paths_to_polys(path):
+    """
+    Converts a Path object to a Polygons object by extracting all paths
+    interpreting inclusion zones as holes and then constructing Polygon
+    and MultiPolygon geometries for each path.
+    """
     geoms = path_to_geom_dicts(path)
 
     polys = []
@@ -55,7 +60,14 @@ def paths_to_polys(path):
         if 'holes' in p:
             holes = [LinearRing(h) for h in p['holes']]
 
-        poly = Polygon(geom, holes)
+        if 'Multi' in geom.type:
+            polys = []
+            for g in geom:
+                subholes = [h for h in holes if g.intersects(h)]
+                polys.append(Polygon(g, subholes))
+            poly = MultiPolygon(polys)
+        else:
+            poly = Polygon(geom, holes)
         p['geometry'] = poly
         polys_with_holes.append(p)
     return path.clone(polys_with_holes, new_type=gv.Polygons)
