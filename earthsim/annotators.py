@@ -355,7 +355,7 @@ class PolyExporter(param.Parameterized):
 
     filename = param.String(default='')
 
-    path = param.ClassSelector(class_=Path)
+    path = param.ClassSelector(class_=Path, precedence=-1)
 
     save = param.Action(default=lambda x: x._save())
 
