@@ -106,7 +106,7 @@ which appear periodically after new features are added.
   
 If you *really* want to be on the bleeding edge, you can instead get
 the absolute latest changes by cloning the earthsim, holoviews,
-geoviews, datashader, param, and parambokeh Github repositories and
+geoviews, datashader, param, and panel Github repositories and
 running `pip install -e .` inside each one, pulling new changes from
 each of these libraries as needed.  That's what the main developers
 do, but it isn't recommended for other users unless you are very

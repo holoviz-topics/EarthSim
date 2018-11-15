@@ -54,7 +54,7 @@ def parameters(**kwargs):
     Utility to easily define a parameterized class with a chosen set of
     parameters specified as keyword arguments. The resulting object can
     be used to parameterize a notebook, display corresponding widgets
-    with parambokeh and control the workflow from the command line.
+    with panel and control the workflow from the command line.
     """
     name = kwargs.get('name', 'Parameters')
     params = params_from_kwargs(**kwargs)
