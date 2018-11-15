@@ -149,23 +149,23 @@ class GrabCutPanel(param.Parameterized):
         Number of iterations to run the GrabCut algorithm for.""")
 
     clear = param.Action(default=lambda o: o._trigger_clear(),
-                                  precedence=1, doc="""
+                                  precedence=2, doc="""
         Button to clear drawn annotations.""")
 
     update_contour = param.Action(default=lambda o: o.param.trigger('update_contour'),
-                                  precedence=1, doc="""
+                                  precedence=2, doc="""
         Button triggering GrabCut.""")
 
-    minimum_size = param.Integer(default=0, precedence=2)
+    minimum_size = param.Integer(default=0, precedence=3)
 
     filter_contour = param.Action(default=lambda o: o.param.trigger('filter_contour'),
-                                  precedence=3, doc="""
+                                  precedence=4, doc="""
         Button triggering filtering of contours.""")
 
-    tolerance = param.Number(default=0, precedence=4)
+    tolerance = param.Number(default=0, precedence=5)
 
     simplify_contour = param.Action(default=lambda o: o.param.trigger('simplify_contour'),
-                                    precedence=5, doc="""
+                                    precedence=6, doc="""
         Simplifies contour.""" )
 
     width = param.Integer(default=500, precedence=-1, doc="""
