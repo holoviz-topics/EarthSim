@@ -18,7 +18,7 @@ pyviz/label/earthsim::param=1.8.2a1
 pyviz/label/earthsim::pyct=0.4.4a10
 pyviz/label/earthsim::holoviews=1.11.0a10
 pyviz/label/earthsim::geoviews=1.6.0a2
-pyviz/label/earthsim::panel=0.2.0a7
+pyviz/label/earthsim::panel=0.2.0a8
 conda-forge::lancet=0.9.0
 conda-forge::colorcet=1.0.0
 
