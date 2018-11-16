@@ -68,19 +68,17 @@ jobs:
 
 
     ########## DOCS ##########
-
     - <<: *default
       stage: doc
+      env: HV_DOC_HTML="true" DESC="docs"
       script:
-        - conda install -c pyviz/label/dev -c conda-forge nbsite sphinx_ioam_theme
+        - conda install -c pyviz -c conda-forge nbsite sphinx_ioam_theme
         - earthsim fetch-data --path=examples
-        - rm -rf examples/topics/batched_example/*.ipynb       # see github.com/pyviz/EarthSim/issues/113
-        - rm -rf examples/topics/GSSHA_Workflow.ipynb          # see github.com/pyviz/EarthSim/issues/253
-        - rm -rf examples/topics/GSSHA_Parameter_Sweep.ipynb   # see github.com/pyviz/EarthSim/issues/113
-        - travis_wait 60 doit docs
+        - nbsite generate-rst --org pyviz --project-name earthsim --offset 0 --skip '^.*Workflow.*$' --skip '^.*Sweep.*$'  --skip '^.*Batched.*$'
+        - travis_wait 60 nbsite build --what=html --output=builtdocs
       deploy:
         provider: pages
         skip_cleanup: true
         github_token: $GITHUB_TOKEN
-        local_dir: ./doc/_build/html
+        local_dir: ./builtdocs
         fqdn: earthsim.pyviz.org
