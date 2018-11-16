@@ -112,9 +112,9 @@ class CreateGSSHAModel(CreateModel):
     """Create a new GSSHA model."""
     
     mask_shapefile = param.FileSelector(default='./vicksburg_watershed/watershed_boundary.shp',
-                                        path='./vicksburg_watershed/*.shp', doc="""
+                                        path='./*/*.shp', doc="""
        Path to watershed boundary shapefile. Required for new model. Typically a *.shp file.""", precedence=0.1)
-    
+
     grid_cell_size = param.Number(default=None, precedence=0.2)
 
     # TODO: specify acceptable file extensions?

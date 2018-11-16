@@ -3,6 +3,7 @@ import math
 import warnings
 
 import param
+import panel as pn
 import numpy as np
 import holoviews as hv
 import geoviews as gv
@@ -11,8 +12,10 @@ import datashader as ds
 import quest
 
 from PIL import Image, ImageDraw
+from geoviews.util import path_to_geom_dicts
 from holoviews.core.operation import Operation
 from holoviews.core.options import Store, Options
+from holoviews.core.spaces import DynamicMap
 from holoviews.core.util import pd
 from holoviews.element.util import split_path
 from holoviews.operation.datashader import ResamplingOperation, rasterize, regrid
@@ -110,6 +113,19 @@ class filter_polygons(Operation):
         return element.clone(paths)
 
 
+class simplify_paths(Operation):
+
+    tolerance = param.Number(default=0.01)
+
+    def _process(self, element, key=None):
+        paths = []
+        for g in path_to_geom_dicts(element):
+            geom = g['geometry']
+            g = dict(g, geometry=geom.simplify(self.p.tolerance))
+            paths.append(g)
+        return element.clone(paths)
+
+
 class GrabCutPanel(param.Parameterized):
     """
     Defines a Panel for extracting contours from an Image.
@@ -119,50 +135,82 @@ class GrabCutPanel(param.Parameterized):
                               precedence=-1, doc="""
         Projection the inputs and output paths are defined in.""")
 
+    image = param.ClassSelector(class_=gv.RGB, precedence=-1, doc="""
+        The Image to compute contours on""")
+
     path_type = param.ClassSelector(default=gv.Path, class_=hv.Path,
                                     precedence=-1, is_instance=False, doc="""
         The element type to draw into.""")
 
+    downsample = param.Magnitude(default=1, precedence=1, doc="""
+        Amount to downsample image by before applying grabcut.""")
+
+    iterations = param.Integer(default=5, precedence=1, bounds=(0, 20), doc="""
+        Number of iterations to run the GrabCut algorithm for.""")
+
+    clear = param.Action(default=lambda o: o._trigger_clear(),
+                                  precedence=2, doc="""
+        Button to clear drawn annotations.""")
+
     update_contour = param.Action(default=lambda o: o.param.trigger('update_contour'),
-                                  precedence=1, doc="""
+                                  precedence=2, doc="""
         Button triggering GrabCut.""")
 
-    filter_contour = param.Action(default=lambda o: o._trigger_filter(),
-                                  precedence=1, doc="""
+    minimum_size = param.Integer(default=0, precedence=3)
+
+    filter_contour = param.Action(default=lambda o: o.param.trigger('filter_contour'),
+                                  precedence=4, doc="""
         Button triggering filtering of contours.""")
+
+    tolerance = param.Number(default=0, precedence=5)
+
+    simplify_contour = param.Action(default=lambda o: o.param.trigger('simplify_contour'),
+                                    precedence=6, doc="""
+        Simplifies contour.""" )
 
     width = param.Integer(default=500, precedence=-1, doc="""
         Width of the plot""")
 
-    height = param.Integer(default=500, precedence=-1, doc="""
+    height = param.Integer(default=None, precedence=-1, doc="""
         Height of the plot""")
 
-    downsample = param.Magnitude(default=1., doc="""
-        Amount to downsample image by before applying grabcut.""")
-
-    iterations = param.Integer(default=5, bounds=(0, 20), doc="""
-        Number of iterations to run the GrabCut algorithm for.""")
-
-    minimum_size = param.Integer(default=10)
-
     def __init__(self, image, fg_data=[], bg_data=[], **params):
-        self.image = image
-        super(GrabCutPanel, self).__init__(**params)
-        self.bg_paths = gv.project(self.path_type(bg_data, crs=self.crs), projection=image.crs)
-        self.fg_paths = gv.project(self.path_type(fg_data, crs=self.crs), projection=image.crs)
+        super(GrabCutPanel, self).__init__(image=image, **params)
+        self._bg_data = bg_data
+        self._fg_data = fg_data
+        self.bg_paths = DynamicMap(self.bg_path_view)
+        self.fg_paths = DynamicMap(self.fg_path_view)
         self.draw_bg = FreehandDraw(source=self.bg_paths)
         self.draw_fg = FreehandDraw(source=self.fg_paths)
         self._initialized = False
-        self._filter = False
+        self._clear = False
 
-    @param.depends('update_contour')
+    def _trigger_clear(self):
+        self._clear = True
+        self.param.trigger('clear')
+        self._clear = False
+
+    @param.depends('clear')
+    def bg_path_view(self):
+        if self._clear:
+            self._bg_data = []
+        elif self._initialized:
+            self._bg_data = self.draw_bg.element.data
+        return gv.project(self.path_type(self._bg_data, crs=self.crs), projection=self.image.crs)
+
+    @param.depends('clear')
+    def fg_path_view(self):
+        if self._clear:
+            self._fg_data = []
+        elif self._initialized:
+            self._fg_data = self.draw_fg.element.data
+        return gv.project(self.path_type(self._fg_data, crs=self.crs), projection=self.image.crs)
+
+    @param.depends('update_contour', 'image')
     def extract_foreground(self, **kwargs):
         img = self.image
-        if self._initialized:
-            bg, fg = self.draw_bg.element, self.draw_fg.element
-        else:
-            self._initialized = True
-            bg, fg = self.bg_paths, self.fg_paths
+        bg, fg = self.bg_path_view(), self.fg_path_view()
+        self._initialized = True
         bg, fg = (gv.project(g, projection=img.crs) for g in (bg, fg))
 
         if not len(bg) or not len(fg):
@@ -182,25 +230,38 @@ class GrabCutPanel(param.Parameterized):
         self.result = gv.project(foreground, projection=self.crs)
         return foreground
 
-    def _trigger_filter(self):
-        self._filter = True
-        self.param.trigger('filter_contour')
-        self._filter = False
-
     @param.depends('filter_contour')
     def _filter_contours(self, obj, **kwargs):
-        if self._filter:
+        if self.minimum_size > 0:
             obj = filter_polygons(obj, minimum_size=self.minimum_size)
+        return obj
+
+    @param.depends('simplify_contour')
+    def _simplify_contours(self, obj, **kwargs):
+        if self.tolerance > 0:
+            obj = simplify_paths(obj, tolerance=self.tolerance)
         self.result = gv.project(obj, projection=self.crs)
         return obj
 
     def view(self):
-        options = dict(width=self.width, height=self.height, xaxis=None, yaxis=None,
+        height = self.height
+        if height is None:
+            h, w = self.image.dimension_values(2, flat=False).shape[:2]
+            height = int(self.width*(h/w))
+        options = dict(width=self.width, height=height, xaxis=None, yaxis=None,
                        projection=self.image.crs)
         dmap = hv.DynamicMap(self.extract_foreground)
         dmap = hv.util.Dynamic(dmap, operation=self._filter_contours)
+        dmap = hv.util.Dynamic(dmap, operation=self._simplify_contours)
         return (regrid(self.image).options(**options) * self.bg_paths * self.fg_paths +
-                dmap.options(**options)).options(merge_tools=False, clone=False)
+                dmap.options(**options))
+
+    @param.output(polys=hv.Path)
+    def output(self):
+        return self.result
+
+    def panel(self):
+        return pn.Row(self.param, self.view())
 
 
 
@@ -250,6 +311,8 @@ class SelectRegionPanel(param.Parameterized):
             fill_alpha=0.5, color='grey', line_color='white',
             line_width=2, width=self.width, height=self.height
         )
+        if not self.boxes:
+            self.boxes = self.boxes.options(global_extent=True)
         self.box_stream = BoxEdit(source=self.boxes, num_objects=1)
 
     @classmethod
@@ -257,6 +320,7 @@ class SelectRegionPanel(param.Parameterized):
                              tile_width=256, tile_height=256, max_zoom=21):
         """
         Computes the zoom level from the lat/lon bounds and the plot width and height
+
         bounds: tuple(float)
             Bounds in the form (lon_min, lat_min, lon_max, lat_max)
         width: int
@@ -308,9 +372,6 @@ class SelectRegionPanel(param.Parameterized):
         else:
             return None
 
-    def view(self):
-        return (gv.DynamicMap(self.callback) * self.boxes)
-
     def get_tiff(self):
         bbox = self.bbox
         filepath = self.tiff_from_bbox(self.tile_server, self.zoom_level, bbox)
@@ -346,6 +407,17 @@ class SelectRegionPanel(param.Parameterized):
         if not os.path.isfile(file_path):
             print('Error: No TIFF downloaded')
         return file_path
+
+    def view(self):
+        return (gv.DynamicMap(self.callback) * self.boxes)
+
+    @param.output(image=hv.Image)
+    def output(self):
+        return self.get_tiff()
+
+    def panel(self):
+        return pn.Row(self.param, self.view())
+
 
 
 options = Store.options('bokeh')

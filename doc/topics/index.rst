@@ -15,9 +15,6 @@ freely available but closed source.
 * `GrabCut Demo <GrabCut.html>`_
   An example for using the GrabCut algorithm with OpenCV to extract a coastline from a satellite image
 
-* `GSSHA Workflow <GSSHA_Workflow.html>`_
-  An end to end workflow for running GSSHA simulations.
-
 * `GSSHA Parameter Sweep <GSSHA_Parameter_Sweep.html>`_
   Running a parameter sweep of a parameterized GSSHA Workflow.
 
@@ -27,6 +24,5 @@ freely available but closed source.
     :maxdepth: 2
 
     GrabCut Demo <GrabCut>
-    GSSHA Workflow <GSSHA_Workflow>
     GSSHA Parameter Sweep <GSSHA_Parameter_Sweep>
 

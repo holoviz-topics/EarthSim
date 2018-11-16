@@ -7,6 +7,7 @@ from functools import partial
 import param
 import numpy as np
 import pandas as pd
+import panel as pn
 import cartopy.crs as ccrs
 import geopandas as gpd
 import holoviews as hv
@@ -18,10 +19,58 @@ from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
 from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
 from geoviews.data.geopandas import GeoPandasInterface
-from geoviews import Polygons, Points, WMTS, TriMesh
+from geoviews import Polygons, Points, WMTS, TriMesh, Path as GeoPath
+from geoviews.util import path_to_geom_dicts
+from shapely.geometry import Polygon, LinearRing, MultiPolygon
 
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
 from .links import VertexTableLink, PointTableLink
+
+
+def paths_to_polys(path):
+    """
+    Converts a Path object to a Polygons object by extracting all paths
+    interpreting inclusion zones as holes and then constructing Polygon
+    and MultiPolygon geometries for each path.
+    """
+    geoms = path_to_geom_dicts(path)
+
+    polys = []
+    for geom in geoms:
+        g = geom['geometry']
+        found = False
+        for p in list(polys):
+            if Polygon(p['geometry']).contains(g):
+                if 'holes' not in p:
+                    p['holes'] = []
+                p['holes'].append(g)
+                found = True
+            elif Polygon(g).contains(p['geometry']):
+                polys.pop(polys.index(p))
+                if 'holes' not in geom:
+                    geom['holes'] = []
+                geom['holes'].append(p['geometry'])
+        if not found:
+            polys.append(geom)
+
+    polys_with_holes = []
+    for p in polys:
+        geom = p['geometry']
+        holes = []
+        if 'holes' in p:
+            holes = [LinearRing(h) for h in p['holes']]
+
+        if 'Multi' in geom.type:
+            polys = []
+            for g in geom:
+                subholes = [h for h in holes if g.intersects(h)]
+                polys.append(Polygon(g, subholes))
+            poly = MultiPolygon(polys)
+        else:
+            poly = Polygon(geom, holes)
+        p['geometry'] = poly
+        polys_with_holes.append(p)
+    return path.clone(polys_with_holes, new_type=gv.Polygons)
 
 
 def poly_to_geopandas(polys, columns):
@@ -76,6 +125,12 @@ class GeoAnnotator(param.Parameterized):
     path_type = param.ClassSelector(default=Polygons, class_=Path, is_instance=False, doc="""
          The element type to draw into.""")
 
+    polys = param.ClassSelector(class_=Path, precedence=-1, doc="""
+         Polygon or Path element to annotate""")
+
+    points = param.ClassSelector(class_=Points, precedence=-1, doc="""
+         Point element to annotate""")
+
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
 
@@ -96,12 +151,12 @@ class GeoAnnotator(param.Parameterized):
             polys = self.path_type(polys, crs=crs).options(**opts)
         self.polys = polys.options(**opts)
         self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True)
-        self.vertex_stream = PolyEdit(source=self.polys)
+        self.vertex_stream = PolyEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
         if isinstance(points, Points):
             self.points = points
         else:
             self.points = Points(points, self.polys.kdims, crs=crs).options(**opts)
-        self.point_stream = PointDraw(source=self.points, data={})
+        self.point_stream = PointDraw(source=self.points, drag=True, data={})
 
     def pprint(self):
         params = dict(self.get_param_values())
@@ -111,8 +166,11 @@ class GeoAnnotator(param.Parameterized):
             string += '  %s: %s\n' % (item)
         print(string)
 
-    def view(self):
+    def map_view(self):
         return self.tiles * self.polys * self.points
+
+    def panel(self):
+        return pn.Row(self.map_view())
 
 
 class PointWidgetAnnotator(GeoAnnotator):
@@ -132,6 +190,9 @@ class PointWidgetAnnotator(GeoAnnotator):
     column = param.String(default='Group', constant=True)
 
     table_height = param.Integer(default=150, doc="Height of the table",
+                                 precedence=-1)
+
+    table_width = param.Integer(default=300, doc="Width of the table",
                                  precedence=-1)
 
     def __init__(self, groups, **params):
@@ -154,7 +215,7 @@ class PointWidgetAnnotator(GeoAnnotator):
         self.table_stream.trigger([self.table_stream])
 
     def group_table(self):
-        plot = dict(width=self.width, height=self.table_height)
+        plot = dict(width=self.table_width, height=self.table_height)
         data = [(group, str(inds)) for group, inds in self._group_data.items()]
         return Table(data, self.column, 'index').sort().opts(plot=plot)
 
@@ -169,10 +230,17 @@ class PointWidgetAnnotator(GeoAnnotator):
         return element.clone(data, vdims=self.column).opts(plot={'color_index': self.column},
                                                            style={'cmap': 'Category20'})
 
-    def view(self):
-        table = DynamicMap(self.group_table, streams=[self.table_stream])
+    def map_view(self):
+        options = dict(tools=['box_select'], clone=False)
         annotated = DynamicMap(self.annotated_points, streams=[self.table_stream])
-        return (self.tiles * self.polys * self.points * annotated + table).cols(1)
+        return self.tiles * self.polys * self.points.options(**options) * annotated
+
+    def table_view(self):
+        return DynamicMap(self.group_table, streams=[self.table_stream])
+
+    def panel(self):
+        return pn.Row(self.param, self.map_view(), self.table_view())
+
 
 
 class PolyAnnotator(GeoAnnotator):
@@ -189,10 +257,13 @@ class PolyAnnotator(GeoAnnotator):
     table_height = param.Integer(default=150, doc="Height of the table",
                                  precedence=-1)
 
+    table_width = param.Integer(default=400, doc="Width of the table",
+                                 precedence=-1)
+
     def __init__(self, poly_data={}, **params):
         super(PolyAnnotator, self).__init__(**params)
         style = dict(editable=True)
-        plot = dict(width=self.width, height=self.table_height)
+        plot = dict(width=self.table_width, height=self.table_height)
 
         # Add annotation columns to poly data
         for col in self.poly_columns:
@@ -200,6 +271,7 @@ class PolyAnnotator(GeoAnnotator):
                 self.polys = self.polys.add_dimension(col, 0, '', True)
         self.poly_stream.source = self.polys
         self.vertex_stream.source = self.polys
+
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
             self.poly_stream.event(data={kd.name: [p.dimension_values(kd) for p in poly_data]
@@ -215,8 +287,20 @@ class PolyAnnotator(GeoAnnotator):
         self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
         self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
 
-    def view(self):
-        return (self.tiles * self.polys * self.points + self.poly_table + self.vertex_table).cols(1)
+    def map_view(self):
+        return (self.tiles * self.polys.options(clone=False, line_width=5) *
+                self.points.options(tools=['hover'], clone=False))
+
+    def table_view(self):
+        return pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table))
+
+    def panel(self):
+        return pn.Row(self.map_view(), self.table_view())
+
+    @param.output(path=hv.Path)
+    def path_output(self):
+        return self.poly_stream.element
+
 
 
 class PointAnnotator(GeoAnnotator):
@@ -230,10 +314,13 @@ class PointAnnotator(GeoAnnotator):
     table_height = param.Integer(default=150, doc="Height of the table",
                                  precedence=-1)
 
+    table_width = param.Integer(default=400, doc="Width of the table",
+                                 precedence=-1)
+
     def __init__(self, **params):
         super(PointAnnotator, self).__init__(**params)
         style = dict(editable=True)
-        plot = dict(width=self.width, height=self.table_height)
+        plot = dict(width=self.table_width, height=self.table_height)
         for col in self.point_columns:
             if col not in self.points:
                 self.points = self.points.add_dimension(col, 0, None, True)
@@ -242,8 +329,15 @@ class PointAnnotator(GeoAnnotator):
         self.point_table = Table(projected).opts(plot=plot, style=style)
         self.point_link = PointTableLink(source=self.points, target=self.point_table)
 
-    def view(self):
-        return (self.tiles * self.polys * self.points + self.point_table).cols(1)
+    def table_view(self):
+        return self.point_table
+
+    def panel(self):
+        return pn.Row(self.map_view(), self.table_view())
+
+    @param.output(points=gv.Points)
+    def point_output(self):
+        return self.point_stream.element
 
 
 class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
@@ -252,13 +346,33 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     DataTable.
     """
 
-    def view(self):
-        return(self.tiles * self.polys * self.points +
-               self.poly_table + self.point_table + self.vertex_table).cols(1)
+    def table_view(self):
+        return pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table),
+                       ('Points', self.point_table))
+
+
+class PolyExporter(param.Parameterized):
+
+    filename = param.String(default='')
+
+    path = param.ClassSelector(class_=Path, precedence=-1)
+
+    save = param.Action(default=lambda x: x._save())
+
+    def __init__(self, path, **params):
+        self._polys = paths_to_polys(path)
+        super(PolyExporter, self).__init__(path=path, **params)
+
+    def _save(self):
+        pass
+
+    def panel(self):
+        return pn.Row(self.param, self._polys.options(width=800, height=600))
 
 
 options = Store.options('bokeh')
 
 options.Points = Options('plot', padding=0.1)
+options.Points = Options('style', size=10, line_color='black')
 options.Path = Options('plot', padding=0.1)
 options.Polygons = Options('plot', padding=0.1)
