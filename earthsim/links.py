@@ -13,6 +13,8 @@ class PointTableLink(Link):
 
     point_columns = param.List(default=[])
 
+    _requires_target = True
+
     def __init__(self, source, target, **params):
         if 'point_columns' not in params:
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
@@ -27,6 +29,8 @@ class VertexTableLink(Link):
     """
 
     vertex_columns = param.List(default=[])
+
+    _requires_target = True
 
     def __init__(self, source, target, **params):
         if 'vertex_columns' not in params:
