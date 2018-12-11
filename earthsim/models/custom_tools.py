@@ -1,8 +1,8 @@
 import os
 
-from bokeh.core.properties import Instance, List
+from bokeh.core.properties import Instance, List, Dict, String, Any
 from bokeh.core.enums import Dimensions
-from bokeh.models import Tool, ColumnDataSource
+from bokeh.models import Tool, ColumnDataSource, PolyEditTool
 
 from . import _CUSTOM_MODELS
 
@@ -15,9 +15,9 @@ class CheckpointTool(Tool):
     the RestoreTool to restore the data to a previous state.
     """
 
-    __implementation__ = os.path.join(fpath, 'checkpoint_tool.ts')
-
     sources = List(Instance(ColumnDataSource))
+
+    __implementation__ = os.path.join(fpath, 'checkpoint_tool.ts')
 
 
 class RestoreTool(Tool):
@@ -26,9 +26,9 @@ class RestoreTool(Tool):
     checkpoint created by the CheckpointTool
     """
 
-    __implementation__ = os.path.join(fpath, 'restore_tool.ts')
-
     sources = List(Instance(ColumnDataSource))
+
+    __implementation__ = os.path.join(fpath, 'restore_tool.ts')
 
 
 class ClearTool(Tool):
@@ -36,11 +36,23 @@ class ClearTool(Tool):
     Clears the data on the supplied ColumnDataSources.
     """
 
+    sources = List(Instance(ColumnDataSource))
+
     __implementation__ = os.path.join(fpath, 'clear_tool.ts')
 
-    sources = List(Instance(ColumnDataSource))
+
+class PolyVertexEditTool(PolyEditTool):
+
+    node_style = Dict(String, Any, help="""
+    Custom styling to apply to the intermediate nodes of a patch or line glyph.""")
+
+    end_style = Dict(String, Any, help="""
+    Custom styling to apply to the start and nodes of a patch or line glyph.""")
+
+    __implementation__ = os.path.join(fpath, 'poly_edit.ts')
 
 
 _CUSTOM_MODELS['earthsim.models.custom_tools.CheckPointTool'] = CheckpointTool
 _CUSTOM_MODELS['earthsim.models.custom_tools.RestoreTool'] = RestoreTool
 _CUSTOM_MODELS['earthsim.models.custom_tools.ClearTool'] = ClearTool
+_CUSTOM_MODELS['earthsim.models.custom_tools.PolyVertexEditTool'] = PolyVertexEditTool
