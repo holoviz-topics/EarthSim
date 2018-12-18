@@ -14,7 +14,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     if (this._basepoint == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
-    if (ev.shiftKey) {
+    if (!ev.shiftKey) {
       this._move_linked(points)
     }
     if (this._selected_renderer)
@@ -25,8 +25,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     if (this._basepoint == null)
       return
     const points = this._drag_points(ev, [this.model.vertex_renderer])
-    if (ev.shiftKey) {
-	  console.log(points)
+    if (!ev.shiftKey) {
       this._move_linked(points)
     }
     this._emit_cds_changes(this.model.vertex_renderer.data_source, false, true, true)
@@ -91,9 +90,15 @@ export class PolyVertexEditToolView extends PolyEditToolView {
         point_glyph.y = {value: ys}
     }
 
-    for (const key of keys(styles)) {
-      point_cds.data[key] = styles[key] 
-      point_glyph[key] = {field: key}
+    if (styles != null) {
+      for (const key of keys(styles)) {
+        point_cds.data[key] = styles[key]
+        point_glyph[key] = {field: key}
+      }
+    } else {
+      for (const col of point_cds.columns()) {
+        point_cds.data[col] = []
+      }
     }
     this._emit_cds_changes(point_cds, true, true, false)
   }
