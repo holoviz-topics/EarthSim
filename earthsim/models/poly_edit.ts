@@ -127,10 +127,6 @@ export class PolyVertexEditToolView extends PolyEditToolView {
     }
   }
 
-  _hide_vertices(): void {
-    this._set_vertices([], [], {})
-  }
-
   _show_vertices(ev: UIEvent): void {
     if (!this.model.active)
       return
