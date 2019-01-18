@@ -5,6 +5,6 @@
 
 pyviz/label/dev::datashader
 pyviz/label/dev::param
-pyviz/label/dev::holoviews=1.11.0a10
-pyviz/label/dev::geoviews=1.6.0a2
+pyviz/label/dev::holoviews=1.11.1
+pyviz/label/dev::geoviews=1.6.2a1
 pyviz/label/dev::panel
