@@ -50,6 +50,8 @@ jobs:
       script:
         - earthsim fetch-data --path=examples
         - travis_wait 60 doit test_all
+      after_failure:
+        - sleep 10
 
     - <<: *default
       <<: *_osx_config
