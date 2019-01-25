@@ -5,7 +5,7 @@ conda-forge::cartopy=0.17.0
 conda-forge::xarray=0.10.7
 conda-forge::geopandas=0.3.0
 conda-forge::notebook=5.5.0
-conda-forge::opencv=3.4.4
+conda-forge::opencv=3.4.1
 conda-forge::gsshapy=2.3.8
 conda-forge::bokeh=1.0.4
 conda-forge::lancet=0.9.0
@@ -35,10 +35,10 @@ conda-forge::gdal=2.4.0
 pyviz/label/earthsim::zeromq
 
 ### scipy+deps
-conda-forge::numpy=1.16.0
+conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
-conda-forge::scipy=1.2.0
+conda-forge::scipy=1.1.0
 
 ######## for running tests ########
 conda-forge::pytest
