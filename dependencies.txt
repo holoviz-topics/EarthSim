@@ -1,6 +1,6 @@
 ########### direct deps ###########
 #conda-forge::python=3.6 # specify separately or can't solve
-conda-forge::fiona=1.8.4
+conda-forge::fiona=1.7.12
 conda-forge::cartopy=0.17.0
 conda-forge::xarray=0.10.7
 conda-forge::geopandas=0.3.0
