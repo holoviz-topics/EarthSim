@@ -1,18 +1,18 @@
 ########### direct deps ###########
 #conda-forge::python=3.6 # specify separately or can't solve
-conda-forge::fiona=1.7.12
+conda-forge::fiona=1.8.4
 conda-forge::cartopy=0.17.0
-conda-forge::xarray=0.10.7
-conda-forge::geopandas=0.3.0
+conda-forge::xarray=0.11.0
+conda-forge::geopandas=0.4.0
 conda-forge::notebook=5.5.0
-conda-forge::opencv=3.4.1
+conda-forge::opencv=3.4.4
 conda-forge::gsshapy=2.3.8
 conda-forge::bokeh=1.0.4
 conda-forge::lancet=0.9.0
 conda-forge::colorcet=1.0.0
 erdc::quest=2.6.1
 pyviz/label/earthsim::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
-pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
+# pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 pyviz/label/earthsim::datashader=0.6.9a1
 pyviz/label/earthsim::param=1.8.2a1
 pyviz/label/earthsim::pyct=0.4.6
@@ -22,11 +22,10 @@ pyviz/label/earthsim::panel=0.3.1
 
 ########## indirect deps ##########
 conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to pin this (though it does contain compiled code)
-conda-forge::descartes=1.1.0     # from geopandas; have not verified we need to pin this
 conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
-conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
-conda-forge::libgdal=2.2.4       # libgdal >2.2.4 incompatible with hdf5 version needed for opencv 3.4.1
-conda-forge::gdal=2.2.4 
+conda-forge::boost-cpp=1.69.0    # current c-f pin (used by various deps including filigree)
+conda-forge::libgdal=2.4.0
+conda-forge::gdal=2.4.0
 
 # zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
 # previous minor releases I tried were also problematic on
@@ -35,10 +34,10 @@ conda-forge::gdal=2.2.4
 pyviz/label/earthsim::zeromq
 
 ### scipy+deps
-conda-forge::numpy=1.14.5
+conda-forge::numpy=1.16.0
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
-conda-forge::scipy=1.1.0
+defaults::scipy=1.2.0
 
 ######## for running tests ########
 conda-forge::pytest
