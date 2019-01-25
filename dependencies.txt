@@ -27,12 +27,6 @@ conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
 conda-forge::libgdal=2.4.0
 conda-forge::gdal=2.4.0
 
-# zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
-# previous minor releases I tried were also problematic on
-# linux. Appears to be going through some building changes right now
-# on c-f, so temporarily avoid that by hosting ourselves.
-pyviz/label/earthsim::zeromq
-
 ### scipy+deps
 defaults::numpy=1.15.4
 defaults::scipy=1.2.0
