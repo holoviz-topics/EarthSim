@@ -61,8 +61,13 @@ class extract_foreground(Operation):
     def _process(self, element, key=None):
         try:
             import cv2 as cv
-        except ImportError:
-            raise ImportError('GrabCut algorithm requires openCV')
+        except:
+            # HACK: Avoids error loading OpenCV the first time
+            # ImportError dlopen: cannot load any more object with static TLS
+            try:
+                import cv2 as cv
+            except ImportError:
+                raise ImportError('GrabCut algorithm requires openCV')
 
         if isinstance(self.p.foreground, hv.Polygons):
             rasterize_op = rasterize_polygon
