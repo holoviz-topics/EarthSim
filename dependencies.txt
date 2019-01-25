@@ -34,9 +34,7 @@ conda-forge::gdal=2.4.0
 pyviz/label/earthsim::zeromq
 
 ### scipy+deps
-conda-forge::numpy=1.16.0
-# linux,mac packages copied from c-f channel, win package from
-# defaults (same compiler,options for win)
+defaults::numpy=1.16.0
 defaults::scipy=1.2.0
 
 ######## for running tests ########
