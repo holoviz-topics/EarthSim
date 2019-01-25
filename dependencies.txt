@@ -34,7 +34,7 @@ conda-forge::gdal=2.4.0
 pyviz/label/earthsim::zeromq
 
 ### scipy+deps
-defaults::numpy=1.16.0
+defaults::numpy=1.15.4
 defaults::scipy=1.2.0
 
 ######## for running tests ########
