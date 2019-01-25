@@ -25,8 +25,8 @@ conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to
 conda-forge::descartes=1.1.0     # from geopandas; have not verified we need to pin this
 conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
 conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
-conda-forge::libgdal=2.3.3       # libgdal 2.4.0 incompatible with hdf5 version needed for opencv 3.4.1
-conda-forge::gdal=2.3.3 
+conda-forge::libgdal=2.2.4       # libgdal >2.2.4 incompatible with hdf5 version needed for opencv 3.4.1
+conda-forge::gdal=2.2.4 
 
 # zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
 # previous minor releases I tried were also problematic on
