@@ -38,7 +38,7 @@ pyviz/label/earthsim::zeromq
 conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
-pyviz/label/earthsim::scipy=1.1.0
+conda-forge::scipy=1.2.0
 
 ######## for running tests ########
 conda-forge::pytest
