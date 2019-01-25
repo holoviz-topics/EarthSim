@@ -1,44 +1,32 @@
 ########### direct deps ###########
 #conda-forge::python=3.6 # specify separately or can't solve
-conda-forge::fiona=1.7.12
-conda-forge::gdal=2.4.0
+conda-forge::fiona=1.8.4
 conda-forge::cartopy=0.17.0
 conda-forge::xarray=0.10.7
 conda-forge::geopandas=0.3.0
-conda-forge::jupyter=1.0.0
 conda-forge::notebook=5.5.0
 conda-forge::opencv=3.4.1
 conda-forge::gsshapy=2.3.8
 conda-forge::bokeh=1.0.4
+conda-forge::lancet=0.9.0
+conda-forge::colorcet=1.0.0
+erdc::quest=2.6.1
 pyviz/label/earthsim::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
 pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
-erdc::quest=2.6.1
 pyviz/label/earthsim::datashader=0.6.9a1
 pyviz/label/earthsim::param=1.8.2a1
 pyviz/label/earthsim::pyct=0.4.6
 pyviz/label/earthsim::holoviews=1.11.1
-pyviz/label/earthsim::geoviews=1.6.2a1
+pyviz/label/earthsim::geoviews=1.6.2a10
 pyviz/label/earthsim::panel=0.3.1
-conda-forge::lancet=0.9.0
-conda-forge::colorcet=1.0.0
 
 ########## indirect deps ##########
 conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to pin this (though it does contain compiled code)
 conda-forge::descartes=1.1.0     # from geopandas; have not verified we need to pin this
 conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
 conda-forge::boost-cpp=1.66.0    # current c-f pin (used by various deps including filigree)
-
-# libgdal 2.2.4 build 5 (pinned for compatibility)
-conda-forge::libgdal=2.4.0
-
-# Newer x264 breaks current c-f::opencv (3.4.1; see
-# https://github.com/conda-forge/opencv-feedstock/issues/115). Note
-# that the windows package is just a dummy (can't express optional
-# constraint here). Alternatively could have asked users to create a
-# pinned file, or could have added "constrains" to e.g. our own copy
-# of the opencv package, or could have a separate dependencies.txt
-# file for windows.
-pyviz/label/earthsim::x264
+conda-forge::libgdal=2.4.0       # Binary compatibility issues with older versions
+conda-forge::gdal=2.4.0
 
 # zeromq: build 3 of 4.2.5 broke travis/linux (build 2 was fine);
 # previous minor releases I tried were also problematic on
@@ -64,7 +52,6 @@ conda-forge::numpy=1.14.5
 # linux,mac packages copied from c-f channel, win package from
 # defaults (same compiler,options for win)
 pyviz/label/earthsim::scipy=1.1.0
-#conda-forge::libgfortran
 
 ######## for running tests ########
 conda-forge::pytest
