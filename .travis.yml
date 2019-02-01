@@ -31,7 +31,7 @@ jobs:
   include:
     ########## TEST USER INSTALL ##########
     - &default
-      stage: user_install
+      stage: test
       before_install: true
       install:
         #####
