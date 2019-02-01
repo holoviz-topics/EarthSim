@@ -56,19 +56,6 @@ jobs:
     - <<: *default
       <<: *_osx_config
 
-
-    ########## TEST DEVELOPER INSTALL ##########
-    - &dev_default
-      <<: *default
-      stage: test
-      before_script:
-        - conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
-        - doit env_capture
-
-    - <<: *dev_default
-      <<: *_osx_config
-
-
     ########## DOCS ##########
     - <<: *default
       stage: doc
