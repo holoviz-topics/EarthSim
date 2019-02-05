@@ -10,7 +10,9 @@ conda-forge::gsshapy=2.3.8
 conda-forge::bokeh=1.0.4
 conda-forge::lancet=0.9.0
 conda-forge::colorcet=1.0.0
+conda-forge::ulmo=0.8.4
 erdc::quest=2.6.1
+
 pyviz/label/earthsim::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
 # pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 pyviz/label/dev::datashader=0.6.9
@@ -18,7 +20,7 @@ pyviz/label/dev::param=1.8.2
 pyviz/label/dev::pyct=0.4.6
 pyviz/label/dev::holoviews=1.11.2
 pyviz/label/dev::geoviews=1.6.2
-pyviz/label/dev::panel=0.3.1
+pyviz/label/dev::panel=0.4.0
 
 ########## indirect deps ##########
 conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to pin this (though it does contain compiled code)
