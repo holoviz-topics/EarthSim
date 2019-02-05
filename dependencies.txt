@@ -1,20 +1,17 @@
 ########### direct deps ###########
 #conda-forge::python=3.6 # specify separately or can't solve
-conda-forge::fiona=1.8.4
-conda-forge::cartopy=0.17.0
-conda-forge::xarray=0.11.0
-conda-forge::geopandas=0.4.0
-conda-forge::notebook=5.5.0
-conda-forge::opencv=3.4.4
-conda-forge::gsshapy=2.3.8
-conda-forge::bokeh=1.0.4
-conda-forge::lancet=0.9.0
-conda-forge::colorcet=1.0.0
-conda-forge::ulmo=0.8.4
-erdc::quest=2.6.1
+fiona=1.8.4
+cartopy=0.17.0
+xarray=0.11.0
+geopandas=0.4.0
+notebook=5.5.0
+opencv=3.4.4
+bokeh=1.0.4
+lancet=0.9.0
+colorcet=1.0.0
 
+# PyViz dependencies
 pyviz/label/earthsim::gssha=7.12+pyviz.0     # https://github.com/ContinuumIO/EarthSim-gssha/releases/
-# pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 pyviz/label/dev::datashader=0.6.9
 pyviz/label/dev::param=1.8.2
 pyviz/label/dev::pyct=0.4.6
@@ -22,16 +19,21 @@ pyviz/label/dev::holoviews=1.11.2
 pyviz/label/dev::geoviews=1.6.2
 pyviz/label/dev::panel=0.4.0
 
-########## indirect deps ##########
-conda-forge::scikit-image=0.14.0 # from datashader; have not verified we need to pin this (though it does contain compiled code)
-conda-forge::nodejs=9.11.1       # for bokeh (not a dep of bokeh conda package)
-#conda-forge::boost-cpp=1.69.0    # current c-f pin (used by various deps including filigree)
-conda-forge::libgdal=2.4.0
-conda-forge::gdal=2.4.0
+# ERDC dependencies
+conda-forge::gsshapy=2.3.8
+conda-forge::ulmo=0.8.4
+erdc::quest=2.6.1
+# pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 
-### scipy+deps
-defaults::numpy=1.15.4
-defaults::scipy=1.2.0
+########## indirect deps ##########
+numpy
+scipy
+nodejs
+scikit-image
+libgdal
+gdal
+#conda-forge::boost-cpp=1.69.0    # current c-f pin (used by various deps including filigree)
+
 
 ######## for running tests ########
 conda-forge::pytest
