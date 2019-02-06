@@ -26,14 +26,8 @@ erdc::quest=2.6.1
 # pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 
 ########## indirect deps ##########
-numpy
-scipy
 nodejs
-scikit-image
-libgdal
-gdal
 #conda-forge::boost-cpp=1.69.0    # current c-f pin (used by various deps including filigree)
-
 
 ######## for running tests ########
 conda-forge::pytest
