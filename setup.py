@@ -12,7 +12,21 @@ from setuptools.command.install import install
 import pyct.build
 import param.version
 
-setup_args = {'name':'earthsim'}
+setup_args = {'name': 'earthsim'}
+
+install_requires = [
+    'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9', 'pyct=0.4.6',
+    'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
+    'xarray>=0.11.0', 'colorcet>=1.0.0', 'lancet>=0.9.0', 'notebook>=5.5.0'
+    'quest=2.6.1', 'gsshapy=2.3.8', 'ulmo=0.8.4', 'gssha=7.12+pyviz.0',
+    'opencv']
+
+extras_require = {}
+
+extras_require['build'] = ['nodejs']
+
+extras_require['test'] = extras_require['build'] + ['pytest', 'pyflakes', 'nbsmoke']
+
 
 def build_custom_models():
     """
@@ -60,6 +74,8 @@ setup_args.update(dict(
     version=param.version.get_setup_version(__file__,"EarthSim",setup_args['name'],archive_commit="$Format:%h$"),
     packages = find_packages(),
     include_package_data=True,
+    install_requires=install_requires,
+    extras_require=extras_require,
     cmdclass={
         'develop': CustomDevelopCommand,
         'install': CustomInstallCommand,
@@ -69,6 +85,11 @@ setup_args.update(dict(
               'param = earthsim.__main__:param_main',
               'earthsim = earthsim.__main__:main'
     ]},
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    maintainer="PyViz Developers",
+    maintainer_email="developers@pyviz.org",
+    platforms=['Windows', 'Mac OS X', 'Linux'],
     url = "https://earthsim.pyviz.org",
     license = "BSD",
     description = "Tools for working with and visualizing environmental simulations"
