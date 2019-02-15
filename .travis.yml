@@ -48,6 +48,7 @@ jobs:
         - travis_wait 20 doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
         - source activate earthsim
         - doit develop_install $CHANS_DEV -o tests
+        - conda install -c conda-forge freetype --force
         - doit env_capture
       script:
         - earthsim fetch-data --path=examples
