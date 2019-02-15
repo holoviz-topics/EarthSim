@@ -1,15 +1,21 @@
 environment:
+  global:
+    CHANS_DEV: "-c pyviz/label/earthsim -c pyviz/label/dev -c conda-forge"
   matrix:
     - PY: "3.6"
       CONDA: "C:\\Miniconda36-x64"
 
+init:
+  - cmd: set PATH=%CONDA%;%CONDA%\Scripts;%CONDA%\Library\bin;%PATH%
+  - cmd: echo %path%
+
 install:
-  - "SET PATH=%CONDA%;%CONDA%\\Scripts;%PATH%"
   - "conda install -y -c pyviz pyctdev && doit ecosystem_setup"
+  - "conda install -y conda<4.6"
   - "conda config --set always_yes True"
-  - "conda create -n earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6"
+  - "doit env_create %CHANS_DEV% --name=earthsim --python=%PY%"
   - "activate earthsim"
-  - "pip install -e ."
+  - "doit develop_install %CHANS_DEV% -o test"
   - "doit env_capture"
 
 build: off
