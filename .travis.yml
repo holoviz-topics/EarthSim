@@ -49,13 +49,12 @@ jobs:
     ########## TEST USER INSTALL ##########
     - &default
       stage: test
-      before_install:
+      install:
         - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
         - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
         - conda config --set path_conflict warn
-      install:
         - doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
         - source activate earthsim
         - doit develop_install $CHANS_DEV -o tests
