@@ -20,7 +20,7 @@ install_requires = [
     'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9',
     'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
     'xarray>=0.11.0', 'colorcet>=1.0.0', 'notebook>=5.5.0',
-    'fiona==1.8.4', 'gdal>=2.3.3', 'rasterio==1.0.13']
+    'fiona==1.8.4', 'gdal>=2.4.0', 'rasterio==1.0.13']
 
 extras_require = {}
 
