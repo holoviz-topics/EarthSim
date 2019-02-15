@@ -58,7 +58,7 @@ jobs:
       install:
         - doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
         - source activate earthsim
-        - doit develop_install $CHANS_DEV -o test
+        - doit develop_install $CHANS_DEV -o tests
         - doit env_capture
       script:
         - earthsim fetch-data --path=examples

@@ -15,7 +15,7 @@ install:
   - "conda config --set always_yes True"
   - "doit env_create %CHANS_DEV% --name=earthsim --python=%PY%"
   - "activate earthsim"
-  - "doit develop_install %CHANS_DEV% -o test"
+  - "doit develop_install %CHANS_DEV% -o tests"
   - "doit env_capture"
 
 build: off

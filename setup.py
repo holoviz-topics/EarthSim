@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import json
@@ -15,17 +17,26 @@ import param.version
 setup_args = {'name': 'earthsim'}
 
 install_requires = [
-    'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9', 'pyct=0.4.6',
+    'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9',
     'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
     'xarray>=0.11.0', 'colorcet>=1.0.0', 'lancet>=0.9.0', 'notebook>=5.5.0'
-    'quest=2.6.1', 'gsshapy=2.3.8', 'ulmo=0.8.4', 'gssha=7.12+pyviz.0',
+    'quest==2.6.1', 'gsshapy==2.3.8', 'ulmo==0.8.4', 'gssha==7.12+pyviz.0',
     'opencv']
 
 extras_require = {}
 
-extras_require['build'] = ['nodejs']
+# until pyproject.toml/equivalent is widely supported (setup_requires
+# doesn't work well with pip)
+extras_require['build'] = [
+    'param >=1.7.0',
+    'pyct >=0.4.4',
+    'setuptools >=30.3.0',
+    'bokeh >=1.0.0',
+    'pyviz_comms >=0.6.0',
+    'nodejs >=9.11.1',
+]
 
-extras_require['test'] = extras_require['build'] + ['pytest', 'pyflakes', 'nbsmoke']
+extras_require['tests'] = extras_require['build'] + ['pytest', 'pyflakes', 'nbsmoke']
 
 
 def build_custom_models():
