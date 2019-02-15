@@ -7,7 +7,7 @@ env:
   global:
     - PYENV_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36"
-    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc"
+    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c defaults -c erdc -c conda-forge"
     - CHANS="-c pyviz"
     - MPLBACKEND="Agg"
 
