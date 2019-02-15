@@ -27,6 +27,11 @@ _osx_config: &_osx_config
   osx_image: xcode10.1
   env: PYENV_VERSION=3.6.4
   before_install:
+    # set up python
+    - eval "$(pyenv init -)"
+    - pyenv install $PYENV_VERSION  
+    # check the below still required
+    # brew-installed geos interferes with cartopy?
     - brew uninstall --ignore-dependencies geos gdal postgis
 
 jobs:
