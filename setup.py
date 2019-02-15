@@ -19,13 +19,14 @@ setup_args = {'name': 'earthsim'}
 install_requires = [
     'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9',
     'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
-    'xarray>=0.11.0', 'colorcet>=1.0.0', 'lancet>=0.9.0', 'notebook>=5.5.0',
+    'xarray>=0.11.0', 'colorcet>=1.0.0', 'notebook>=5.5.0',
     'fiona==1.8.4', 'gdal>=2.3.3']
 
 extras_require = {}
 
-extras_require['recommended'] = ['opencv', 'quest==2.6.1', 'gsshapy==2.3.8',
-                                 'ulmo==0.8.4', 'gssha==7.12+pyviz.0']
+extras_require['recommended'] = [
+    'opencv', 'quest==2.6.1', 'gsshapy==2.3.8', 'gssha==7.12+pyviz.0',
+    'ulmo==0.8.4', 'lancet>=0.9.0']
 
 # until pyproject.toml/equivalent is widely supported (setup_requires
 # doesn't work well with pip)
