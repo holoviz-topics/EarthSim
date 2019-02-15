@@ -40,7 +40,8 @@ extras_require['build'] = [
 ]
 
 extras_require['tests'] = (
-    extras_require['build'] + extras_require['recommended'] + ['pytest', 'pyflakes', 'nbsmoke'])
+    extras_require['build'] + extras_require['recommended'] +
+    ['pytest', 'pyflakes', 'nbsmoke'])
 
 
 def build_custom_models():

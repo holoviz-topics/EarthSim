@@ -8,8 +8,10 @@ env:
     - PYENV_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36"
     - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c defaults -c erdc -c conda-forge"
-    - CHANS="-c pyviz"
+    - CHANS_REL="-c pyviz -c defaults -c erdc -c conda-forge"
     - MPLBACKEND="Agg"
+    - LABELS_DEV="--label dev"
+    - LABELS_REL="--label dev --label main"
 
 notifications:
   email:
@@ -21,6 +23,11 @@ stages:
     if: type = cron
   - name: doc
     if: branch = master AND type != pull_request
+  - name: conda_dev_package
+    if: tag =~ ^v(\d+|\.)+[a-z]\d+$
+  - name: conda_package
+    if: tag =~ ^v(\d+|\.)+[^a-z]\d+$
+
 
 _osx_config: &_osx_config
   os: osx
@@ -33,18 +40,24 @@ _osx_config: &_osx_config
     # check the below still required
     # brew-installed geos interferes with cartopy?
     - brew uninstall --ignore-dependencies geos gdal postgis
+    - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
+    - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+    - conda config --set always_yes True
+    - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
+    - conda config --set path_conflict warn
 
 jobs:
   include:
     ########## TEST USER INSTALL ##########
     - &default
       stage: test
-      install:
+      before_install:
         - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
         - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
         - conda config --set path_conflict warn
+      install:
         - travis_wait 20 doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
         - source activate earthsim
         - doit develop_install $CHANS_DEV -o tests
@@ -57,6 +70,22 @@ jobs:
 
     - <<: *default
       <<: *_osx_config
+
+    ########## END-USER PACKAGES ##########
+
+    - &conda_pkg
+      <<: *default
+      stage: conda_dev_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID LABELS=$LABELS_DEV CHANS=$CHANS_DEV
+      install:
+        - doit package_build $CHANS --no-pkg-tests
+      script: doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS
+
+    ## release packages
+
+    - <<: *conda_pkg
+      stage: conda_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID LABELS=$LABELS_REL CHANS=$CHANS_REL
 
     ########## DOCS ##########
     - <<: *default
