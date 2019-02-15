@@ -55,7 +55,7 @@ jobs:
         - conda config --set always_yes True
         - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
         - conda config --set path_conflict warn
-        - doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
+        - travis_wait 20 doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
         - source activate earthsim
         - doit develop_install $CHANS_DEV -o tests
         - doit env_capture
