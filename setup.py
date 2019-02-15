@@ -21,7 +21,7 @@ install_requires = [
     'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
     'xarray>=0.11.0', 'colorcet>=1.0.0', 'lancet>=0.9.0', 'notebook>=5.5.0',
     'quest==2.6.1', 'gsshapy==2.3.8', 'ulmo==0.8.4', 'gssha==7.12+pyviz.0',
-    'opencv', 'fiona==1.8.4', 'gdal>=2.3.3' 'libiconv']
+    'opencv', 'fiona==1.8.4', 'gdal>=2.3.3', 'libiconv']
 
 extras_require = {}
 
