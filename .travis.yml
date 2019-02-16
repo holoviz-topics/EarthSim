@@ -6,6 +6,16 @@ language: generic
 env:
   global:
     - PYENV_VERSION=3.6
+    - PKG_TEST_PYTHON="--test-python=py36"
+    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c defaults -c erdc -c conda-forge"
+    - CHANS_REL="-c pyviz -c defaults -c erdc -c conda-forge"
+    - MPLBACKEND="Agg"
+    - LABELS_DEV="--label dev"
+    - LABELS_REL="--label dev --label main"
+
+notifications:
+  email:
+    on_failure: change # [always|never|change] default: always
 
 stages:
   - test
@@ -13,11 +23,16 @@ stages:
     if: type = cron
   - name: doc
     if: branch = master AND type != pull_request
+  - name: conda_dev_package
+    if: tag =~ ^v(\d+|\.)+[a-z]\d+$
+  - name: conda_package
+    if: tag =~ ^v(\d+|\.)+[^a-z]\d+$
+
 
 _osx_config: &_osx_config
   os: osx
-  osx_image: xcode9.3
-  env: PYENV_VERSION=3.6.4
+  osx_image: xcode10.1
+  env: PYENV_VERSION=3.6.4 CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge"
   before_install:
     # set up python
     - eval "$(pyenv init -)"
@@ -25,47 +40,52 @@ _osx_config: &_osx_config
     # check the below still required
     # brew-installed geos interferes with cartopy?
     - brew uninstall --ignore-dependencies geos gdal postgis
-
+    - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
+    - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
+    - conda config --set always_yes True
+    - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
+    - conda config --set path_conflict warn
 
 jobs:
   include:
     ########## TEST USER INSTALL ##########
     - &default
-      stage: user_install
-      before_install: true
-      install:
-        #####
-        # install doit/pyctdev and use to install miniconda...
+      stage: test
+      before_install:
         - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
-        # ...and now install doit/pyctdev into miniconda
         - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
-        #####
         - conda config --set path_conflict warn
-        - conda create -n earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
+      install:
+        - travis_wait 20 doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
         - source activate earthsim
-        - pip install -e .
+        - doit develop_install $CHANS_DEV -o tests
         - doit env_capture
       script:
         - earthsim fetch-data --path=examples
         - travis_wait 60 doit test_all
+      after_failure:
+        - sleep 10
 
     - <<: *default
       <<: *_osx_config
 
+    ########## END-USER PACKAGES ##########
 
-    ########## TEST DEVELOPER INSTALL ##########
-    - &dev_default
+    - &conda_pkg
       <<: *default
-      stage: test
-      before_script:
-        - conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
-        - doit env_capture
+      stage: conda_dev_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID LABELS=$LABELS_DEV CHANS=$CHANS_DEV
+      install:
+        - doit package_build $CHANS --no-pkg-tests
+      script: doit package_upload --token=$CONDA_UPLOAD_TOKEN $LABELS
 
-    - <<: *dev_default
-      <<: *_osx_config
+    ## release packages
 
+    - <<: *conda_pkg
+      stage: conda_package
+      env: DESC="" TRAVIS_NOCACHE=$TRAVIS_JOB_ID LABELS=$LABELS_REL CHANS=$CHANS_REL
 
     ########## DOCS ##########
     - <<: *default
@@ -75,7 +95,7 @@ jobs:
         - conda install -c pyviz -c conda-forge nbsite=0.5.1 sphinx_ioam_theme
         - mkdir examples/assets
         - earthsim fetch-data --path=examples
-        - nbsite generate-rst --org pyviz --project-name earthsim --offset 0 --skip '^.*Workflow.*$' --skip '^.*Sweep.*$'  --skip '^.*Batched.*$'
+        - nbsite generate-rst --org pyviz --project-name earthsim --offset 0 --skip '^.*Workflow.*$' --skip '^.*Sweep.*$'  --skip '^.*Batched.*$' --skip '^.Specifying.*$'
         - travis_wait 60 nbsite build --what=html --output=builtdocs
       deploy:
         provider: pages

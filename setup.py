@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import sys
 import json
@@ -12,7 +14,35 @@ from setuptools.command.install import install
 import pyct.build
 import param.version
 
-setup_args = {'name':'earthsim'}
+setup_args = {'name': 'earthsim'}
+
+install_requires = [
+    'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9',
+    'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
+    'xarray>=0.11.0', 'colorcet>=1.0.0', 'notebook>=5.5.0',
+    'fiona', 'gdal>=2.3.3', 'rasterio==1.0.13']
+
+extras_require = {}
+
+extras_require['recommended'] = [
+    'opencv', 'quest==2.6.1', 'gsshapy==2.3.8', 'gssha==7.12+pyviz.0',
+    'ulmo==0.8.4', 'lancet>=0.9.0']
+
+# until pyproject.toml/equivalent is widely supported (setup_requires
+# doesn't work well with pip)
+extras_require['build'] = [
+    'param >=1.7.0',
+    'pyct >=0.4.4',
+    'setuptools >=30.3.0',
+    'bokeh >=1.0.0',
+    'pyviz_comms >=0.6.0',
+    'nodejs >=9.11.1',
+]
+
+extras_require['tests'] = (
+    extras_require['build'] + extras_require['recommended'] +
+    ['pytest', 'pyflakes', 'nbsmoke'])
+
 
 def build_custom_models():
     """
@@ -60,6 +90,9 @@ setup_args.update(dict(
     version=param.version.get_setup_version(__file__,"EarthSim",setup_args['name'],archive_commit="$Format:%h$"),
     packages = find_packages(),
     include_package_data=True,
+    install_requires=install_requires,
+    extras_require=extras_require,
+    python_requires=">=3.6",
     cmdclass={
         'develop': CustomDevelopCommand,
         'install': CustomInstallCommand,
@@ -69,6 +102,11 @@ setup_args.update(dict(
               'param = earthsim.__main__:param_main',
               'earthsim = earthsim.__main__:main'
     ]},
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    maintainer="PyViz Developers",
+    maintainer_email="developers@pyviz.org",
+    platforms=['Windows', 'Mac OS X', 'Linux'],
     url = "https://earthsim.pyviz.org",
     license = "BSD",
     description = "Tools for working with and visualizing environmental simulations"
