@@ -92,6 +92,7 @@ setup_args.update(dict(
     include_package_data=True,
     install_requires=install_requires,
     extras_require=extras_require,
+    python_requires=">=3.6",
     cmdclass={
         'develop': CustomDevelopCommand,
         'install': CustomInstallCommand,
