@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8"/>
+  <title>
+   GSSHA Workflow — EarthSim 0.0.1 documentation
+  </title>
+  <meta content="Tools for working with and visualizing environmental simulations." name="description"/>
+  <meta content="GitHub contributors" name="author"/>
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js">
+  </script>
+  <script>
+   WebFont.load({
+      google: {
+        families: ['Source Sans Pro']
+      }
+    });
+  </script>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="../_static/css/main.css" rel="stylesheet"/>
+  <link href="../_static/nbsite.css" rel="stylesheet"/>
+  <link href="../_static/geoviews.css" rel="stylesheet"/>
+  <!-- Scripts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+  </script>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+  <script src="../_static/js/main.js">
+  </script>
+  <script src="../_static/nbsite.js">
+  </script>
+  <script src="../_static/require.js">
+  </script>
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="../_static/favicon.ico" rel="icon" type="image/png"/>
+  <!-- Canonical
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="/topics/GSSHA_Workflow.html" rel="canonical"/>
+ </head>
+ <body class="">
+  <header class="navigation">
+   <div class="wrapper">
+    <a class="logo" href="../index.html">
+     <img alt="Logo" src="../_static/logo.png"/>
+    </a>
+    <a class="navigation-menu logo-text" href="../index.html">
+     EarthSim
+    </a>
+    <a class="navigation-menu-button" href="javascript:void(0)" id="js-mobile-menu">
+     Menu
+    </a>
+    <nav>
+     <ul class="navigation-menu show" id="js-navigation-menu">
+      <li class="nav-link">
+       <a href="../getting_started/index.html">
+        Getting Started
+       </a>
+      </li>
+      <li class="nav-link">
+       <a href="../user_guide/index.html">
+        User Guide
+       </a>
+      </li>
+      <li class="nav-link">
+       <a href="index.html">
+        Topics
+       </a>
+      </li>
+      <li class="nav-link">
+       <a href="../about.html">
+        About
+       </a>
+      </li>
+      <li class="nav-link">
+       <div style="display:inline-block;vertical-align: middle;">
+        <div class="search-bar">
+         <form action="../search.html" method="get" role="search">
+          <input name="q" placeholder="Search" type="search"/>
+          <button type="submit">
+           <img alt="Search Icon" src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/search-icon-black.png"/>
+          </button>
+         </form>
+        </div>
+       </div>
+      </li>
+     </ul>
+    </nav>
+   </div>
+  </header>
+  <!-- MAIN BODY OF DOCS –––––––––––––––––– -->
+  <div class="docs section">
+   <div id="hacketyhackhack">
+    <!-- style="width:20%;margin-right: 100px;"> -->
+    <!--style="display: none;"> style="display:none;"> -->
+    <div class="toc" style="width:15%; margin-right:20px;">
+     <ul>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../index.html">
+        Introduction
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../getting_started/index.html">
+        Getting Started
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../user_guide/index.html">
+        User Guide
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="index.html">
+        Topics
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../about.html">
+        About
+       </a>
+      </li>
+     </ul>
+    </div>
+   </div>
+   <div class="content">
+    <!-- style="max-width:80%;margin-left:auto;margin-right: auto;">-->
+    <div class="section" id="gssha-workflow">
+     <h1>
+      GSSHA Workflow
+      <a class="headerlink" href="#gssha-workflow" title="Permalink to this headline">
+       ¶
+      </a>
+     </h1>
+     Notebook conversion failed with the following traceback: 
+An error occurred while executing the following cell:
+------------------
+%%opts Shape [width=600 height=400] (alpha=0.5)
+if vertex_stream.data:
+    edited_shape_fname = './vicksburg_watershed_edited/watershed_boundary.shp'
+    dir_name = os.path.dirname(edited_shape_fname)
+    if not os.path.isdir(dir_name): os.makedirs(dir_name)
+    save_shapefile(vertex_stream.data, edited_shape_fname, model_creator.mask_shapefile)
+    model_creator.mask_shapefile = edited_shape_fname
+    mask_shape = gv.Shape.from_shapefile(edited_shape_fname)
+mask_shape = mask_shape.opts() # Clear options
+mask_shape
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mKeyError[0m                                  Traceback (most recent call last)
+[0;32m
+     <ipython-input-7-04060c9ff39c>
+      [0m in [0;36m
+      <module>
+       [0;34m[0m
+[1;32m      4[0m     [0;32mif[0m [0;32mnot[0m [0mos[0m[0;34m.[0m[0mpath[0m[0;34m.[0m[0misdir[0m[0;34m([0m[0mdir_name[0m[0;34m)[0m[0;34m:[0m [0mos[0m[0;34m.[0m[0mmakedirs[0m[0;34m([0m[0mdir_name[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      5[0m     [0msave_shapefile[0m[0;34m([0m[0mvertex_stream[0m[0;34m.[0m[0mdata[0m[0;34m,[0m [0medited_shape_fname[0m[0;34m,[0m [0mmodel_creator[0m[0;34m.[0m[0mmask_shapefile[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m----&gt; 6[0;31m     [0mmodel_creator[0m[0;34m.[0m[0mmask_shapefile[0m [0;34m=[0m [0medited_shape_fname[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m      7[0m     [0mmask_shape[0m [0;34m=[0m [0mgv[0m[0;34m.[0m[0mShape[0m[0;34m.[0m[0mfrom_shapefile[0m[0;34m([0m[0medited_shape_fname[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      8[0m [0mmask_shape[0m [0;34m=[0m [0mmask_shape[0m[0;34m.[0m[0mopts[0m[0;34m([0m[0;34m)[0m [0;31m# Clear options[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/__init__.py[0m in [0;36m__set__[0;34m(self, obj, val)[0m
+[1;32m   1124[0m             [0mself[0m[0;34m.[0m[0m_ensure_value_is_in_objects[0m[0;34m([0m[0mval[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1125[0m [0;34m[0m[0m
+[0;32m-&gt; 1126[0;31m         [0msuper[0m[0;34m([0m[0mObjectSelector[0m[0;34m,[0m[0mself[0m[0;34m)[0m[0;34m.[0m[0m__set__[0m[0;34m([0m[0mobj[0m[0;34m,[0m[0mval[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1127[0m [0;34m[0m[0m
+[1;32m   1128[0m [0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/parameterized.py[0m in [0;36m__set__[0;34m(self, obj, val)[0m
+[1;32m    705[0m         [0mobj[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_owner[0m [0;32mif[0m [0mobj[0m [0;32mis[0m [0;32mNone[0m [0;32melse[0m [0mobj[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    706[0m         [0;32mfor[0m [0ms[0m [0;32min[0m [0mwatchers[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--&gt; 707[0;31m             [0mobj[0m[0;34m.[0m[0mparam[0m[0;34m.[0m[0m_call_watcher[0m[0;34m([0m[0ms[0m[0;34m,[0m [0mevent[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    708[0m [0;34m[0m[0m
+[1;32m    709[0m [0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/parameterized.py[0m in [0;36m_call_watcher[0;34m(self_, watcher, event)[0m
+[1;32m   1157[0m                 [0mself_[0m[0;34m.[0m[0m_watchers[0m[0;34m.[0m[0mappend[0m[0;34m([0m[0mwatcher[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1158[0m         [0;32melif[0m [0mwatcher[0m[0;34m.[0m[0mmode[0m [0;34m==[0m [0;34m'args'[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-&gt; 1159[0;31m             [0mwatcher[0m[0;34m.[0m[0mfn[0m[0;34m([0m[0mself_[0m[0;34m.[0m[0m_update_event_type[0m[0;34m([0m[0mwatcher[0m[0;34m,[0m [0mevent[0m[0;34m,[0m [0mself_[0m[0;34m.[0m[0mself_or_cls[0m[0;34m.[0m[0mparam[0m[0;34m.[0m[0m_TRIGGER[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1160[0m         [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1161[0m             [0mevent[0m [0;34m=[0m [0mself_[0m[0;34m.[0m[0m_update_event_type[0m[0;34m([0m[0mwatcher[0m[0;34m,[0m [0mevent[0m[0;34m,[0m [0mself_[0m[0;34m.[0m[0mself_or_cls[0m[0;34m.[0m[0mparam[0m[0;34m.[0m[0m_TRIGGER[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/panel/param.py[0m in [0;36mlink[0;34m(change, _updating)[0m
+[1;32m    320[0m                     [0mupdates[0m[0;34m[[0m[0;34m'value'[0m[0;34m][0m [0;34m=[0m [0mchange[0m[0;34m.[0m[0mnew[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    321[0m                 [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--&gt; 322[0;31m                     [0mwidget[0m[0;34m.[0m[0mset_param[0m[0;34m([0m[0;34m**[0m[0mupdates[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    323[0m                 [0;32mexcept[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    324[0m                     [0;32mraise[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/parameterized.py[0m in [0;36minner[0;34m(*args, **kwargs)[0m
+[1;32m    968[0m                 get_logger().log(WARNING,
+[1;32m    969[0m                                  '%s: Use method %r via param namespace ' % info)
+[0;32m--&gt; 970[0;31m             [0;32mreturn[0m [0mfn[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m [0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    971[0m [0;34m[0m[0m
+[1;32m    972[0m         [0minner[0m[0;34m.[0m[0m__doc__[0m[0;34m=[0m [0;34m"Inspect .param.%s method for the full docstring"[0m  [0;34m%[0m [0mfn[0m[0;34m.[0m[0m__name__[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/parameterized.py[0m in [0;36mset_param[0;34m(self_or_cls, *args, **kwargs)[0m
+[1;32m   2254[0m     [0;34m@[0m[0mParameters[0m[0;34m.[0m[0mdeprecate[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   2255[0m     [0;32mdef[0m [0mset_param[0m[0;34m([0m[0mself_or_cls[0m[0;34m,[0m[0;34m*[0m[0margs[0m[0;34m,[0m[0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-&gt; 2256[0;31m         [0;32mreturn[0m [0mself_or_cls[0m[0;34m.[0m[0mparam[0m[0;34m.[0m[0mset_param[0m[0;34m([0m[0;34m*[0m[0margs[0m[0;34m,[0m[0;34m**[0m[0mkwargs[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   2257[0m [0;34m[0m[0m
+[1;32m   2258[0m     [0;34m@[0m[0mbothmethod[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/parameterized.py[0m in [0;36mset_param[0;34m(self_, *args, **kwargs)[0m
+[1;32m   1110[0m [0;34m[0m[0m
+[1;32m   1111[0m         [0mself_[0m[0;34m.[0m[0mself_or_cls[0m[0;34m.[0m[0mparam[0m[0;34m.[0m[0m_BATCH_WATCH[0m [0;34m=[0m [0;32mFalse[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-&gt; 1112[0;31m         [0mself_[0m[0;34m.[0m[0m_batch_call_watchers[0m[0;34m([0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1113[0m [0;34m[0m[0m
+[1;32m   1114[0m [0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/param/parameterized.py[0m in [0;36m_batch_call_watchers[0;34m(self_)[0m
+[1;32m   1177[0m                       for name in watcher.parameter_names if name in event_dict]
+[1;32m   1178[0m             [0;32mif[0m [0mwatcher[0m[0;34m.[0m[0mmode[0m [0;34m==[0m [0;34m'args'[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m-&gt; 1179[0;31m                 [0mwatcher[0m[0;34m.[0m[0mfn[0m[0;34m([0m[0;34m*[0m[0mevents[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m   1180[0m             [0;32melse[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m   1181[0m                 [0mwatcher[0m[0;34m.[0m[0mfn[0m[0;34m([0m[0;34m**[0m[0;34m{[0m[0mc[0m[0;34m.[0m[0mname[0m[0;34m:[0m[0mc[0m[0;34m.[0m[0mnew[0m [0;32mfor[0m [0mc[0m [0;32min[0m [0mevents[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/panel/viewable.py[0m in [0;36mparam_change[0;34m(*events)[0m
+[1;32m    414[0m             [0mmsgs[0m [0;34m=[0m [0;34m[[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[1;32m    415[0m             [0;32mfor[0m [0mevent[0m [0;32min[0m [0mevents[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--&gt; 416[0;31m                 [0mmsg[0m [0;34m=[0m [0mself[0m[0;34m.[0m[0m_process_param_change[0m[0;34m([0m[0;34m{[0m[0mevent[0m[0;34m.[0m[0mname[0m[0;34m:[0m [0mevent[0m[0;34m.[0m[0mnew[0m[0;34m}[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    417[0m                 [0mmsg[0m [0;34m=[0m [0;34m{[0m[0mk[0m[0;34m:[0m [0mv[0m [0;32mfor[0m [0mk[0m[0;34m,[0m [0mv[0m [0;32min[0m [0mmsg[0m[0;34m.[0m[0mitems[0m[0;34m([0m[0;34m)[0m [0;32mif[0m [0mk[0m [0;32mnot[0m [0;32min[0m [0mself[0m[0;34m.[0m[0m_active[0m[0;34m}[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    418[0m                 [0;32mif[0m [0mmsg[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m~/miniconda/envs/earthsim/lib/python3.6/site-packages/panel/widgets.py[0m in [0;36m_process_param_change[0;34m(self, msg)[0m
+[1;32m    451[0m         [0mmapping[0m [0;34m=[0m [0;34m{[0m[0mhashable[0m[0;34m([0m[0mv[0m[0;34m)[0m[0;34m:[0m [0mk[0m [0;32mfor[0m [0mk[0m[0;34m,[0m [0mv[0m [0;32min[0m [0mself[0m[0;34m.[0m[0moptions[0m[0;34m.[0m[0mitems[0m[0;34m([0m[0;34m)[0m[0;34m}[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    452[0m         [0;32mif[0m [0mmsg[0m[0;34m.[0m[0mget[0m[0;34m([0m[0;34m'value'[0m[0;34m)[0m [0;32mis[0m [0;32mnot[0m [0;32mNone[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--&gt; 453[0;31m             [0mmsg[0m[0;34m[[0m[0;34m'value'[0m[0;34m][0m [0;34m=[0m [0mmapping[0m[0;34m[[0m[0mhashable[0m[0;34m([0m[0mmsg[0m[0;34m[[0m[0;34m'value'[0m[0;34m][0m[0;34m)[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    454[0m         [0;32mif[0m [0;34m'options'[0m [0;32min[0m [0mmsg[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    455[0m             [0mmsg[0m[0;34m[[0m[0;34m'options'[0m[0;34m][0m [0;34m=[0m [0mlist[0m[0;34m([0m[0mmsg[0m[0;34m[[0m[0;34m'options'[0m[0;34m][0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mKeyError[0m: './vicksburg_watershed_edited/watershed_boundary.shp'
+KeyError: './vicksburg_watershed_edited/watershed_boundary.shp'
+       <hr class="docutils"/>
+       <p>
+        <a class="reference external" href="https://raw.githubusercontent.com/pyviz/earthsim/master/examples/topics/GSSHA_Workflow.ipynb">
+         Right click to download this notebook from GitHub.
+        </a>
+       </p>
+      </module>
+     </ipython-input-7-04060c9ff39c>
+    </div>
+   </div>
+  </div>
+  <!-- END MAIN BODY OF DOCS ––––––––––––– -->
+  <footer class="footer">
+   <div class="footer-links">
+    <ul>
+     <li>
+      <span class="footer-title">
+       Links
+      </span>
+     </li>
+     <li>
+      <a href="../getting_started/index.html">
+       Getting Started
+      </a>
+     </li>
+     <li>
+      <a href="../user_guide/index.html">
+       User Guide
+      </a>
+     </li>
+     <li>
+      <a href="index.html">
+       Topics
+      </a>
+     </li>
+     <li>
+      <a href="../about.html">
+       About
+      </a>
+     </li>
+    </ul>
+    <ul>
+     <li>
+      <span class="footer-title">
+       Join Us
+      </span>
+     </li>
+     <li>
+      <a href="//github.com/pyviz/earthsim">
+       Github
+      </a>
+     </li>
+    </ul>
+    <ul class="copyright">
+     <li>
+      2018 GitHub contributors
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <!-- Google Analytics -->
+  <script>
+   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61554933-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- MathJax Config -->
+  <script type="text/x-mathjax-config">
+   MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+  </script>
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ </body>
+</html>

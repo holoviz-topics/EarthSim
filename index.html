@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<meta charset="utf-8"/>
+<title>EarthSim — EarthSim 0.0.1 documentation</title>
+<meta content="Tools for working with and visualizing environmental simulations." name="description"/>
+<meta content="GitHub contributors" name="author"/>
+<!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+    WebFont.load({
+      google: {
+        families: ['Source Sans Pro']
+      }
+    });
+  </script>
+<!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<link href="_static/css/main.css" rel="stylesheet"/>
+<link href="_static/nbsite.css" rel="stylesheet"/>
+<link href="_static/geoviews.css" rel="stylesheet"/>
+<!-- Scripts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+</script>
+<script src="_static/js/main.js"></script>
+<script src="_static/nbsite.js"></script>
+<script src="_static/require.js"></script>
+<!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<link href="_static/favicon.ico" rel="icon" type="image/png"/>
+<!-- Canonical
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<link href="/index.html" rel="canonical">
+</link></head>
+<body class="">
+<header class="navigation">
+<div class="wrapper">
+<a class="logo" href="#">
+<img alt="Logo" src="_static/logo.png"/>
+</a>
+<a class="navigation-menu logo-text" href="#">EarthSim</a>
+<a class="navigation-menu-button" href="javascript:void(0)" id="js-mobile-menu">Menu</a>
+<nav>
+<ul class="navigation-menu show" id="js-navigation-menu">
+<li class="nav-link"><a href="getting_started/index.html">Getting Started</a></li>
+<li class="nav-link"><a href="user_guide/index.html">User Guide</a></li>
+<li class="nav-link"><a href="topics/index.html">Topics</a></li>
+<li class="nav-link"><a href="about.html">About</a></li>
+<li class="nav-link"><div style="display:inline-block;vertical-align: middle;"><div class="search-bar"><form action="search.html" method="get" role="search">
+<input name="q" placeholder="Search" type="search"/>
+<button type="submit">
+<img alt="Search Icon" src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/search-icon-black.png"/>
+</button>
+</form>
+</div></div></li>
+</ul>
+</nav>
+</div>
+</header>
+<!-- MAIN BODY OF DOCS –––––––––––––––––– -->
+<div class="docs section">
+<div id="hacketyhackhack"> <!-- style="width:20%;margin-right: 100px;"> --> <!--style="display: none;"> style="display:none;"> -->
+<div class="toc" style="width:15%; margin-right:20px;">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topics/index.html">Topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+</div>
+</div>
+<div class="content"> <!-- style="max-width:80%;margin-left:auto;margin-right: auto;">-->
+<div class="section" id="earthsim">
+<h1>EarthSim<a class="headerlink" href="#earthsim" title="Permalink to this headline">¶</a></h1>
+<p><strong>Lightweight Python tools for environmental simulation</strong></p>
+<p>EarthSim is a project for developing Python-based workflows for
+specifying, launching, visualizing, and analyzing environmental
+simulations, such as those for hydrology modeling. EarthSim is
+designed to be a lightweight project internally, relying on code and
+documentation primarily maintained in other, freely available,
+general-purpose SciPy and <a class="reference external" href="http://pyviz.org">PyViz</a> projects:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://bokeh.pydata.org">Bokeh</a>: Interactive browser-based
+plotting.</li>
+<li><a class="reference external" href="http://holoviews.org">HoloViews</a>: Easy construction of Bokeh
+plots for datasets.</li>
+<li><a class="reference external" href="https://github.com/bokeh/datashader">Datashader</a>: Rendering large
+datasets into images for display in browsers.</li>
+<li><a class="reference external" href="https://github.com/ioam/param">Param</a>: Specifying parameters of
+interest, e.g. to make widgets.</li>
+<li><a class="reference external" href="http://xarray.pydata.org">XArray</a>: Processing gridded data structures.</li>
+<li><a class="reference external" href="http://geoviews.org">GeoViews</a>: HoloViews with earth-specific
+projections.</li>
+</ul>
+<p>This website has three main sections:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="getting_started">Getting Started</a>:</dt>
+<dd>How to install the code, notebooks, and data files needed for the examples.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="user_guide">User Guide</a>:</dt>
+<dd>Usage information for the <code class="docutils literal notranslate"><span class="pre">earthsim</span></code> Python package, which
+contains a small amount of code specific to environmental
+simulation such as helper functions for annotating plots and
+specifying irregular meshes.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="topics">Topics</a>:</dt>
+<dd>A set of Jupyter notebooks that show how to use the various PyViz
+tools together to solve earth-science problems, such as how to run
+various simulators.</dd>
+</dl>
+</li>
+</ul>
+<p>If you have any notebooks showing how to use these tools to do useful
+work in environmental simulation, we’d love to add them to the Topics!</p>
+<p>Please feel free to report <a class="reference external" href="https://github.com/pyviz/earthsim/issues">issues</a> or <a class="reference external" href="https://help.github.com/articles/about-pull-requests">contribute code.</a></p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+</div>
+</div>
+<!-- END MAIN BODY OF DOCS ––––––––––––– -->
+<footer class="footer">
+<div class="footer-links">
+<ul>
+<li><span class="footer-title">Links</span></li>
+<li><a href="getting_started/index.html">Getting Started</a></li>
+<li><a href="user_guide/index.html">User Guide</a></li>
+<li><a href="topics/index.html">Topics</a></li>
+<li><a href="about.html">About</a></li>
+</ul>
+<ul>
+<li><span class="footer-title">Join Us</span></li>
+<li><a href="//github.com/pyviz/earthsim">Github</a></li>
+</ul>
+<ul class="copyright">
+<li>2018 GitHub contributors</li>
+</ul>
+</div>
+</footer>
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61554933-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- MathJax Config -->
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8"/>
+  <title>
+   Rain Intensity Sweep Example — EarthSim 0.0.1 documentation
+  </title>
+  <meta content="Tools for working with and visualizing environmental simulations." name="description"/>
+  <meta content="GitHub contributors" name="author"/>
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js">
+  </script>
+  <script>
+   WebFont.load({
+      google: {
+        families: ['Source Sans Pro']
+      }
+    });
+  </script>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="../../_static/css/main.css" rel="stylesheet"/>
+  <link href="../../_static/nbsite.css" rel="stylesheet"/>
+  <link href="../../_static/geoviews.css" rel="stylesheet"/>
+  <!-- Scripts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">
+  </script>
+  <script async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript">
+  </script>
+  <script src="../../_static/js/main.js">
+  </script>
+  <script src="../../_static/nbsite.js">
+  </script>
+  <script src="../../_static/require.js">
+  </script>
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="../../_static/favicon.ico" rel="icon" type="image/png"/>
+  <!-- Canonical
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="/topics/batched_example/Rain_Intensity_Sweep_Example.html" rel="canonical"/>
+ </head>
+ <body class="">
+  <header class="navigation">
+   <div class="wrapper">
+    <a class="logo" href="../../index.html">
+     <img alt="Logo" src="../../_static/logo.png"/>
+    </a>
+    <a class="navigation-menu logo-text" href="../../index.html">
+     EarthSim
+    </a>
+    <a class="navigation-menu-button" href="javascript:void(0)" id="js-mobile-menu">
+     Menu
+    </a>
+    <nav>
+     <ul class="navigation-menu show" id="js-navigation-menu">
+      <li class="nav-link">
+       <a href="../../getting_started/index.html">
+        Getting Started
+       </a>
+      </li>
+      <li class="nav-link">
+       <a href="../../user_guide/index.html">
+        User Guide
+       </a>
+      </li>
+      <li class="nav-link">
+       <a href="../index.html">
+        Topics
+       </a>
+      </li>
+      <li class="nav-link">
+       <a href="../../about.html">
+        About
+       </a>
+      </li>
+      <li class="nav-link">
+       <div style="display:inline-block;vertical-align: middle;">
+        <div class="search-bar">
+         <form action="../../search.html" method="get" role="search">
+          <input name="q" placeholder="Search" type="search"/>
+          <button type="submit">
+           <img alt="Search Icon" src="https://raw.githubusercontent.com/thoughtbot/refills/master/source/images/search-icon-black.png"/>
+          </button>
+         </form>
+        </div>
+       </div>
+      </li>
+     </ul>
+    </nav>
+   </div>
+  </header>
+  <!-- MAIN BODY OF DOCS –––––––––––––––––– -->
+  <div class="docs section">
+   <div id="hacketyhackhack">
+    <!-- style="width:20%;margin-right: 100px;"> -->
+    <!--style="display: none;"> style="display:none;"> -->
+    <div class="toc" style="width:15%; margin-right:20px;">
+     <ul>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../../index.html">
+        Introduction
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../../getting_started/index.html">
+        Getting Started
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../../user_guide/index.html">
+        User Guide
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../index.html">
+        Topics
+       </a>
+      </li>
+      <li class="toctree-l1">
+       <a class="reference internal" href="../../about.html">
+        About
+       </a>
+      </li>
+     </ul>
+    </div>
+   </div>
+   <div class="content">
+    <!-- style="max-width:80%;margin-left:auto;margin-right: auto;">-->
+    <div class="section" id="rain-intensity-sweep-example">
+     <h1>
+      Rain Intensity Sweep Example
+      <a class="headerlink" href="#rain-intensity-sweep-example" title="Permalink to this headline">
+       ¶
+      </a>
+     </h1>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         In this notebook, we will use
+         <a href="https://ioam.github.io/lancet/">
+          Lancet
+         </a>
+         to perform a parameter sweep over 3 values of the
+         <code>
+          rain_intensity
+         </code>
+         parameter defined in
+         <a href="GSSHA_Workflow_Batched_Example2.html">
+          GSSHA_Workflow_Batched_Example2
+         </a>
+         .
+        </p>
+        <p>
+         First import lancet:
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [1]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">import</span> <span class="nn">lancet</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <h2 id="Declaring-the-Arguments">
+         Declaring the
+         <code>
+          Arguments
+         </code>
+         <a class="anchor-link" href="#Declaring-the-Arguments">
+          ¶
+         </a>
+        </h2>
+        <p>
+         Next we define our constant parameters using
+         <code>
+          lancet.Args
+         </code>
+         :
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [2]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">rain_duration</span> <span class="o">=</span> <span class="n">lancet</span><span class="o">.</span><span class="n">Args</span><span class="p">(</span><span class="n">rain_duration</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         Next we use
+         <code>
+          lancet.List
+         </code>
+         to define the three parameters we want to use for
+         <code>
+          rain_intensity
+         </code>
+         :
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [3]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">rain_intensity</span>       <span class="o">=</span> <span class="n">lancet</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="s1">'rain_intensity'</span><span class="p">,</span> <span class="p">[</span><span class="mi">24</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">28</span><span class="p">])</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         Finally we take the cartesian product of these parameters using the
+         <code>
+          *
+         </code>
+         operator:
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [4]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">rain_intensity</span> <span class="o">*</span> <span class="n">rain_duration</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         Here is the
+         <code>
+          args
+         </code>
+         object's repr:
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [5]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">args</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="output_wrapper">
+       <div class="output">
+        <div class="output_area">
+         <div class="prompt output_prompt">
+          Out[5]:
+         </div>
+         <div class="output_text output_subarea output_execute_result">
+          <pre>List(key='rain_intensity',values=[24, 26, 28],fp_precision=4) * Args(fp_precision=4,rain_duration=3600)</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         And the result of calling its
+         <code>
+          show
+         </code>
+         method used to inspect the sets of arguments that will be executed:
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [6]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">args</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="output_wrapper">
+       <div class="output">
+        <div class="output_area">
+         <div class="prompt">
+         </div>
+         <div class="output_subarea output_stream output_stdout output_text">
+          <pre>0: rain_duration=3600, rain_intensity=24
+1: rain_duration=3600, rain_intensity=26
+2: rain_duration=3600, rain_intensity=28
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <h2 id="Defining-ReportCommand">
+         Defining
+         <code>
+          ReportCommand
+         </code>
+         <a class="anchor-link" href="#Defining-ReportCommand">
+          ¶
+         </a>
+        </h2>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         Next we need to define how our arguments map to the
+         <code>
+          param
+         </code>
+         command described in
+         <a href="GSSHA_Workflow_Batched_Example2.html">
+          GSSHA_Workflow_Batched_Example2
+         </a>
+         . To do this we define a
+         <code>
+          ReportCommand
+         </code>
+         subclass of
+         <code>
+          lancet.Command
+         </code>
+         .
+        </p>
+        <p>
+         Note that this code is shown in this notebook to demonstrate how to interface lancet with an arbitrary command. Normally you would not show this code in a notebook and would simply import
+         <code>
+          ReportCommand
+         </code>
+         from the appropriate library.
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [7]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="kn">import</span> <span class="nn">param</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="k">class</span> <span class="nc">ReportCommand</span><span class="p">(</span><span class="n">lancet</span><span class="o">.</span><span class="n">Command</span><span class="p">):</span>
+    
+    <span class="n">notebook_path</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">doc</span><span class="o">=</span><span class="s1">'Path to the notebook used to generate the report'</span><span class="p">)</span>
+    
+    <span class="n">options</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">List</span><span class="p">([</span><span class="s1">'--ExecutePreprocessor.allow_errors=True'</span><span class="p">,</span> 
+                          <span class="s1">'--ExecutePreprocessor.timeout=900'</span><span class="p">],</span> <span class="n">doc</span><span class="o">=</span><span class="s2">"""</span>
+<span class="s2">    Additional options to supply to nbconvert."""</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notebook_path</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReportCommand</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">notebook_path</span><span class="o">=</span><span class="n">notebook_path</span><span class="p">,</span>
+                                          <span class="n">do_format</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                          <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pprint_args</span><span class="p">([</span><span class="s1">'notebook_path'</span><span class="p">],[</span><span class="s1">'options'</span><span class="p">])</span>
+        
+    <span class="k">def</span> <span class="nf">_fname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="n">excluding</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">root_dir</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">'root_directory'</span><span class="p">]</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">'tid'</span> <span class="p">,</span> <span class="n">tid</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span>  <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                                    <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">info</span><span class="p">[</span><span class="s1">'varying_keys'</span><span class="p">]</span>
+                                    <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluding</span><span class="p">]</span>
+        <span class="n">basename</span> <span class="o">=</span> <span class="s1">'_'</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="s1">'</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">'batch_name'</span><span class="p">],</span>
+                                                   <span class="n">basename</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">tid</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="si">%s</span><span class="s1">=</span><span class="si">%r</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'-p'</span><span class="p">)</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
+            
+        <span class="n">output_options</span> <span class="o">=</span> <span class="s2">"--output-dir=</span><span class="si">%s</span><span class="s2"> --output </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">'root_directory'</span><span class="p">],</span> 
+                                                          <span class="bp">self</span><span class="o">.</span><span class="n">_fname</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">tid</span><span class="p">,</span> <span class="n">info</span><span class="p">))</span>
+        <span class="n">inner_cmd</span> <span class="o">=</span> <span class="s2">"jupyter nbconvert --execute </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notebook_path</span><span class="p">,</span> 
+                                                              <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">),</span>
+                                                              <span class="n">output_options</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">'param'</span><span class="p">,</span> <span class="s1">'-cmd'</span><span class="p">,</span> <span class="n">inner_cmd</span><span class="p">]</span> <span class="o">+</span> <span class="n">params</span>
+        
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <h2 id="Instantiating-ReportCommand">
+         Instantiating
+         <code>
+          ReportCommand
+         </code>
+         <a class="anchor-link" href="#Instantiating-ReportCommand">
+          ¶
+         </a>
+        </h2>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         Now we instantiate
+         <code>
+          ReportCommand
+         </code>
+         by specifying the path to the notebook we want to use to generate reports. We then look at this object's
+         <code>
+          repr
+         </code>
+         :
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [8]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">notebook_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">'GSSHA_Workflow_Batched_Example2.ipynb'</span><span class="p">)</span>
+<span class="n">gssha_report</span> <span class="o">=</span> <span class="n">ReportCommand</span><span class="p">(</span><span class="n">notebook_path</span><span class="o">=</span><span class="n">notebook_path</span><span class="p">)</span>
+<span class="n">gssha_report</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="output_wrapper">
+       <div class="output">
+        <div class="output_area">
+         <div class="prompt output_prompt">
+          Out[8]:
+         </div>
+         <div class="output_text output_subarea output_execute_result">
+          <pre>ReportCommand(notebook_path='/home/travis/build/pyviz-topics/EarthSim/examples/topics/batched_example/GSSHA_Workflow_Batched_Example2.ipynb',options=['--ExecutePreprocessor.allow_errors=True', '--ExecutePreprocessor.timeout=900'])</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <h2 id="Running-the-batch">
+         Running the batch
+         <a class="anchor-link" href="#Running-the-batch">
+          ¶
+         </a>
+        </h2>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         Lastly, we declare a
+         <code>
+          lancet.Launcher
+         </code>
+         instance and call it to execute the batches locally. To run this on an Oracle Grid Engine cluster you should simply replace
+         <code>
+          lancet.Launcher
+         </code>
+         with
+         <code>
+          lancet.QLauncher
+         </code>
+         .
+        </p>
+        <p>
+         A
+         <code>
+          Launcher
+         </code>
+         takes a name for the experimental run, the
+         <code>
+          Args
+         </code>
+         and
+         <code>
+          Command
+         </code>
+         objects, and optional arguments such as the directory to collect results in (here it is
+         <code>
+          'output'
+         </code>
+         ) and a chosen limit on the number of concurrent processes executed:
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [9]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">lancet</span><span class="o">.</span><span class="n">Launcher</span><span class="p">(</span><span class="s1">'example'</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">gssha_report</span><span class="p">,</span> <span class="n">output_directory</span><span class="o">=</span><span class="s1">'output'</span><span class="p">,</span> <span class="n">max_concurrency</span><span class="o">=</span><span class="mi">1</span><span class="p">)()</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="output_wrapper">
+       <div class="output">
+        <div class="output_area">
+         <div class="prompt">
+         </div>
+         <div class="output_subarea output_stream output_stderr output_text">
+          <pre>INFO:root:Launcher: Group 0: executing 3 processes...
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         This command will take a few minutes to execute, blocking the notebook thread as the batches are being run locally. If
+         <code>
+          QLauncher
+         </code>
+         were used or another
+         <code>
+          Launcher
+         </code>
+         based on an HPC batch system, this command would return as soon as the jobs are queued.
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <h2 id="Inspecting-the-results">
+         Inspecting the results
+         <a class="anchor-link" href="#Inspecting-the-results">
+          ¶
+         </a>
+        </h2>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         The results are found in timestamped directories within the chosen
+         <code>
+          output_directory
+         </code>
+         which will be called
+         <code>
+          output
+         </code>
+         in this instance.
+        </p>
+        <p>
+         On Unix systems, you can see this by running the cell below:
+        </p>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing code_cell rendered">
+      <div class="input">
+       <div class="prompt input_prompt">
+        In [10]:
+       </div>
+       <div class="inner_cell">
+        <div class="input_area">
+         <div class="highlight hl-ipython3">
+          <pre><span></span><span class="n">ls</span> <span class="o">./</span><span class="n">output</span>
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="output_wrapper">
+       <div class="output">
+        <div class="output_area">
+         <div class="prompt">
+         </div>
+         <div class="output_subarea output_stream output_stdout output_text">
+          <pre><span class="ansi-blue-intense-fg ansi-bold">2019-03-12_1339-example</span>/
+</pre>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="cell border-box-sizing text_cell rendered">
+      <div class="prompt input_prompt">
+      </div>
+      <div class="inner_cell">
+       <div class="text_cell_render border-box-sizing rendered_html">
+        <p>
+         An example of the report output may be found in a location similar to
+         <code>
+          output/2018-06-01_1353-example/example_rain_intensity=24_tid=0.html
+         </code>
+         . There will be as many such files and directories as batch jobs executed.
+        </p>
+       </div>
+      </div>
+     </div>
+     <hr class="docutils"/>
+     <p>
+      <a class="reference external" href="https://raw.githubusercontent.com/pyviz/earthsim/master/examples/topics/batched_example/Rain_Intensity_Sweep_Example.ipynb">
+       Right click to download this notebook from GitHub.
+      </a>
+     </p>
+    </div>
+   </div>
+  </div>
+  <!-- END MAIN BODY OF DOCS ––––––––––––– -->
+  <footer class="footer">
+   <div class="footer-links">
+    <ul>
+     <li>
+      <span class="footer-title">
+       Links
+      </span>
+     </li>
+     <li>
+      <a href="../../getting_started/index.html">
+       Getting Started
+      </a>
+     </li>
+     <li>
+      <a href="../../user_guide/index.html">
+       User Guide
+      </a>
+     </li>
+     <li>
+      <a href="../index.html">
+       Topics
+      </a>
+     </li>
+     <li>
+      <a href="../../about.html">
+       About
+      </a>
+     </li>
+    </ul>
+    <ul>
+     <li>
+      <span class="footer-title">
+       Join Us
+      </span>
+     </li>
+     <li>
+      <a href="//github.com/pyviz/earthsim">
+       Github
+      </a>
+     </li>
+    </ul>
+    <ul class="copyright">
+     <li>
+      2018 GitHub contributors
+     </li>
+    </ul>
+   </div>
+  </footer>
+  <!-- Google Analytics -->
+  <script>
+   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-61554933-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- MathJax Config -->
+  <script type="text/x-mathjax-config">
+   MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+  </script>
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ </body>
+</html>
