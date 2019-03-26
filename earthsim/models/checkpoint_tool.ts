@@ -8,7 +8,7 @@ export class CheckpointToolView extends ActionToolView {
   model: CheckpointTool
 
   doit(): void {
-	const sources: any = this.model.sources;
+    const sources: any = this.model.sources;
     for (const source of sources) {
       if (!source.buffer) { source.buffer = [] }
       let data_copy: any = {};
