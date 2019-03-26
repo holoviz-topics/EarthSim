@@ -8,15 +8,16 @@ export class CheckpointToolView extends ActionToolView {
   model: CheckpointTool
 
   doit(): void {
-    for (var source of this.model.sources) {
-      if (source.buffer == undefined) { source.buffer = [] }
-      let data_copy = {};
+	const sources: any = this.model.sources;
+    for (const source of sources) {
+      if (!source.buffer) { source.buffer = [] }
+      let data_copy: any = {};
       for (const key in source.data) {
         const column = source.data[key];
         const new_column = []
         for (const arr of column) {
           if (Array.isArray(arr) || (ArrayBuffer.isView(arr))) {
-            new_column.push(copy(arr))
+            new_column.push(copy((arr as any)))
           } else {
             new_column.push(arr)
           }
@@ -29,16 +30,16 @@ export class CheckpointToolView extends ActionToolView {
 }
 
 export namespace CheckpointTool {
-  export interface Attrs extends ActionTool.Attrs {}
-
-  export interface Props extends ActionTool.Props {}
+  export type Attrs = p.AttrsOf<Props>
+  export type Props = ActionTool.Props & {
+    sources: p.Property<ColumnDataSource[]>
+  }
 }
 
 export interface CheckpointTool extends CheckpointTool.Attrs {}
 
 export class CheckpointTool extends ActionTool {
   properties: CheckpointTool.Props
-  sources: ColumnDataSource[]
 
   constructor(attrs?: Partial<CheckpointTool.Attrs>) {
     super(attrs)
@@ -48,7 +49,7 @@ export class CheckpointTool extends ActionTool {
     this.prototype.type = "CheckpointTool"
     this.prototype.default_view = CheckpointToolView
 
-    this.define({
+    this.define<CheckpointTool.Props>({
       sources: [ p.Array, [] ],
     })
   }

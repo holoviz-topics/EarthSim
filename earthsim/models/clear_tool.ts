@@ -18,16 +18,16 @@ export class ClearToolView extends ActionToolView {
 }
 
 export namespace ClearTool {
-  export interface Attrs extends ActionTool.Attrs {}
-
-  export interface Props extends ActionTool.Props {}
+  export type Attrs = p.AttrsOf<Props>
+  export type Props = ActionTool.Props & {
+    sources: p.Property<ColumnDataSource[]>
+  }
 }
 
 export interface ClearTool extends ClearTool.Attrs {}
 
 export class ClearTool extends ActionTool {
   properties: ClearTool.Props
-  sources: ColumnDataSource[]
 
   constructor(attrs?: Partial<ClearTool.Attrs>) {
     super(attrs)
@@ -37,7 +37,7 @@ export class ClearTool extends ActionTool {
     this.prototype.type = "ClearTool"
     this.prototype.default_view = ClearToolView
 
-    this.define({
+    this.define<ClearTool.Props>({
       sources: [ p.Array, [] ],
     })
   }

@@ -7,8 +7,9 @@ export class RestoreToolView extends ActionToolView {
   model: RestoreTool
 
   doit(): void {
-    for (var source of this.model.sources) {
-      if ((source.buffer == undefined) || (source.buffer.length == 0)) { continue; }
+    const sources: any = this.model.sources;
+    for (const source of sources) {
+      if (source.buffer || (source.buffer.length == 0)) { continue; }
       source.data = source.buffer.pop();
       source.change.emit();
       source.properties.data.change.emit();
@@ -17,16 +18,16 @@ export class RestoreToolView extends ActionToolView {
 }
 
 export namespace RestoreTool {
-  export interface Attrs extends ActionTool.Attrs {}
-
-  export interface Props extends ActionTool.Props {}
+  export type Attrs = p.AttrsOf<Props>
+  export type Props = ActionTool.Props & {
+    sources: p.Property<ColumnDataSource[]>
+  }
 }
 
 export interface RestoreTool extends RestoreTool.Attrs {}
 
 export class RestoreTool extends ActionTool {
   properties: RestoreTool.Props
-  sources: ColumnDataSource[]
 
   constructor(attrs?: Partial<RestoreTool.Attrs>) {
     super(attrs)
@@ -36,8 +37,8 @@ export class RestoreTool extends ActionTool {
     this.prototype.type = "RestoreTool"
     this.prototype.default_view = RestoreToolView
 
-    this.define({
-      sources: [ p.Array, [] ],
+    this.define<RestoreTool.Props>({
+      sources: [ p.Array, [] ]
     })
   }
 
