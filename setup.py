@@ -17,8 +17,8 @@ import param.version
 setup_args = {'name': 'earthsim'}
 
 install_requires = [
-    'param>=1.8.2,<2.0', 'holoviews>=1.11.2', 'datashader>=0.6.9',
-    'geoviews>=1.6.2', 'panel>=0.4.0', 'bokeh>=1.0.4', 'cartopy>=0.17.0',
+    'param>=1.9.0,<2.0', 'holoviews>=1.12.0', 'datashader>=0.7.0',
+    'geoviews>=1.6.2', 'panel>=0.5.0', 'bokeh>=1.1.0', 'cartopy>=0.17.0',
     'xarray>=0.11.0', 'colorcet>=1.0.0', 'notebook>=5.5.0',
     'fiona', 'gdal>=2.3.3', 'rasterio==1.0.13']
 
@@ -34,7 +34,7 @@ extras_require['build'] = [
     'param >=1.7.0',
     'pyct >=0.4.4',
     'setuptools >=30.3.0',
-    'bokeh >=1.0.0',
+    'bokeh >=1.1.0',
     'pyviz_comms >=0.6.0',
     'nodejs >=9.11.1',
 ]

@@ -44,8 +44,8 @@ class PointTableLinkCallback(LinkCallback):
     source_model = 'cds'
     target_model = 'cds'
 
-    on_source_changes = ['data']
-    on_target_changes = ['data']
+    on_source_changes = ['data', 'patching']
+    on_target_changes = ['data', 'patching']
 
     source_code = """
     var projections = require("core/util/projections");
@@ -105,8 +105,8 @@ class VertexTableLinkCallback(LinkCallback):
     source_model = 'cds'
     target_model = 'cds'
 
-    on_source_changes = ['selected', 'data']
-    on_target_changes = ['data']
+    on_source_changes = ['selected', 'data', 'patching']
+    on_target_changes = ['data', 'patching']
 
     source_code = """
     var projections = require("core/util/projections");
