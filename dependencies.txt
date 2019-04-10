@@ -21,8 +21,8 @@ pyviz/label/dev::panel=0.4.0
 
 # ERDC dependencies
 conda-forge::gsshapy=2.3.8
-conda-forge::ulmo=0.8.4
-erdc::quest=2.6.1
+conda-forge::ulmo=0.8.5
+erdc::quest=3.1.1
 # pyviz/label/earthsim::filigree=0.2.2+pyviz.0 # https://github.com/ContinuumIO/EarthSim-filigree-cli/releases/
 
 ########## indirect deps ##########

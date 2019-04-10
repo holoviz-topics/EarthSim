@@ -35,9 +35,7 @@ class Simulation(param.Parameterized):
         Simulated-time duration for simulated rain, in seconds.""")
 
 
-    
-
-def download_data(service_uri, bounds, collection_name):
+def download_data(service_uri, bounds, collection_name, use_existing=True):
     """
     Downloads raster data from source uri and adds to a quest collection.
     
@@ -49,34 +47,15 @@ def download_data(service_uri, bounds, collection_name):
     # download the features (i.e. locations) and metadata for the given web service
     # the first time this is run it will take longer since it downloads 
     # and caches all metadata for the given service.
-    features = quest.api.get_features(uris=service_uri,
-                                      filters={'bbox': bounds},
-                                      as_dataframe=True,
-                                      update_cache=False
-                                      )
-    
-    # add the selected features to a quest collection
-    added_features = quest.api.add_features(collection_name, features)
-    
-    # stage the data for download, optional parameters can be provided here 
-    # for certain web services (i.e. date range etc), raster services don't 
-    # typically have any optional parameters.
-    staged_datasets = quest.api.stage_for_download(uris=added_features)
-    
-    # download the staged datasets
-    quest.api.download_datasets(datasets=staged_datasets)
-    final_datasets = staged_datasets
-    
-    # if more than one raster tile downloaded, merge into a single raster tile
-    if len(staged_datasets) > 1:
-        merged_datasets = quest.api.apply_filter(name='raster-merge',
-                                                 datasets=staged_datasets)
-        final_datasets = merged_datasets['datasets']
-        # delete the original individual tiles
-        quest.api.delete(staged_datasets)
+    dataset_id = quest.api.get_seamless_data(
+        service_uri=service_uri,
+        bbox=bounds,
+        collection_name=collection_name,
+        as_open_dataset=False,
+        raise_on_error=True,
+    )
 
-    assert len(final_datasets)==1
-    return final_datasets[0]
+    return dataset_id
 
 
 # TODO: need to understand how quest is being used by researchers. This temporary
@@ -103,18 +82,12 @@ def get_file_from_quest(collection_name, service_uri, parameter, mask_shapefile,
             return 'philippines_small/gmted_elevation.tif'
         else:
             raise ValueError
-
-    if use_existing:
-        for k,v in quest.api.get_datasets(expand=True).items():
-            if v.get('collection','')==collection_name and \
-               (v.get('metadata',{}) or {}).get('mask_shapefile') == mask_shapefile and \
-               (v.get('metadata',{}) or {}).get('service_uri') == service_uri and \
-               (v.get('metadata',{}) or {}).get('parameter') == parameter:
-                return quest.api.open_dataset(k).name
         
-    bounds = [str(x) for x in gpd.read_file(mask_shapefile).geometry.bounds.values[0]]
-    d = download_data(service_uri,bounds,collection_name)
-    quest.api.datasets.update_metadata(d,metadata={'mask_shapefile': mask_shapefile,
-                                                   'service_uri': service_uri,
-                                                   'parameter': parameter})
-    return quest.api.open_dataset(d).name
+    bounds = [float(x) for x in gpd.read_file(mask_shapefile).geometry.bounds.values[0]]
+    dataset_id = download_data(service_uri, bounds, collection_name, use_existing)
+    metadata = quest.api.datasets.update_metadata(dataset_id, metadata={
+        'mask_shapefile': mask_shapefile,
+        'service_uri': service_uri,
+        'parameter': parameter})[dataset_id]
+
+    return metadata['file_path']
