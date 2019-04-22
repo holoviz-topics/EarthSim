@@ -17,7 +17,7 @@ import holoviews.plotting.bokeh
 from holoviews import DynamicMap, Path, Table, NdOverlay, Store, Options
 from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
-from holoviews.streams import Selection1D, Stream, PointDraw, CDSStream
+from holoviews.streams import Selection1D, Stream, PointDraw, CDSStream, PolyEdit, PolyDraw
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh, Path as GeoPath
 from geoviews.util import path_to_geom_dicts
@@ -187,8 +187,12 @@ class GeoAnnotator(param.Parameterized):
         opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
         polys = self.polys if polys is None else polys
         self.polys = polys.options(**opts)
-        self.poly_stream = PolyVertexDraw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
-        self.vertex_stream = PolyVertexEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
+        if isinstance(self.polys, Polygons):
+            poly_draw, poly_edit = PolyDraw, PolyEdit
+        else:
+            poly_draw, poly_edit = PolyVertexDraw, PolyVertexEdit
+        self.poly_stream = poly_draw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
+        self.vertex_stream = poly_edit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
         self.poly_selection = Selection1D(source=self.polys)
         
     @param.depends('points', watch=True)
