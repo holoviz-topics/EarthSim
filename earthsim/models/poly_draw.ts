@@ -18,13 +18,25 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
       const ypaths = cds.data[ykey]
       for (let index = 0; index < xpaths.length; index++) {
         const xs = xpaths[index]
+        if (!isArray(xs)) {
+          const xarray = Array.from(xs)
+          cds.data[xkey][index] = xarray
+        }
         const ys = ypaths[index]
+        if (!isArray(ys)) {
+          const yarray = Array.from(ys)
+          cds.data[ykey][index] = yarray
+        }
         for (let i = 0; i < xs.length; i++) {
           if ((xs[i] == x) && (ys[i] == y) && (i != 0) && (i != (xs.length-1))) {
             xpaths.splice(index+1, 0, xs.slice(i))
             ypaths.splice(index+1, 0, ys.slice(i))
             xs.splice(i+1)
             ys.splice(i+1)
+            for (const column of cds.columns()) {
+              if ((column !== xkey) && (column != ykey))
+                cds.data[column].splice(index+1, 0, cds.data[column][index])
+            }
             return
           }
         }
@@ -41,6 +53,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
       const point_glyph: any = this.model.vertex_renderer.glyph
       const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
       if (vertex_selected.length) {
+        // If existing vertex is hit split path at that location
+        // converting to feature vertex
         const index = point_ds.selected.indices[0]
         if (pxkey)
           x = point_ds.data[pxkey][index]
