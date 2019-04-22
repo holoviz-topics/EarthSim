@@ -2,15 +2,16 @@ import os
 
 from bokeh.models import CustomJS, CustomAction, PolyEditTool
 
-from holoviews.streams import Stream, PolyEdit
-from holoviews.plotting.bokeh.callbacks import CDSCallback, PolyEditCallback
+from holoviews.streams import Stream, PolyEdit, PolyDraw
+from holoviews.plotting.bokeh.callbacks import (
+    CDSCallback, PolyEditCallback, PolyDrawCallback)
 
-from .models.custom_tools import PolyVertexEditTool
+from .models.custom_tools import PolyVertexEditTool, PolyVertexDrawTool
 
 
 class PolyVertexEdit(PolyEdit):
     """
-    Attaches a PolyEditTool and syncs the datasource.
+    Attaches a PolyVertexEditTool and syncs the datasource.
 
     shared: boolean
         Whether PolyEditTools should be shared between multiple elements
@@ -27,6 +28,26 @@ class PolyVertexEdit(PolyEdit):
         self.node_style = node_style
         self.feature_style = feature_style
         super(PolyVertexEdit, self).__init__(**params)
+
+
+class PolyVertexDraw(PolyDraw):
+    """
+    Attaches a PolyVertexDrawTool and syncs the datasource.
+
+    shared: boolean
+        Whether PolyEditTools should be shared between multiple elements
+
+    node_style: dict
+        A dictionary specifying the style options for the intermediate nodes.
+
+    feature_style: dict
+        A dictionary specifying the style options for the intermediate nodes.
+    """
+
+    def __init__(self, node_style={}, feature_style={}, **params):
+        self.node_style = node_style
+        self.feature_style = feature_style
+        super(PolyVertexDraw, self).__init__(**params)
 
 
 class PolyVertexEditCallback(PolyEditCallback):
@@ -93,5 +114,34 @@ class PolyVertexEditCallback(PolyEditCallback):
         CDSCallback.initialize(self, plot_id)
 
 
+
+class PolyVertexDrawCallback(PolyDrawCallback):
+
+    def initialize(self, plot_id=None):
+        plot = self.plot
+        stream = self.streams[0]
+        element = self.plot.current_frame
+        kwargs = {}
+        if stream.num_objects:
+            kwargs['num_objects'] = stream.num_objects
+        if stream.show_vertices:
+            vertex_style = dict({'size': 10}, **stream.vertex_style)
+            r1 = plot.state.scatter([], [], **vertex_style)
+            kwargs['vertex_renderer'] = r1
+        tooltip = '%s Draw Tool' % type(element).__name__
+        poly_tool = PolyVertexDrawTool(
+            drag=all(s.drag for s in self.streams),
+            empty_value=stream.empty_value,
+            renderers=[plot.handles['glyph_renderer']],
+            node_style=stream.node_style,
+            end_style=stream.feature_style,
+            custom_tooltip=tooltip,
+            **kwargs)
+        plot.state.tools.append(poly_tool)
+        self._update_cds_vdims()
+        super(PolyDrawCallback, self).initialize(plot_id)
+
+
 callbacks = Stream._callbacks['bokeh']
-callbacks[PolyVertexEdit]    = PolyVertexEditCallback
+callbacks[PolyVertexEdit] = PolyVertexEditCallback
+callbacks[PolyVertexDraw] = PolyVertexDrawCallback

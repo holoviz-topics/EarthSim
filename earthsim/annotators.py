@@ -17,7 +17,7 @@ import holoviews.plotting.bokeh
 from holoviews import DynamicMap, Path, Table, NdOverlay, Store, Options
 from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
-from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
+from holoviews.streams import Selection1D, Stream, PointDraw, CDSStream
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh, Path as GeoPath
 from geoviews.util import path_to_geom_dicts
@@ -25,6 +25,7 @@ from shapely.geometry import Polygon, LinearRing, MultiPolygon
 
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
 from .links import VertexTableLink, PointTableLink
+from .streams import PolyVertexDraw, PolyVertexEdit
 
 
 def paths_to_polys(path):
@@ -186,9 +187,10 @@ class GeoAnnotator(param.Parameterized):
         opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
         polys = self.polys if polys is None else polys
         self.polys = polys.options(**opts)
-        self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
-        self.vertex_stream = PolyEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
-
+        self.poly_stream = PolyVertexDraw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
+        self.vertex_stream = PolyVertexEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
+        self.poly_selection = Selection1D(source=self.polys)
+        
     @param.depends('points', watch=True)
     @preprocess
     def _init_points(self, points=None):
