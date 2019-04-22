@@ -53,7 +53,7 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     return [x, y]
   }
 
-  _set_vertices(xs: number[] | number, ys: number[] | number, styles): void {
+  _set_vertices(xs: number[] | number, ys: number[] | number, styles?: any): void {
     const point_glyph: any = this.model.vertex_renderer.glyph
     const point_cds = this.model.vertex_renderer.data_source
     const [pxkey, pykey] = [point_glyph.x.field, point_glyph.y.field]
@@ -87,8 +87,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     if (!this.model.active ) { return }
     const xs: number[] = []
     const ys: number[] = []
-    const styles = {}
-    for (const key of keys(this.model.end_style))
+    const styles: any = {}
+    for (const key of keys((this.model as any).end_style))
       styles[key] = []
     for (let i=0; i<this.model.renderers.length; i++) {
       const renderer = this.model.renderers[i]
@@ -97,15 +97,15 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
       const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
       for (const array of cds.get_array(xkey)) {
         Array.prototype.push.apply(xs, array)
-        for (const key of keys(this.model.end_style))
-          styles[key].push(this.model.end_style[key])
-        for (const key of keys(this.model.node_style)) {
-          for (let index = 0; index < (array.length-2); index++) { 
-            styles[key].push(this.model.node_style[key])
+        for (const key of keys((this.model as any).end_style))
+          styles[key].push((this.model as any).end_style[key])
+        for (const key of keys((this.model as any).node_style)) {
+          for (let index = 0; index < ((array as any).length-2); index++) {
+            styles[key].push((this.model as any).node_style[key])
           }
         }
-        for (const key of keys(this.model.end_style))
-          styles[key].push(this.model.end_style[key])
+        for (const key of keys((this.model as any).end_style))
+          styles[key].push((this.model as any).end_style[key])
       }
       for (const array of cds.get_array(ykey))
         Array.prototype.push.apply(ys, array)
@@ -122,16 +122,18 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
 }
 
 export namespace PolyVertexDrawTool {
-  export interface Attrs extends ActionTool.Attrs {}
-
-  export interface Props extends ActionTool.Props {}
+  export type Attrs = p.AttrsOf<Props>
+  export type Props = PolyDrawTool.Props & {
+    node_style: p.Property<any>
+    end_style:  p.Property<any>
+  }
 }
 
 export interface PolyVertexDrawTool extends PolyDrawTool.Attrs {}
 
 export class PolyVertexDrawTool extends PolyDrawTool {
+
   properties: PolyVertexDrawTool.Props
-  sources: ColumnDataSource[]
 
   constructor(attrs?: Partial<PolyVertexDrawTool.Attrs>) {
     super(attrs)
@@ -141,10 +143,11 @@ export class PolyVertexDrawTool extends PolyDrawTool {
     this.prototype.type = "PolyVertexDrawTool"
     this.prototype.default_view = PolyVertexDrawToolView
 
-    this.define({
+    this.define<PolyVertexDrawTool.Props>({
+      end_style:  [ p.Any, {} ],
       node_style: [ p.Any, {} ],
-      end_style: [ p.Any, {} ],
     })
   }
 }
+
 PolyVertexDrawTool.initClass()

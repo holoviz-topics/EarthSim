@@ -6,7 +6,7 @@ from bokeh.models import Tool, ColumnDataSource, PolyEditTool, PolyDrawTool
 
 from . import _CUSTOM_MODELS
 
-fpath = os.path.dirname(__file__)
+fpath = os.path.abspath(os.path.dirname(__file__))
 
 
 class CheckpointTool(Tool):
