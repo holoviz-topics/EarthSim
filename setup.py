@@ -25,8 +25,8 @@ install_requires = [
 extras_require = {}
 
 extras_require['recommended'] = [
-    'opencv', 'quest==2.6.1', 'gsshapy==2.3.8', 'gssha==7.12+pyviz.0',
-    'ulmo==0.8.4', 'lancet>=0.9.0']
+    'opencv', 'quest==3.1.1', 'gsshapy==2.3.8', 'gssha==7.12+pyviz.0',
+    'ulmo==0.8.5', 'lancet>=0.9.0']
 
 # until pyproject.toml/equivalent is widely supported (setup_requires
 # doesn't work well with pip)
