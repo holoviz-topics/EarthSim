@@ -111,6 +111,27 @@ def initialize_tools(plot, element):
         clear[0].sources.append(cds)
 
 
+def preprocess(function, current=[]):
+    """
+    Turns a param.depends watch call into a preprocessor method, i.e.
+    skips all downstream events triggered by it.
+
+    NOTE: This is a temporary hack while the addition of preprocessors
+          in param is under discussion. This only works for the first
+          method which depends on a particular parameter.
+
+          (see https://github.com/pyviz/param/issues/332)
+    """
+    def inner(*args, **kwargs):
+        self = args[0]
+        self.param._BATCH_WATCH = True
+        function(*args, **kwargs)
+        self.param._BATCH_WATCH = False
+        self.param._watchers = []
+        self.param._events = []
+    return inner
+
+
 class GeoAnnotator(param.Parameterized):
     """
     Provides support for drawing polygons and points on top of a map.
@@ -145,17 +166,29 @@ class GeoAnnotator(param.Parameterized):
         polys = [] if polys is None else polys
         points = [] if points is None else points
         crs = ccrs.GOOGLE_MERCATOR if crs is None else crs
-        tools = [CheckpointTool(), RestoreTool(), ClearTool()]
-        opts = dict(tools=tools, finalize_hooks=[initialize_tools], color_index=None)
+        self._tools = [CheckpointTool(), RestoreTool(), ClearTool()]
         if not isinstance(polys, Path):
-            polys = self.path_type(polys, crs=crs).options(**opts)
+            polys = self.path_type(polys, crs=crs)
+        self._init_polys(polys)
+        if not isinstance(points, Points):
+            points = Points(points, self.polys.kdims, crs=crs)
+        self._init_points(points)
+
+    @param.depends('polys', watch=True)
+    @preprocess
+    def _init_polys(self, polys=None):
+        opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
+        polys = self.polys if polys is None else polys
         self.polys = polys.options(**opts)
         self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True)
         self.vertex_stream = PolyEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
-        if isinstance(points, Points):
-            self.points = points
-        else:
-            self.points = Points(points, self.polys.kdims, crs=crs).options(**opts)
+
+    @param.depends('points', watch=True)
+    @preprocess
+    def _init_points(self, points=None):
+        opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
+        points = self.points if points is None else points
+        self.points = points.options(**opts)
         self.point_stream = PointDraw(source=self.points, drag=True, data={})
 
     def pprint(self):
@@ -166,11 +199,12 @@ class GeoAnnotator(param.Parameterized):
             string += '  %s: %s\n' % (item)
         print(string)
 
+    @param.depends('points', 'polys')
     def map_view(self):
         return self.tiles * self.polys * self.points
 
     def panel(self):
-        return pn.Row(self.map_view())
+        return pn.Row(self.map_view)
 
 
 class PointWidgetAnnotator(GeoAnnotator):
@@ -260,8 +294,13 @@ class PolyAnnotator(GeoAnnotator):
     table_width = param.Integer(default=400, doc="Width of the table",
                                  precedence=-1)
 
-    def __init__(self, poly_data={}, **params):
-        super(PolyAnnotator, self).__init__(**params)
+    def __init__(self, *args, **params):
+        super(PolyAnnotator, self).__init__(*args, **params)
+        self._link_polys()
+
+    @param.depends('polys', watch=True)
+    @preprocess
+    def _link_polys(self):
         style = dict(editable=True)
         plot = dict(width=self.table_width, height=self.table_height)
 
@@ -287,15 +326,17 @@ class PolyAnnotator(GeoAnnotator):
         self.vertex_table = Table([], self.polys.kdims, self.vertex_columns).opts(plot=plot, style=style)
         self.vertex_link = VertexTableLink(self.polys, self.vertex_table)
 
+    @param.depends('points', 'polys')
     def map_view(self):
         return (self.tiles * self.polys.options(clone=False, line_width=5) *
                 self.points.options(tools=['hover'], clone=False))
 
+    @param.depends('polys')
     def table_view(self):
         return pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table))
 
     def panel(self):
-        return pn.Row(self.map_view(), self.table_view())
+        return pn.Row(self.map_view, self.table_view)
 
     @param.output(path=hv.Path)
     def path_output(self):
@@ -317,8 +358,13 @@ class PointAnnotator(GeoAnnotator):
     table_width = param.Integer(default=400, doc="Width of the table",
                                  precedence=-1)
 
-    def __init__(self, **params):
-        super(PointAnnotator, self).__init__(**params)
+    def __init__(self, *args, **params):
+        super(PointAnnotator, self).__init__(*args, **params)
+        self._link_points()
+
+    @param.depends('points', watch=True)
+    @preprocess
+    def _link_points(self):
         style = dict(editable=True)
         plot = dict(width=self.table_width, height=self.table_height)
         for col in self.point_columns:
@@ -329,11 +375,12 @@ class PointAnnotator(GeoAnnotator):
         self.point_table = Table(projected).opts(plot=plot, style=style)
         self.point_link = PointTableLink(source=self.points, target=self.point_table)
 
+    @param.depends('points')
     def table_view(self):
         return self.point_table
 
     def panel(self):
-        return pn.Row(self.map_view(), self.table_view())
+        return pn.Row(self.map_view, self.table_view)
 
     @param.output(points=gv.Points)
     def point_output(self):
@@ -346,6 +393,7 @@ class PolyAndPointAnnotator(PolyAnnotator, PointAnnotator):
     DataTable.
     """
 
+    @param.depends('points', 'polys')
     def table_view(self):
         return pn.Tabs(('Polygons', self.poly_table), ('Vertices', self.vertex_table),
                        ('Points', self.point_table))
