@@ -35,12 +35,15 @@ class LineCrossSection(param.Parameterized):
         Distance between samples in meters. Used for interpolation
         of the cross-section paths.""")
 
+    _num_objects = None
+
     def __init__(self, obj, paths=None, **params):
         super(LineCrossSection, self).__init__(**params)
         self.obj = obj
         paths = [] if paths is None else paths
         self.path = Path(paths, crs=ccrs.GOOGLE_MERCATOR)
-        self.path_stream = PolyDraw(source=self.path)
+        self.path_stream = PolyDraw(source=self.path,
+                                    num_objects=self._num_objects)
         PolyEdit(source=self.path)
         self.sections = Dynamic(self.obj, operation=self._sample,
                                 streams=[self.path_stream])
@@ -149,6 +152,8 @@ class SurfaceCrossSection(LineCrossSection):
     the resulting stack of images along paths drawn using a PolyDraw
     tool.
     """
+
+    _num_objects = 1
 
     def _sample(self, obj, data):
         """
