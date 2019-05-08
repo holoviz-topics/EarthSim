@@ -152,6 +152,12 @@ class GeoAnnotator(param.Parameterized):
     points = param.ClassSelector(class_=Points, precedence=-1, doc="""
          Point element to annotate""")
 
+    num_points = param.Integer(default=None, doc="""
+         Maximum number of points to allow drawing (unlimited by default).""")
+
+    num_polys = param.Integer(default=None, doc="""
+         Maximum number of polygons to allow drawing (unlimited by default).""")
+
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
 
@@ -180,7 +186,7 @@ class GeoAnnotator(param.Parameterized):
         opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
         polys = self.polys if polys is None else polys
         self.polys = polys.options(**opts)
-        self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True)
+        self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
         self.vertex_stream = PolyEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
 
     @param.depends('points', watch=True)
@@ -189,7 +195,7 @@ class GeoAnnotator(param.Parameterized):
         opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
         points = self.points if points is None else points
         self.points = points.options(**opts)
-        self.point_stream = PointDraw(source=self.points, drag=True, data={})
+        self.point_stream = PointDraw(source=self.points, drag=True, data={}, num_objects=self.num_points)
 
     def pprint(self):
         params = dict(self.get_param_values())
