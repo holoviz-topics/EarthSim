@@ -201,7 +201,9 @@ class GrabCutPanel(param.Parameterized):
             self._bg_data = []
         elif self._initialized:
             self._bg_data = self.draw_bg.element.data
-        return gv.project(self.path_type(self._bg_data, crs=self.crs), projection=self.image.crs)
+        else:
+            self._bg_data = gv.project(self.path_type(self._bg_data, crs=self.crs), projection=self.image.crs)
+        return self.path_type(self._bg_data, crs=self.image.crs)
 
     @param.depends('clear')
     def fg_path_view(self):
@@ -209,14 +211,15 @@ class GrabCutPanel(param.Parameterized):
             self._fg_data = []
         elif self._initialized:
             self._fg_data = self.draw_fg.element.data
-        return gv.project(self.path_type(self._fg_data, crs=self.crs), projection=self.image.crs)
+        else:
+            self._fg_data = gv.project(self.path_type(self._fg_data, crs=self.crs), projection=self.image.crs)
+        return self.path_type(self._fg_data, crs=self.image.crs)
 
     @param.depends('update_contour', 'image')
     def extract_foreground(self, **kwargs):
         img = self.image
         bg, fg = self.bg_path_view(), self.fg_path_view()
         self._initialized = True
-        bg, fg = (gv.project(g, projection=img.crs) for g in (bg, fg))
 
         if not len(bg) or not len(fg):
             return gv.Path([], img.kdims, crs=img.crs)
@@ -269,30 +272,28 @@ class GrabCutPanel(param.Parameterized):
         return pn.Row(self.param, self.view())
 
 
-
 class SelectRegionPanel(param.Parameterized):
     """
     Visualization that allows selecting a bounding box anywhere on a tile source.
     """
 
     # Tile servers
-    misc_servers =  {'OpenStreetMap' : 'http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
-                     'Basemaps CartoCDN' :
-                     'https://s.basemaps.cartocdn.com/light_all/{Z}/{X}/{Y}.png',
-                     'Stamen':'http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png'}
+    misc_servers = {'OpenStreetMap': 'http://c.tile.openstreetmap.org/{Z}/{X}/{Y}.png',
+                    'Basemaps CartoCDN': 'https://s.basemaps.cartocdn.com/light_all/{Z}/{X}/{Y}.png',
+                    'Stamen': 'http://tile.stamen.com/terrain/{Z}/{X}/{Y}.png'}
 
-    arcgis_paths = {'World Imagery':'World_Imagery/MapServer/tile/{Z}/{Y}/{X}',
-                    'World Topo Map':'World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}',
-                    'World Terrain Base':'World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}',
+    arcgis_paths = {'World Imagery': 'World_Imagery/MapServer/tile/{Z}/{Y}/{X}',
+                    'World Topo Map': 'World_Topo_Map/MapServer/tile/{Z}/{Y}/{X}',
+                    'World Terrain Base': 'World_Terrain_Base/MapServer/tile/{Z}/{Y}/{X}',
                     'World Street Map': 'World_Street_Map/MapServer/tile/{Z}/{Y}/{X}',
                     'World Shaded Relief': 'World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}',
                     'World Physical Map': 'World_Physical_Map/MapServer/tile/{Z}/{Y}/{X}',
-                    'USA Topo Maps' : 'USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}',
-                    'Ocean Basemap' : 'Ocean_Basemap/MapServer/tile/{Z}/{Y}/{X}',
-                    'NatGeo World Map' : 'NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}'}
+                    'USA Topo Maps': 'USA_Topo_Maps/MapServer/tile/{Z}/{Y}/{X}',
+                    'Ocean Basemap': 'Ocean_Basemap/MapServer/tile/{Z}/{Y}/{X}',
+                    'NatGeo World Map': 'NatGeo_World_Map/MapServer/tile/{Z}/{Y}/{X}'}
 
     arcgis_urls = {k: 'https://server.arcgisonline.com/ArcGIS/rest/services/' + v
-                   for k,v in arcgis_paths.items()}
+                   for k, v in arcgis_paths.items()}
 
     tile_urls = dict(misc_servers, **arcgis_urls)
 
@@ -380,7 +381,7 @@ class SelectRegionPanel(param.Parameterized):
     def get_tiff(self):
         bbox = self.bbox
         filepath = self.tiff_from_bbox(self.tile_server, self.zoom_level, bbox)
-        return gv.load_tiff(filepath, crs=ccrs.PlateCarree()).redim(x='Longitude', y='Latitude')
+        return gv.load_tiff(filepath, crs=ccrs.GOOGLE_MERCATOR).redim(x='Longitude', y='Latitude')
 
     @classmethod
     def tiff_from_bbox(cls, tile_server, zoom_level, bbox):
@@ -388,33 +389,24 @@ class SelectRegionPanel(param.Parameterized):
             raise ValueError('Please supply a bounding box in order to extract a tiff.')
 
         options = {'url': tile_server, 'zoom_level': zoom_level,
-                   'bbox': bbox, 'crop_to_bbox':True}
+                   'bbox': bbox, 'crop_to_bbox': True}
 
-        quest_service = 'svc://wmts:seamless_imagery'
-        tile_service_options = quest.api.download_options(quest_service,
-                                                          fmt='param')[quest_service]
-        basemap_features = quest.api.get_features(quest_service)
-        collection_name = 'examples'
-        if collection_name in quest.api.get_collections():
-            pass
-        else:
-            quest.api.new_collection(collection_name)
+        meta = quest.api.get_data(
+            collection_name='examples',
+            service_uri='svc://wmts:seamless_imagery',
+            search_filters=None,
+            download_options=options,
+            as_open_datasets=False,
+            expand=True,
+        )[0]
 
-        collection_feature = quest.api.add_features(collection_name, basemap_features[0])
-
-        staged_id = quest.api.stage_for_download(collection_feature, options=options)
-        download_state = quest.api.download_datasets(staged_id)
-        # Fragile, needs improvement
-        download_id = list(download_state.keys())[0]
-
-        meta = quest.api.get_metadata(staged_id)
-        file_path = meta[download_id].get('file_path',None)
+        file_path = meta.get('file_path', None)
         if not os.path.isfile(file_path):
             print('Error: No TIFF downloaded')
         return file_path
 
     def view(self):
-        return (gv.DynamicMap(self.callback) * self.boxes)
+        return (gv.DynamicMap(self.callback) * self.boxes).options(active_tools=['wheel_zoom'])
 
     @param.output(image=hv.Image)
     def output(self):
@@ -422,7 +414,6 @@ class SelectRegionPanel(param.Parameterized):
 
     def panel(self):
         return pn.Row(self.param, self.view())
-
 
 
 options = Store.options('bokeh')

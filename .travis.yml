@@ -22,7 +22,7 @@ stages:
   - name: user_install
     if: type = cron
   - name: doc
-    if: branch = master AND type != pull_request
+    if: tag =~ ^v(\d+|\.)+.*$  # match dev or release tags
   - name: conda_dev_package
     if: tag =~ ^v(\d+|\.)+[a-z]\d+$
   - name: conda_package
@@ -103,3 +103,6 @@ jobs:
         github_token: $GITHUB_TOKEN
         local_dir: ./builtdocs
         fqdn: earthsim.pyviz.org
+        on:
+          tags: true
+          all_branches: true
