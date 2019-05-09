@@ -35,8 +35,8 @@ Drawing/annotation tools:
 
 Making and using triangular meshes:
 
-* `Specifying meshes with Filigree <Specifying_Meshes.html>`_:
-  Using draw tools to generate inputs to the Filigree mesh generator.
+* `Generating meshes with XMSMesh <Generating_Meshes.html>`_:
+  Using draw tools to generate inputs to the XMSMesh mesh generator.
 
 * `Visualizing meshes <Visualizing_Meshes.html>`_:
   Demonstrates how to load large static and time-varying trimesh data
@@ -53,6 +53,6 @@ Making and using triangular meshes:
 
     Drawing Tools <Drawing_Tools>
     Adding Annotations <Annotators>
-    Specifying Meshes <Specifying_Meshes>
+    Generating Meshes <Generating_Meshes>
     Visualizing Meshes <Visualizing_Meshes>
     Analyzing Meshes <Analyzing_Meshes>
