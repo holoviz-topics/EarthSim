@@ -20,7 +20,8 @@ install_requires = [
     'param>=1.9.0,<2.0', 'holoviews>=1.12.0', 'datashader>=0.7.0',
     'geoviews>=1.6.2', 'panel>=0.5.0', 'bokeh>=1.1.0', 'cartopy>=0.17.0',
     'xarray>=0.11.0', 'colorcet>=1.0.0', 'notebook>=5.5.0',
-    'fiona', 'gdal>=2.3.3', 'rasterio==1.0.13']
+    'fiona', 'gdal>=2.3.3', 'rasterio==1.0.13', 'xmscore', 'xmsinterp',
+    'xmsgrid', 'xmsmesh']
 
 extras_require = {}
 
