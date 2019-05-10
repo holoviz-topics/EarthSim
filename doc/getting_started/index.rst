@@ -19,7 +19,7 @@ EarthSim itself is a pure Python package that itself would be easy to install, b
     conda install -c conda-forge earthsim
 
 3. Download the sample files.
-    python -c "import earthsim ; earthsim examples"
+    python -m "earthsim examples"
 
 
 Developer Installation
