@@ -14,33 +14,52 @@ EarthSim itself is a pure Python package that itself would be easy to install, b
 1. Install Python 3 `Miniconda <http://conda.pydata.org/miniconda.html>`_ or 
 `Anaconda <http://docs.continuum.io/anaconda/install>`_, if you don't already have it on your system.
 
-2. Clone the EarthSim git repository if you do not already have it::
+2. Install the EarthSim package via conda.
+
+    conda install -c conda-forge earthsim
+
+3. Download the sample files.
+    python -c "import earthsim ; earthsim examples"
+
+
+Developer Installation
+----------------------
+
+If you are actively collaborating with the EarthSim developers and
+want to try out the latest pyviz work as it first appears (which is
+not necessarily functional or stable), you can install EarthSim
+from GitHub.
+
+2. Clone the EarthSim git repository::
 
     git clone git://github.com/pyviz/EarthSim.git
 
 3. Set up an environment with all of the dependencies needed to run the examples::
-    
+
     cd EarthSim
-    conda create -n earthsim -c conda-forge --file=dependencies.txt conda-forge::python=3.6
+    doit env_create -c pyviz/label/earthsim -c pyviz/label/dev -c defaults -c erdc -c conda-forge --name=earthsim --python=3.6
 
 4. Activate the earthsim environment::
-	 
+
     activate earthsim
 
-   for Windows; MacOS and Linux users should instead run::
-
-    source activate earthsim
-
 5. Install the ``earthsim`` module into this environment::
-    
+
     pip install -e .
 
 6. Download the sample files::
 
     earthsim examples
 
-These instructions are designed to build a working environment repeatably on Mac OS X, Windows, and Linux platforms, pinning dependencies to known versions to avoid incompatibilities with new releases of the software required.
-    
+If you *really* want to be on the bleeding edge, you can instead get
+the absolute latest changes by cloning the earthsim, holoviews,
+geoviews, datashader, param, and panel Github repositories and
+running `pip install -e .` inside each one, pulling new changes from
+each of these libraries as needed.  That's what the main developers
+do, but it isn't recommended for other users unless you are very
+skilled at debugging the broken environments that are likely to appear
+as packages change unpredictably over time.
+
     
 Usage
 -----
@@ -69,46 +88,3 @@ good way to get comfortable with those tools is to work through the tutorials at
 If you find any bugs or have any feature suggestions please file a 
 `GitHub issue <https://github.com/pyviz/EarthSim/issues>`_
 or submit a `pull request <https://help.github.com/articles/about-pull-requests>`_.
-
-
-Updates
--------
-
-Assuming you are in the EarthSim directory, and the ``earthsim`` conda
-environment is active, you can update to the latest version of
-EarthSim as follows:
-
-1. Get updated code and examples from git::
-
-    git pull
-
-2. Update the earthsim conda environment::
-
-    conda install -c pyviz/label/earthsim -c conda-forge --file=dependencies.txt
-
-3. Get a new copy of the examples to work on, and download new or updated data::
-
-    earthsim examples	 
-
-
-Developers
-----------    
-    
-If you are actively collaborating with the EarthSim developers and
-want to try out the latest pyviz work as it first appears (which is
-not necessarily functional or stable), you can run the following after
-creating or updating (and activating) your earthsim environment::
-
-  conda install -c pyviz/label/dev -c conda-forge --file=dependencies-dev-overrides.txt
-
-This command will update the main packages to the latest `dev` releases,
-which appear periodically after new features are added.
-  
-If you *really* want to be on the bleeding edge, you can instead get
-the absolute latest changes by cloning the earthsim, holoviews,
-geoviews, datashader, param, and panel Github repositories and
-running `pip install -e .` inside each one, pulling new changes from
-each of these libraries as needed.  That's what the main developers
-do, but it isn't recommended for other users unless you are very
-skilled at debugging the broken environments that are likely to appear
-as packages change unpredictably over time.
