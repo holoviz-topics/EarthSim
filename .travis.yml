@@ -32,7 +32,7 @@ stages:
 _osx_config: &_osx_config
   os: osx
   osx_image: xcode10.1
-  env: PYENV_VERSION=3.6.4 CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge"
+  env: PYENV_VERSION=3.6.4 CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge -c aquaveo"
   before_install:
     # set up python
     - eval "$(pyenv init -)"
