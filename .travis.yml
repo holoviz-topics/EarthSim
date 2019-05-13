@@ -63,7 +63,7 @@ jobs:
         - doit develop_install $CHANS_DEV -o tests
         - doit env_capture
       script:
-        - earthsim fetch-data --path=examples
+        - python -m earthsim fetch-data --path=examples
         - travis_wait 60 doit test_all
       after_failure:
         - sleep 10
