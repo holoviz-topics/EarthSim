@@ -153,11 +153,19 @@ class GeoAnnotator(param.Parameterized):
     points = param.ClassSelector(class_=Points, precedence=-1, doc="""
          Point element to annotate""")
 
+<<<<<<< HEAD
     num_points = param.Integer(default=None, doc="""
          Maximum number of points to allow drawing (unlimited by default).""")
 
     num_polys = param.Integer(default=None, doc="""
          Maximum number of polygons to allow drawing (unlimited by default).""")
+=======
+    node_style = param.Dict(default={'fill_color': 'indianred', 'size': 6}, doc="""
+         Styling to apply to the node vertices.""")
+
+    feature_style = param.Dict(default={'fill_color': 'blue', 'size': 10}, doc="""
+         Styling to apply to the feature vertices.""")
+>>>>>>> Apply different styling for node and feature vertices
 
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
@@ -189,10 +197,16 @@ class GeoAnnotator(param.Parameterized):
         self.polys = polys.options(**opts)
         if isinstance(self.polys, Polygons):
             poly_draw, poly_edit = PolyDraw, PolyEdit
+            style_kwargs = {}
         else:
             poly_draw, poly_edit = PolyVertexDraw, PolyVertexEdit
-        self.poly_stream = poly_draw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
-        self.vertex_stream = poly_edit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
+            style_kwargs = dict(node_style=self.node_style, feature_style=self.feature_style)
+        self.poly_stream = poly_draw(
+            source=self.polys, data={}, show_vertices=True,
+            num_objects=self.num_polys, **style_kwargs)
+        self.vertex_stream = poly_edit(
+            source=self.polys, vertex_style={'nonselection_alpha': 0.5},
+            **style_kwargs)
         self.poly_selection = Selection1D(source=self.polys)
         
     @param.depends('points', watch=True)
