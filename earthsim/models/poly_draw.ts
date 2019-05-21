@@ -17,15 +17,15 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
       const xpaths = cds.data[xkey]
       const ypaths = cds.data[ykey]
       for (let index = 0; index < xpaths.length; index++) {
-        const xs = xpaths[index]
+        let xs = xpaths[index]
         if (!isArray(xs)) {
-          const xarray = Array.from(xs)
-          cds.data[xkey][index] = xarray
+          xs = Array.from(xs)
+          cds.data[xkey][index] = xs
         }
-        const ys = ypaths[index]
+        let ys = ypaths[index]
         if (!isArray(ys)) {
-          const yarray = Array.from(ys)
-          cds.data[ykey][index] = yarray
+          ys = Array.from(ys)
+          cds.data[ykey][index] = ys
         }
         for (let i = 0; i < xs.length; i++) {
           if ((xs[i] == x) && (ys[i] == y) && (i != 0) && (i != (xs.length-1))) {
