@@ -94,7 +94,7 @@ jobs:
       script:
         - conda install -c pyviz -c conda-forge nbsite=0.5.1 sphinx_ioam_theme
         - mkdir examples/assets
-        - earthsim fetch-data --path=examples
+        - python -m earthsim fetch-data --path=examples
         - nbsite generate-rst --org pyviz --project-name earthsim --offset 0 --skip '^.*Workflow.*$' --skip '^.*Sweep.*$'  --skip '^.*Batched.*$' --skip '^.Specifying.*$'
         - travis_wait 60 nbsite build --what=html --output=builtdocs
       deploy:
