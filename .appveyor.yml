@@ -1,6 +1,6 @@
 environment:
   global:
-    CHANS_DEV: "-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge -c aquaveo"
+    CHANS_DEV: "-c pyviz/label/earthsim -c pyviz/label/dev -c bokeh -c erdc -c conda-forge -c aquaveo"
   matrix:
     - PY: "3.6"
       CONDA: "C:\\Miniconda36-x64"
