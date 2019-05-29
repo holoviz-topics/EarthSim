@@ -121,7 +121,7 @@ def test_point_annotator_updates():
 
     # Ensure points data matches
     for k in updated_points:
-        np.testing.assert_allclose(points.data_source.data[k], sample_points[k])
+        np.testing.assert_allclose(points.data_source.data[k], updated_points[k])
 
     # Ensure point is linked to table
     point_cbs = points.data_source.js_property_callbacks['change:data']
