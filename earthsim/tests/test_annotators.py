@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import holoviews.plotting.bokeh
+import geoviews.plotting.bokeh
 import cartopy.crs as ccrs
 
 from bokeh.models import ColumnDataSource, Plot, DataTable
@@ -10,7 +11,7 @@ from pyviz_comms import Comm
 from earthsim.annotators import PointAnnotator, PolyAnnotator
 from earthsim.links import PointTableLinkCallback, VertexTableLinkCallback
 
-sample_poly=dict(
+sample_poly = dict(
     Longitude = [-10114986, -10123906, -10130333, -10121522, -10129889, -10122959],
     Latitude  = [  3806790,   3812413,   3807530,   3805407,   3798394,   3796693]
 )
