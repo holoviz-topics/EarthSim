@@ -7,8 +7,8 @@ env:
   global:
     - PYENV_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36"
-    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c defaults -c erdc -c conda-forge -c aquaveo"
-    - CHANS_REL="-c pyviz -c defaults -c erdc -c conda-forge -c aquaveo"
+    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
+    - CHANS_REL="-c pyviz -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
     - MPLBACKEND="Agg"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
