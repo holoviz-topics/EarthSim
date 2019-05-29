@@ -125,8 +125,8 @@ def test_point_annotator_updates():
 
     # Ensure point is linked to table
     point_cbs = points.data_source.js_property_callbacks['change:data']
-    assert len(point_cbs) == 1
-    assert point_cbs[0].code == PointTableLinkCallback.source_code
+    assert sum([cb.code == PointTableLinkCallback.source_code
+                for cb in point_cbs]) == 1
 
     table_cbs = table.source.js_property_callbacks['change:data']
     assert len(table_cbs) == 1
