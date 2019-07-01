@@ -153,19 +153,17 @@ class GeoAnnotator(param.Parameterized):
     points = param.ClassSelector(class_=Points, precedence=-1, doc="""
          Point element to annotate""")
 
-<<<<<<< HEAD
     num_points = param.Integer(default=None, doc="""
          Maximum number of points to allow drawing (unlimited by default).""")
 
     num_polys = param.Integer(default=None, doc="""
          Maximum number of polygons to allow drawing (unlimited by default).""")
-=======
+
     node_style = param.Dict(default={'fill_color': 'indianred', 'size': 6}, doc="""
          Styling to apply to the node vertices.""")
 
     feature_style = param.Dict(default={'fill_color': 'blue', 'size': 10}, doc="""
          Styling to apply to the feature vertices.""")
->>>>>>> Apply different styling for node and feature vertices
 
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
