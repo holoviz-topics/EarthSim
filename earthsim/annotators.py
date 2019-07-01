@@ -205,7 +205,7 @@ class GeoAnnotator(param.Parameterized):
         self.vertex_stream = poly_edit(
             source=self.polys, vertex_style={'nonselection_alpha': 0.5},
             **style_kwargs)
-        self.poly_selection = Selection1D(source=self.polys)
+        self._poly_selection = Selection1D(source=self.polys)
         
     @param.depends('points', watch=True)
     @preprocess
@@ -334,6 +334,7 @@ class PolyAnnotator(GeoAnnotator):
                 self.polys = self.polys.add_dimension(col, 0, '', True)
         self.poly_stream.source = self.polys
         self.vertex_stream.source = self.polys
+        self._poly_selection.source = self.polys
 
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
@@ -361,6 +362,13 @@ class PolyAnnotator(GeoAnnotator):
 
     def panel(self):
         return pn.Row(self.map_view, self.table_view)
+
+    @property
+    def selected_polygons(self):
+        index = self._poly_selection.index
+        if not index:
+            return []
+        return [p for i, p in enumerate(self.poly_stream.element.split()) if i in index]
 
     @param.output(path=hv.Path)
     def path_output(self):
@@ -398,10 +406,15 @@ class PointAnnotator(GeoAnnotator):
         projected = gv.project(self.points, projection=ccrs.PlateCarree())
         self.point_table = Table(projected).opts(plot=plot, style=style)
         self.point_link = PointTableLink(source=self.points, target=self.point_table)
+        self._point_selection = Selection1D(source=self.points)
 
     @param.depends('points')
     def table_view(self):
         return self.point_table
+
+    @property
+    def selected_points(self):
+        return self.point_stream.element.iloc[self._point_selection.index]
 
     def panel(self):
         return pn.Row(self.map_view, self.table_view)
