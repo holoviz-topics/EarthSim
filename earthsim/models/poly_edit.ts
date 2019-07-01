@@ -1,5 +1,5 @@
 import * as p from "core/properties"
-import {GestureEvent, UIEvent} from "core/ui_events"
+import {GestureEvent, UIEvent, TapEvent} from "core/ui_events"
 import {keys} from "core/util/object"
 import {isArray} from "core/util/types"
 import {GlyphRenderer} from "models/renderers/glyph_renderer"
@@ -125,6 +125,41 @@ export class PolyVertexEditToolView extends PolyEditToolView {
         }
       }
     }
+  }
+
+  _tap(ev: TapEvent): void {
+    const renderer = this.model.vertex_renderer
+    const point = this._map_drag(ev.sx, ev.sy, renderer)
+    if (point == null)
+      return
+    else if (this._drawing && this._selected_renderer) {
+      let [x, y] = point
+      const cds = renderer.data_source
+      // Type once dataspecs are typed
+      const glyph: any = renderer.glyph
+      const [xkey, ykey] = [glyph.x.field, glyph.y.field]
+      const indices = cds.selected.indices
+      ;[x, y] = this._snap_to_vertex(ev, x, y)
+      const index = indices[0]
+      cds.selected.indices = [index+1]
+      if (xkey) {
+        const xs = cds.get_array(xkey)
+        const nx = xs[index]
+        xs[index] = x
+        xs.splice(index+1, 0, nx)
+      }
+      if (ykey) {
+        const ys = cds.get_array(ykey)
+        const ny = ys[index]
+        ys[index] = y
+        ys.splice(index+1, 0, ny)
+      }
+      cds.change.emit()
+      this._emit_cds_changes(this._selected_renderer.data_source, true, false, true)
+      return
+	}
+    const append = ev.shiftKey
+    this._select_event(ev, append, [renderer])
   }
 
   _show_vertices(ev: UIEvent): void {
