@@ -45,6 +45,7 @@ _osx_config: &_osx_config
     - conda config --set always_yes True
     - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
     - conda config --set path_conflict warn
+    - conda config --set restore_free_channel true
 
 jobs:
   include:
