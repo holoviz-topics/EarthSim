@@ -5,7 +5,8 @@ language: generic
 
 env:
   global:
-    - PYENV_VERSION=3.6
+    - PYENV_VERSION=3.7.1
+    - PYTHON_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36"
     - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
     - CHANS_REL="-c pyviz -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
@@ -32,7 +33,7 @@ stages:
 _osx_config: &_osx_config
   os: osx
   osx_image: xcode10.1
-  env: PYENV_VERSION=3.6.4 CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge -c aquaveo"
+  env: CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge -c aquaveo"
   before_install:
     # set up python
     - eval "$(pyenv init -)"
@@ -59,7 +60,7 @@ jobs:
         - conda install -c pyviz "pyctdev>=0.5" && doit ecosystem_setup
         - conda config --set path_conflict warn
       install:
-        - travis_wait 20 doit env_create $CHANS_DEV --name=earthsim --python=$PYENV_VERSION
+        - travis_wait 20 doit env_create $CHANS_DEV --name=earthsim --python=$PYTHON_VERSION
         - source activate earthsim
         - doit develop_install $CHANS_DEV -o tests
         - doit env_capture
