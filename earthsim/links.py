@@ -165,16 +165,18 @@ class VertexTableLinkCallback(LinkCallback):
     ys_column = target_cds.data[y]
     var projected_xs = []
     var projected_ys = []
+    var points = []
     for (i = 0; i < xs_column.length; i++) {
       var xv = xs_column[i]
       var yv = ys_column[i]
       p = projections.wgs84_mercator.forward([xv, yv])
       projected_xs.push(p[0])
       projected_ys.push(p[1])
+      points.push(i)
     }
     index = source_cds.selected.indices[0]
-    source_cds.data['xs'][index] = projected_xs;
-    source_cds.data['ys'][index] = projected_ys;
+    const xpaths = source_cds.data['xs']
+    const ypaths = source_cds.data['ys']
     var length = source_cds.data['xs'].length
     for (var col in target_cds.data) {
       if ((col == x) || (col == y)) { continue; }
@@ -185,7 +187,29 @@ class VertexTableLinkCallback(LinkCallback):
         source_cds.data[col] = empty
       }
       source_cds.data[col][index] = target_cds.data[col]
+      for (const p of points) {
+        for (let pindex = 0; pindex < xpaths.length; pindex++) {
+          if (pindex == index) { continue }
+          const xs = xpaths[pindex]
+          const ys = ypaths[pindex]
+          const column = source_cds.data[col][pindex]
+          if (column.length != xs.length) {
+            for (let ind = 0; ind < xs.length; ind++) {
+              column.push(null)
+            }
+          }
+          for (let ind = 0; ind < xs.length; ind++) {
+            if ((xs[ind] == xpaths[index][p]) && (ys[ind] == ypaths[index][p])) {
+              column[ind] = target_cds.data[col][p]
+              xs[ind] = projected_xs[p];
+              ys[ind] = projected_ys[p];
+            }
+          }
+        }
+      }
     }
+    xpaths[index] = projected_xs;
+    ypaths[index] = projected_ys;
     source_cds.change.emit()
     source_cds.properties.data.change.emit();
     source_cds.data = source_cds.data

@@ -17,7 +17,7 @@ import holoviews.plotting.bokeh
 from holoviews import DynamicMap, Path, Table, NdOverlay, Store, Options
 from holoviews.core.util import disable_constant
 from holoviews.plotting.links import DataLink
-from holoviews.streams import Selection1D, Stream, PolyDraw, PolyEdit, PointDraw, CDSStream
+from holoviews.streams import Selection1D, Stream, PointDraw, CDSStream, PolyEdit, PolyDraw
 from geoviews.data.geopandas import GeoPandasInterface
 from geoviews import Polygons, Points, WMTS, TriMesh, Path as GeoPath
 from geoviews.util import path_to_geom_dicts
@@ -25,6 +25,7 @@ from shapely.geometry import Polygon, LinearRing, MultiPolygon
 
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
 from .links import VertexTableLink, PointTableLink
+from .streams import PolyVertexDraw, PolyVertexEdit
 
 
 def paths_to_polys(path):
@@ -158,6 +159,12 @@ class GeoAnnotator(param.Parameterized):
     num_polys = param.Integer(default=None, doc="""
          Maximum number of polygons to allow drawing (unlimited by default).""")
 
+    node_style = param.Dict(default={'fill_color': 'indianred', 'size': 6}, doc="""
+         Styling to apply to the node vertices.""")
+
+    feature_style = param.Dict(default={'fill_color': 'blue', 'size': 10}, doc="""
+         Styling to apply to the feature vertices.""")
+
     height = param.Integer(default=500, doc="Height of the plot",
                            precedence=-1)
 
@@ -186,9 +193,20 @@ class GeoAnnotator(param.Parameterized):
         opts = dict(tools=self._tools, finalize_hooks=[initialize_tools], color_index=None)
         polys = self.polys if polys is None else polys
         self.polys = polys.options(**opts)
-        self.poly_stream = PolyDraw(source=self.polys, data={}, show_vertices=True, num_objects=self.num_polys)
-        self.vertex_stream = PolyEdit(source=self.polys, vertex_style={'nonselection_alpha': 0.5})
-
+        if isinstance(self.polys, Polygons):
+            poly_draw, poly_edit = PolyDraw, PolyEdit
+            style_kwargs = {}
+        else:
+            poly_draw, poly_edit = PolyVertexDraw, PolyVertexEdit
+            style_kwargs = dict(node_style=self.node_style, feature_style=self.feature_style)
+        self.poly_stream = poly_draw(
+            source=self.polys, data={}, show_vertices=True,
+            num_objects=self.num_polys, **style_kwargs)
+        self.vertex_stream = poly_edit(
+            source=self.polys, vertex_style={'nonselection_alpha': 0.5},
+            **style_kwargs)
+        self._poly_selection = Selection1D(source=self.polys)
+        
     @param.depends('points', watch=True)
     @preprocess
     def _init_points(self, points=None):
@@ -316,6 +334,7 @@ class PolyAnnotator(GeoAnnotator):
                 self.polys = self.polys.add_dimension(col, 0, '', True)
         self.poly_stream.source = self.polys
         self.vertex_stream.source = self.polys
+        self._poly_selection.source = self.polys
 
         if len(self.polys):
             poly_data = gv.project(self.polys).split()
@@ -343,6 +362,13 @@ class PolyAnnotator(GeoAnnotator):
 
     def panel(self):
         return pn.Row(self.map_view, self.table_view)
+
+    @property
+    def selected_polygons(self):
+        index = self._poly_selection.index
+        if not index:
+            return []
+        return [p for i, p in enumerate(self.poly_stream.element.split()) if i in index]
 
     @param.output(path=hv.Path)
     def path_output(self):
@@ -380,10 +406,15 @@ class PointAnnotator(GeoAnnotator):
         projected = gv.project(self.points, projection=ccrs.PlateCarree())
         self.point_table = Table(projected).opts(plot=plot, style=style)
         self.point_link = PointTableLink(source=self.points, target=self.point_table)
+        self._point_selection = Selection1D(source=self.points)
 
     @param.depends('points')
     def table_view(self):
         return self.point_table
+
+    @property
+    def selected_points(self):
+        return self.point_stream.element.iloc[self._point_selection.index]
 
     def panel(self):
         return pn.Row(self.map_view, self.table_view)
