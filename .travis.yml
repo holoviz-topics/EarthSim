@@ -37,7 +37,7 @@ _osx_config: &_osx_config
   before_install:
     # set up python
     - eval "$(pyenv init -)"
-    - pyenv install $PYENV_VERSION  
+    - pyenv install $PYENV_VERSION
     # check the below still required
     # brew-installed geos interferes with cartopy?
     - brew uninstall --ignore-dependencies geos gdal postgis
@@ -54,6 +54,9 @@ jobs:
     - &default
       stage: test
       before_install:
+        # set up python
+        - eval "$(pyenv init -)"
+        - pyenv install $PYENV_VERSION
         - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
