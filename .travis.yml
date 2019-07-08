@@ -5,8 +5,8 @@ language: generic
 
 env:
   global:
-    - PYENV_VERSION=3.7.1
-    - PYTHON_VERSION=3.7
+    - PYENV_VERSION=3.6
+    - PYTHON_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36"
     - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
     - CHANS_REL="-c pyviz -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
@@ -54,9 +54,6 @@ jobs:
     - &default
       stage: test
       before_install:
-        # set up python
-        - eval "$(pyenv init -)"
-        - pyenv install $PYENV_VERSION
         - pip install pyctdev && doit miniconda_install && pip uninstall -y doit pyctdev
         - export PATH="$HOME/miniconda/bin:$PATH" && hash -r
         - conda config --set always_yes True
