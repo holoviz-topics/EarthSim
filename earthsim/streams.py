@@ -3,8 +3,8 @@ import os
 from bokeh.models import CustomJS, CustomAction, PolyEditTool
 
 from holoviews.streams import Stream, PolyEdit, PolyDraw
-from holoviews.plotting.bokeh.callbacks import (
-    CDSCallback, PolyEditCallback, PolyDrawCallback)
+from holoviews.plotting.bokeh.callbacks import CDSCallback
+from geoviews.plotting.bokeh.callbacks import  GeoPolyEditCallback, GeoPolyDrawCallback
 
 from .models.custom_tools import PolyVertexEditTool, PolyVertexDrawTool
 
@@ -50,7 +50,7 @@ class PolyVertexDraw(PolyDraw):
         super(PolyVertexDraw, self).__init__(**params)
 
 
-class PolyVertexEditCallback(PolyEditCallback):
+class PolyVertexEditCallback(GeoPolyEditCallback):
 
     split_code = """
     var vcds = vertex.data_source
@@ -115,7 +115,7 @@ class PolyVertexEditCallback(PolyEditCallback):
 
 
 
-class PolyVertexDrawCallback(PolyDrawCallback):
+class PolyVertexDrawCallback(GeoPolyDrawCallback):
 
     def initialize(self, plot_id=None):
         plot = self.plot
@@ -139,7 +139,7 @@ class PolyVertexDrawCallback(PolyDrawCallback):
             **kwargs)
         plot.state.tools.append(poly_tool)
         self._update_cds_vdims()
-        super(PolyDrawCallback, self).initialize(plot_id)
+        super(GeoPolyDrawCallback, self).initialize(plot_id)
 
 
 callbacks = Stream._callbacks['bokeh']
