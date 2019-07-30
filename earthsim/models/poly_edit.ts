@@ -10,6 +10,16 @@ import {PolyEditTool, PolyEditToolView} from "models/tools/edit/poly_edit_tool"
 export class PolyVertexEditToolView extends PolyEditToolView {
   model: PolyVertexEditTool
 
+  deactivate(): void {
+    this._hide_vertices()
+    if (!this._selected_renderer) {
+      return
+    } else if (this._drawing) {
+      this._remove_vertex()
+      this._drawing = false
+    }
+  }
+
   _pan(ev: GestureEvent): void {
     if (this._basepoint == null)
       return
