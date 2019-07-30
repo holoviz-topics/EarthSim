@@ -24,7 +24,7 @@ from geoviews.util import path_to_geom_dicts
 from shapely.geometry import Polygon, LinearRing, MultiPolygon
 
 from .models.custom_tools import CheckpointTool, RestoreTool, ClearTool
-from .links import VertexTableLink, PointTableLink
+from .links import VertexTableLink, PointTableLink, PointTableSelectionLink
 from .streams import PolyVertexDraw, PolyVertexEdit
 
 
@@ -406,6 +406,7 @@ class PointAnnotator(GeoAnnotator):
         projected = gv.project(self.points, projection=ccrs.PlateCarree())
         self.point_table = Table(projected).opts(plot=plot, style=style)
         self.point_link = PointTableLink(source=self.points, target=self.point_table)
+        self.point_selection_link = PointTableSelectionLink(source=self.points, target=self.point_table)
         self._point_selection = Selection1D(source=self.points)
 
     @param.depends('points')

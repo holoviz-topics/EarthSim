@@ -22,6 +22,11 @@ class PointTableLink(Link):
         super(PointTableLink, self).__init__(source, target, **params)
 
 
+class PointTableSelectionLink(Link):
+
+    _requires_target = True
+
+
 class VertexTableLink(Link):
     """
     Defines a Link between a Path type and a Table which will
@@ -37,6 +42,23 @@ class VertexTableLink(Link):
             dimensions = [dimension_sanitizer(d.name) for d in target.dimensions()[:2]]
             params['vertex_columns'] = dimensions
         super(VertexTableLink, self).__init__(source, target, **params)
+
+
+class PointTableSelectionLinkCallback(LinkCallback):
+
+    source_model = 'selected'
+    target_model = 'selected'
+
+    on_source_changes = ['indices']
+    on_target_changes = ['indices']
+
+    source_code = """
+    target_selected.indices = source_selected.indices
+    """
+
+    target_code = """
+    source_selected.indices = target_selected.indices
+    """
 
 
 class PointTableLinkCallback(LinkCallback):
@@ -218,3 +240,4 @@ class VertexTableLinkCallback(LinkCallback):
     
 VertexTableLink.register_callback('bokeh', VertexTableLinkCallback)
 PointTableLink.register_callback('bokeh', PointTableLinkCallback)
+PointTableSelectionLink.register_callback('bokeh', PointTableSelectionLinkCallback)
