@@ -18,6 +18,7 @@ export class PolyVertexEditToolView extends PolyEditToolView {
       this._remove_vertex()
       this._drawing = false
     }
+    this._emit_cds_changes(this._selected_renderer.data_source, false, true, false)
   }
 
   _pan(ev: GestureEvent): void {
