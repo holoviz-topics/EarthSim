@@ -154,6 +154,8 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
         (cds.data[ykey] as any).splice(yidx, 1)
     }
     this._emit_cds_changes(cds)
+    this._drawing = false;
+    this._show_vertices()
   }
 }
 
