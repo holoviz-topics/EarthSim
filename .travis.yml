@@ -8,8 +8,8 @@ env:
     - PYENV_VERSION=3.6
     - PYTHON_VERSION=3.6
     - PKG_TEST_PYTHON="--test-python=py36"
-    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
-    - CHANS_REL="-c pyviz -c bokeh -c defaults -c erdc -c conda-forge -c aquaveo"
+    - CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c defaults -c erdc -c conda-forge -c aquaveo"
+    - CHANS_REL="-c pyviz -c defaults -c erdc -c conda-forge -c aquaveo"
     - MPLBACKEND="Agg"
     - LABELS_DEV="--label dev"
     - LABELS_REL="--label dev --label main"
@@ -33,7 +33,7 @@ stages:
 _osx_config: &_osx_config
   os: osx
   osx_image: xcode10.1
-  env: PYENV_VERSION=3.7.1 CHANS_DEV="-c pyviz/label/earthsim -c pyviz/label/dev -c erdc -c conda-forge -c aquaveo"
+  env: PYENV_VERSION=3.7.1
   before_install:
     # set up python
     - eval "$(pyenv init -)"
