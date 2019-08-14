@@ -3,11 +3,6 @@ git:
 
 language: generic
 
-addons:
-  apt:
-    packages:
-    - libzstd
-
 env:
   global:
     - PYENV_VERSION=3.6
