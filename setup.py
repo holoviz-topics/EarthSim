@@ -26,7 +26,7 @@ install_requires = [
 extras_require = {}
 
 extras_require['recommended'] = [
-    'opencv', 'quest==3.1.1', 'ulmo==0.8.5', 'lancet>=0.9.0']
+    'opencv', 'quest>=3.1.1', 'ulmo>=0.8.5', 'lancet>=0.9.0']
 
 # until pyproject.toml/equivalent is widely supported (setup_requires
 # doesn't work well with pip)
