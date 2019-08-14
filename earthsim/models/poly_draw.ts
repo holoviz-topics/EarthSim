@@ -133,6 +133,30 @@ export class PolyVertexDrawToolView extends PolyDrawToolView {
     }
     this._set_vertices(xs, ys, styles)
   }
+
+  _remove(): void {
+    const renderer = this.model.renderers[0]
+    const cds = renderer.data_source
+    const glyph: any = renderer.glyph
+    const [xkey, ykey] = [glyph.xs.field, glyph.ys.field]
+    if (xkey) {
+      const xidx = cds.data[xkey].length-1
+      const xs = cds.get_array<number[]>(xkey)[xidx]
+      xs.splice(xs.length-1, 1)
+      if (xs.length == 1)
+        (cds.data[xkey] as any).splice(xidx, 1)
+    }
+    if (ykey) {
+      const yidx = cds.data[ykey].length-1
+      const ys = cds.get_array<number[]>(ykey)[yidx]
+      ys.splice(ys.length-1, 1)
+      if (ys.length == 1)
+        (cds.data[ykey] as any).splice(yidx, 1)
+    }
+    this._emit_cds_changes(cds)
+    this._drawing = false;
+    this._show_vertices()
+  }
 }
 
 export namespace PolyVertexDrawTool {
