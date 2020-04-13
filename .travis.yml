@@ -99,7 +99,7 @@ jobs:
       stage: doc
       env: HV_DOC_HTML="true" DESC="docs"
       script:
-        - conda install -c pyviz -c conda-forge nbsite=0.6.1 sphinx_ioam_theme
+        - conda install -c pyviz -c conda-forge nbsite=0.6.1 sphinx_holoviz_theme
         - mkdir examples/assets
         - python -m earthsim fetch-data --path=examples
         - nbsite generate-rst --org pyviz --project-name earthsim --offset 0 --skip '^.*Workflow.*$' --skip '^.*Sweep.*$'  --skip '^.*Batched.*$' --skip '^.Specifying.*$'
