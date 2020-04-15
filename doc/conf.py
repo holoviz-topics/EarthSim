@@ -14,7 +14,7 @@ version = '0.0.1'
 release = '0.0.1'
 
 html_static_path += ['_static']
-html_theme = 'sphinx_ioam_theme'
+html_theme = 'sphinx_holoviz_theme'
 # logo file etc should be in html_static_path, e.g. _static
 html_theme_options = {
 #    'custom_css':'bettercolors.css',
@@ -38,6 +38,7 @@ html_context.update({
     # will work without this - for canonical (so can ignore when building locally or test deploying)    
     'WEBSITE_SERVER': 'https://pyviz.github.io/earthsim',
     'VERSION': version,
+    'GOOGLE_ANALYTICS_UA': 'UA-154795830-7',
     'NAV': _NAV,
     # by default, footer links are same as those in header
     'LINKS': _NAV,
