@@ -3,15 +3,11 @@
 
 # EarthSim
 
-
-<div style="border: 2px solid #d9534f; background-color: #f9d6d5; padding: 1em; border-radius: 8px; margin: 1em 0;">
-  <strong style="color: #d9534f; font-size: 1.2em;">⚠️ Project Archived</strong>
-  <p style="margin: 0.5em 0 0 0; color: #333;">
-    This project is no longer maintained and has been archived.<br>
-    The code of this project has been directly merged upstream in the HoloViz libraries. The example notebooks can be found in the the Geospatial section of the <a href="https://examples.holoviz.org">HoloViz Gallery website</a>.
-  </p>
-</div>
-
+> ⚠️ **Project Archived**
+>
+> This project is **no longer maintained and has been archived**.
+> - The code of this project has been directly merged upstream in the HoloViz libraries.
+> - The example notebooks can be found in the the Geospatial section of the <a href="https://examples.holoviz.org">HoloViz Gallery website</a>.
 
 Python-based tools for specifying, launching, visualizing, and analyzing environmental simulations, such as those for hydrology modeling.
 
